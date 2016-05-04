@@ -68,6 +68,8 @@ public abstract class Imovel
         this.precoMinimo = precoMinimo;
     }
     
+    public abstract Imovel clone();
+    
     public boolean equals(Object o){
         if(this == o)
             return true;
@@ -80,8 +82,6 @@ public abstract class Imovel
                this.precoPedido == imv.getPrecoPedido() && 
                this.precoMinimo == imv.getPrecoMinimo();
     }
-    
-    abstract public Imovel clone();
     
     public String toString(){
         StringBuilder sb = new StringBuilder();

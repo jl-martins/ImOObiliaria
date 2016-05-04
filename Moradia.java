@@ -1,4 +1,5 @@
 public class Moradia extends Imovel
+        implements Habitavel
 {
     // Variáveis de instância
     private String tipo; // tipo da moradia (isolada, geminada, banda, gaveto)

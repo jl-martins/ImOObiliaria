@@ -1,4 +1,5 @@
 public class Apartamento extends Imovel
+        implements Habitavel
 {
     // variaveis de instancia
     String tipo; // tipo de apartamento: Simples, Duplex, Triplex

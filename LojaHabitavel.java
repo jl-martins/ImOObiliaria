@@ -1,6 +1,7 @@
 
 
 public class LojaHabitavel extends Loja
+        implements Habitavel
 {   
     Apartamento apartamento;
     
