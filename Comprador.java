@@ -32,8 +32,8 @@ public class Comprador extends Utilizador
         setFavoritos(comp.getFavoritos());
     }
     
-    public Set<Imovel> getFavoritos(){
-        Set<Imovel> copiasFav = new TreeSet<Imovel>();
+    public TreeSet<Imovel> getFavoritos(){
+        TreeSet<Imovel> copiasFav = new TreeSet<Imovel>();
         
         for(Imovel fav : this.favoritos)
             copiasFav.add(fav.clone());
