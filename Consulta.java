@@ -11,41 +11,38 @@ public class Consulta
      */
     public Consulta(){
         data = new GregorianCalendar(); // data atual
-        email = null;
+        email = null; // e-mail desconhecido
     }
     
     /**
      * Construtor parametrizado
      */
-    public Consulta(GregorianCalendar data, String email){
-        this.data = (data != null) ? (GregorianCalendar) data.clone() : new GregorianCalendar();
+    public Consulta(String email){
         this.email = email;
+        this.data = new GregorianCalendar();
     }
-    
+      
     /**
      * Construtor de copia
      */
     public Consulta(Consulta c){
-        this(c.getData(), c.getEmail());
+        this.email = c.email;
+        this.data = (data == null) ? null : (GregorianCalendar) data.clone();
     }
     
     // Getters
     public GregorianCalendar getData(){
-        return (GregorianCalendar) data.clone();
+        return (data == null)? null : (GregorianCalendar) data.clone();
     }
     
     public String getEmail(){
         return email;
     }
+
+    /* Este tipo é Imutável, depois de feita uma consulta, esta não pode ser alterada */
     
-    // Setters
-    public void setData(GregorianCalendar data){
-        if(data != null) // impede que se guarde null na variável de instancia 'data'
-            this.data = (GregorianCalendar) data.clone();
-    }
-    
-    public void setEmail(String email){
-        this.email = email;
+    public boolean feitaPorUtilizadorRegistado(){
+        return email != null;
     }
     
     public Consulta clone(){
@@ -62,6 +59,18 @@ public class Consulta
     }
     
     public String toString(){
-        return "";
+        String aux = (data == null) ? "n/a" : data.toString(); 
+        return "E-mail: " + email + "\nData: " + aux + "\n";
+    }
+    
+    public int hashCode(){
+        int hash, hashEmail, hashData;
+        hash = 7;
+        hashEmail = email == null ? 0 : email.hashCode();
+        hashData = data == null ? 0 : data.hashCode();
+        
+        hash = 31 * hash + hashEmail;
+        hash = 31 * hash + hashData;
+        return hash;
     }
 }
