@@ -26,8 +26,8 @@ public class Consulta
      * Construtor de copia
      */
     public Consulta(Consulta c){
-        this.email = c.email;
-        this.data = (c.data == null) ? null : (GregorianCalendar) c.data.clone();
+        this.email = c.getEmail();
+        this.data = c.getData();
     }
     
     // Getters
