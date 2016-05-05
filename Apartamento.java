@@ -2,11 +2,11 @@ public class Apartamento extends Imovel
         implements Habitavel
 {
     // variaveis de instancia
-    String tipo; // tipo de apartamento: Simples, Duplex, Triplex
-    int areaTotal;
-    int numQuartos, numWCs;
-    int numDaPorta, andar;
-    boolean temGaragem;
+    private String tipo; // tipo de apartamento: Simples, Duplex, Triplex
+    private int areaTotal;
+    private int numQuartos, numWCs;
+    private int numDaPorta, andar;
+    private boolean temGaragem;
 
     /**
      * Constructor for objects of class Apartamento
@@ -118,6 +118,16 @@ public class Apartamento extends Imovel
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Apartamento\n");
+        
+        sb.append(super.toString());
+        sb.append("Tipo: " + tipo + "\n");
+        sb.append("Área total: " + areaTotal + "m^2\n");
+        sb.append("Número de quartos: " + numQuartos + "\n");
+        sb.append("Número de WCs: " + numWCs + "\n");
+        sb.append("Número da porta: " + numDaPorta + "\n");
+        sb.append("Andar: " + andar + "\n");
+        sb.append("Tem garagem: " + (temGaragem ? "sim\n" : "não\n"));
+        return sb.toString();
     }
 }

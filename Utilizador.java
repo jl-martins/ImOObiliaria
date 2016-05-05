@@ -102,7 +102,6 @@ public abstract class Utilizador
     public String toString(){
         StringBuilder sb = new StringBuilder();
         
-        sb.append("Utilizador:\n\n");
         sb.append("Email: " + email + "\n");
         sb.append("Nome: " + nome + "\n");
         sb.append("Morada: " + morada + "\n");

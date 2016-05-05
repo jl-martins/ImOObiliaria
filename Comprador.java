@@ -4,21 +4,21 @@ import java.util.GregorianCalendar;
 
 public class Comprador extends Utilizador
 {
-    Set<Imovel> favoritos; // conjunto dos imoveis favoritos do Comprador
+    private Set<String> favoritos; // conjunto de ids dos imoveis favoritos do Comprador
     
     /**
      * Construtor por omissao
      */
     public Comprador(){
         super();
-        favoritos = new TreeSet<Imovel>();
+        favoritos = new TreeSet<String>();
     }
     
      /**
       * Construtor parametrizado.
       */
     public Comprador(String email, String nome, String password, String morada,
-                     GregorianCalendar dataNascimento, Set<Imovel> favoritos)
+                     GregorianCalendar dataNascimento, Set<String> favoritos)
     {
         super(email, nome, password, morada, dataNascimento);
         setFavoritos(favoritos);
@@ -32,19 +32,19 @@ public class Comprador extends Utilizador
         setFavoritos(comp.getFavoritos());
     }
     
-    public TreeSet<Imovel> getFavoritos(){
-        TreeSet<Imovel> copiasFav = new TreeSet<Imovel>();
+    public TreeSet<String> getFavoritos(){
+        TreeSet<String> copiaFav = new TreeSet<String>();
         
-        for(Imovel fav : this.favoritos)
-            copiasFav.add(fav.clone());
-        return copiasFav;
+        for(String idFav : favoritos)
+            copiaFav.add(idFav);
+        return copiaFav;
     }
     
-    public void setFavoritos(Set<Imovel> favoritos){
-        this.favoritos.clear();
+    public void setFavoritos(Set<String> favoritos){
+        favoritos.clear();
         
-        for(Imovel fav : favoritos)
-            this.favoritos.add(fav.clone());
+        for(String idFav : favoritos)
+            this.favoritos.add(idFav);
     }
     
     public Comprador clone(){
@@ -64,6 +64,12 @@ public class Comprador extends Utilizador
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Comprador\n");
+        
+        sb.append(super.toString());
+        sb.append("Ids dos imóveis favoritos: ");
+        for(String str : favoritos)
+            sb.append(str + "\n");
+        return sb.toString();
     }
 }

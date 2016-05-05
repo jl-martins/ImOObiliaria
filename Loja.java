@@ -80,6 +80,13 @@ public class Loja extends Imovel
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Loja\n");
+        
+        sb.append(super.toString());
+        sb.append("Área: " + area + "m^2\n");
+        sb.append("Tem WC: " + (temWC ? "sim\n" : "não\n"));
+        sb.append("Tipo de negócio: " + tipoNegocio + "\n");
+        sb.append("Número da porta: " + numDaPorta + "\n");
+        return sb.toString();
     }
 }

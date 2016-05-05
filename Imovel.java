@@ -86,11 +86,10 @@ public abstract class Imovel
     public String toString(){
         StringBuilder sb = new StringBuilder();
         
-        sb.append("Imovel\n\n");
-        sb.append("id: " + id);
-        sb.append("Rua: " + rua);
-        sb.append("Preço pedido pelo imóvel: " + precoPedido);
-        sb.append("Preço mínimo exigido: " + precoMinimo);
+        sb.append("id: " + id + "\n");
+        sb.append("Rua: " + rua + "\n");
+        sb.append("Preço pedido pelo imóvel: " + precoPedido + "\n");
+        sb.append("Preço mínimo exigido: " + precoMinimo + "\n");
         
         return sb.toString();
     }

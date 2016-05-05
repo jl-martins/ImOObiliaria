@@ -1,31 +1,22 @@
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.GregorianCalendar;
 
 public class Vendedor extends Utilizador
-{
-    
-    List<Imovel> emVenda;
-    List<Imovel> vendidos;
+{ 
+    private Set<String> emVenda;
+    private Set<String> vendidos;
     
     /** Construtor por omissao */
-    public Vendedor()
-    {
+    public Vendedor(){
         super();
-        emVenda = new ArrayList<Imovel>();
-        vendidos = new ArrayList<Imovel>();
+        emVenda = new TreeSet<String>();
+        vendidos = new TreeSet<String>();
     }
     
     /** Construtor parametrizado */
-    public Vendedor(
-        String email,
-        String nome,
-        String password,
-        String morada,
-        GregorianCalendar dataNascimento,
-        List<Imovel> emVenda,
-        List<Imovel> vendidos
-    ){
+    public Vendedor(String email, String nome, String password, String morada,
+                    GregorianCalendar dataNascimento, Set<String> emVenda, Set<String> vendidos){
         super(email, nome, password, morada, dataNascimento);
         setEmVenda(emVenda);
         setVendidos(vendidos);
@@ -36,34 +27,34 @@ public class Vendedor extends Utilizador
         this(v.getEmail(), v.getNome(), v.getPassword(), v.getMorada(), v.getDataNascimento(), v.getEmVenda(), v.getVendidos());
     }
     
-    public List<Imovel> getEmVenda(){
-        List<Imovel> emVenda = new ArrayList<Imovel>();
+    public Set<String> getEmVenda(){
+        Set<String> emVenda = new TreeSet<String>();
         
-        for(Imovel imovel : this.emVenda)
-            emVenda.add(imovel.clone());
+        for(String idImovel : this.emVenda)
+            emVenda.add(idImovel);
         return emVenda;
     }
     
-    public List<Imovel> getVendidos(){
-        List<Imovel> vendidos = new ArrayList<Imovel>();
+    public Set<String> getVendidos(){
+        Set<String> vendidos = new TreeSet<String>();
         
-        for(Imovel imovel : this.vendidos)
-            vendidos.add(imovel.clone());
+        for(String idImovel : this.vendidos)
+            vendidos.add(idImovel);
         return vendidos;
     }
     
-    public void setEmVenda(List<Imovel> emVenda){
+    public void setEmVenda(Set<String> emVenda){
         this.emVenda.clear();
         
-        for(Imovel imovel : emVenda)
-            this.emVenda.add(imovel.clone());
+        for(String imovel : emVenda)
+            this.emVenda.add(imovel);
     }
     
-    public void setVendidos(List<Imovel> vendidos){
+    public void setVendidos(Set<String> vendidos){
         this.vendidos.clear();
         
-        for(Imovel imovel : vendidos)
-            this.vendidos.add(imovel.clone());
+        for(String idImovel : vendidos)
+            this.vendidos.add(idImovel);
     }
     
     public Vendedor clone(){
@@ -83,6 +74,16 @@ public class Vendedor extends Utilizador
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Vendedor\n");
+        
+        sb.append(super.toString());
+        sb.append("Em venda:\n");
+        for(String idImovel : emVenda)
+            sb.append(idImovel + "\n");
+        
+        sb.append("Vendidos:\n");
+        for(String idImovel : vendidos)
+            sb.append(idImovel + "\n");
+        return sb.toString();
     }
 }

@@ -45,6 +45,9 @@ public class LojaHabitavel extends Loja
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder(super.toString());
+        
+        sb.append(apartamento.toString());
+        return sb.toString();
     }
 }

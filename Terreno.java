@@ -106,6 +106,15 @@ public class Terreno extends Imovel
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Terreno\n");
+        
+        sb.append(super.toString());
+        sb.append("Área: " + area + "m^2\n");
+        sb.append("Apropriado para construção de habitação: " + (terrenoHab ? "sim\n" : "não\n"));
+        sb.append("Apropriado para construção de armazéns: " + (terrenoArm ? "sim\n" : "não\n"));
+        sb.append("Diâmetro das canalizações: " + diamCanalizacoes + "mm\n");
+        sb.append("kWh máximos: " + maxKWh + "kWh\n");
+        sb.append("Tem rede de esgotos: " + (temRedeEsgotos ? "sim\n" : "não\n"));
+        return sb.toString();
     }
 }

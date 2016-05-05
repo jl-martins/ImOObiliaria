@@ -3,11 +3,11 @@ public class Moradia extends Imovel
 {
     // Variáveis de instância
     private String tipo; // tipo da moradia (isolada, geminada, banda, gaveto)
-    int areaImplantacao; // area de implantacao
-    int areaTotal; // area total coberta
-    int areaEnv; // area do terreno envolvente
-    int numQuartos, numWCs;
-    int numDaPorta;
+    private int areaImplantacao; // area de implantacao
+    private int areaTotal; // area total coberta
+    private int areaEnv; // area do terreno envolvente
+    private int numQuartos, numWCs;
+    private int numDaPorta;
     
     /**
      * Construtor por omissão
@@ -34,13 +34,13 @@ public class Moradia extends Imovel
     
     public Moradia(Moradia m){
         super(m);
-        this.tipo = m.getTipo();
-        this.areaImplantacao = m.getAreaImplantacao();
-        this.areaTotal = m.getAreaTotal();
-        this.areaEnv = m.getAreaEnv();
-        this.numQuartos = m.getNumQuartos();
-        this.numWCs = m.getNumWCs();
-        this.numDaPorta = m.getNumDaPorta();
+        tipo = m.getTipo();
+        areaImplantacao = m.getAreaImplantacao();
+        areaTotal = m.getAreaTotal();
+        areaEnv = m.getAreaEnv();
+        numQuartos = m.getNumQuartos();
+        numWCs = m.getNumWCs();
+        numDaPorta = m.getNumDaPorta();
     }
     
     
@@ -121,6 +121,16 @@ public class Moradia extends Imovel
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Moradia\n");
+        
+        sb.append(super.toString());
+        sb.append("Tipo: " + tipo + "\n");
+        sb.append("Área de implantação: " + areaImplantacao + "m^2\n");
+        sb.append("Área total: " + areaTotal + "m^2\n");
+        sb.append("Área envolvente: " + areaEnv + "m^2\n");
+        sb.append("Número de quartos: " + numQuartos + "\n");
+        sb.append("Número de WCs: " + numWCs + "\n");
+        sb.append("Número da porta: " + numDaPorta + "\n");
+        return sb.toString();
     }
 }
