@@ -27,7 +27,7 @@ public class Consulta
      */
     public Consulta(Consulta c){
         this.email = c.email;
-        this.data = (data == null) ? null : (GregorianCalendar) data.clone();
+        this.data = (c.data == null) ? null : (GregorianCalendar) c.data.clone();
     }
     
     // Getters
