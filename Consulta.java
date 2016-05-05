@@ -50,12 +50,18 @@ public class Consulta
     }
     
     public boolean equals(Object o){
+        boolean eIgual = true;
+        
         if(this == o)
             return true;
         if(o == null || o.getClass() != this.getClass())
             return false;
         Consulta c = (Consulta) o;
-        return data.equals(c.getData()) && email.equals(c.getEmail());
+        if(data == null && c.getData() != null)
+            eIgual = false;
+        if(email == null && c.getEmail() != null) 
+            eIgual = false;
+        return eIgual && data.equals(c.getData()) && email.equals(c.getEmail());
     }
     
     public String toString(){
