@@ -3,15 +3,17 @@ public abstract class Imovel
     // variáveis de instância
     private String id; // id do imóvel
     private String rua;
+    private String estado;
     private double precoPedido;
     private double precoMinimo;
+    private int quantasConsultas;    
     
     /**
      * Construtor por omissão
      * (declarado como privado para não ser possível construir um Imovel
      *  sem especificar a rua, o preço mínimo e o preço pedido).
      */
-    public Imovel(){
+    private Imovel(){
         this("n/a", "n/a", 0, 0);
     }
     
@@ -23,6 +25,7 @@ public abstract class Imovel
         this.rua = rua;
         this.precoPedido = precoPedido;
         this.precoMinimo = precoMinimo;
+        this.quantasConsultas = 0;
     }
     
     /**
@@ -48,7 +51,7 @@ public abstract class Imovel
     }
     
     /** @return O preço mínimo deste imóvel. */
-    public double getPrecoMinimo(){
+    private double getPrecoMinimo(){
         return precoMinimo;
     }
     
@@ -64,8 +67,16 @@ public abstract class Imovel
         this.precoPedido = precoPedido;
     }
     
-    public void setPrecoMinimo(double precoMinimo){
+    private void setPrecoMinimo(double precoMinimo){
         this.precoMinimo = precoMinimo;
+    }
+    
+    public void consultaImovel(){
+        this.quantasConsultas++;
+    }
+    
+    public int getNumeroConsultas(){
+        return quantasConsultas;
     }
     
     public abstract Imovel clone();
@@ -89,8 +100,13 @@ public abstract class Imovel
         sb.append("id: " + id + "\n");
         sb.append("Rua: " + rua + "\n");
         sb.append("Preço pedido pelo imóvel: " + precoPedido + "\n");
-        sb.append("Preço mínimo exigido: " + precoMinimo + "\n");
+        //sb.append("Preço mínimo exigido: " + precoMinimo + "\n");
         
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        //MUDAR!!
+        return 0;
     }
 }
