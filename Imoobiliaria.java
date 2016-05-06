@@ -1,10 +1,11 @@
 import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 public class Imoobiliaria
 {   
     Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
-    Set<Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
+    Map<String, Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
     String emailUtilizadorAutenticado = null;
     
     public static void initApp(){
@@ -70,6 +71,7 @@ public class Imoobiliaria
             
             // Completar...
         }
+        return new List<Consulta>();
     }
     
     public void setEstado(String idImovel, String estado) 
