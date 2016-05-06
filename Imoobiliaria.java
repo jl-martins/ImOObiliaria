@@ -56,21 +56,27 @@ public class Imoobiliaria
                 throw new ImovelExisteException("Já existe um imóvel com o id: " + idImovel);
             else{
                 imoveis.put(idImovel, im);
-                /* inserir no portfolio do vendedor */
-                
+                vendedor.poeAVenda(idImovel);                
             }
         }
     }
     
     public List<Consulta> getConsultas() throws SemAutorizacaoException{
         // Esta verificação também é feita em registaImovel(). Pensar em fazer um método privado que realize esta verificação!!!
+        List<Consulta> ultimasConsultas = new ArrayList<Consulta>();
+        Set<String> emVenda;
         
         if(!(utilizadorAutenticado instanceof Vendedor))
             throw new SemAutorizacaoException("Apenas vendedores têm autorização para registar imóveis.");
         else{ // o utilizador autenticado é um vendedor
             Vendedor vendedor = (Vendedor) utilizadorAutenticado;
+            emVenda = vendedor.getEmVenda();
+            for(String idImovel : emVenda){
+                ultimasConsultas.addAll(imoveis.getKey(idImovel).getConsultas());
+                Collections.sort(ultimasConsultas);
+                
+            }
             
-            // Completar...
         }
         return null; // MUDAR!
     }

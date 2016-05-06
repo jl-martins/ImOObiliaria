@@ -1,6 +1,6 @@
 import java.util.GregorianCalendar;
 
-public class Consulta
+public class Consulta implements Comparable<Consulta>
 {   
     // Variaveis de instancia
     private GregorianCalendar data; // data da consulta
@@ -62,6 +62,11 @@ public class Consulta
         if(email == null && c.getEmail() != null) 
             eIgual = false;
         return eIgual && data.equals(c.getData()) && email.equals(c.getEmail());
+    }
+    
+    @Override
+    public int compareTo(Consulta c){
+        return this.data.compareTo(c.data);
     }
     
     public String toString(){

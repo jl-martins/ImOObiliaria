@@ -69,6 +69,12 @@ public abstract class Imovel
         return quantasConsultas;
     }
     
+    public ArrayList<Consulta> getConsultas(){
+        ArrayList<Consulta> todasConsultas = new ArrayList<Consulta>();
+        todasConsultas.addAll(consultas);
+        return todasConsultas;
+    }
+    
     public void setId(String id){
         this.id = id;
     }

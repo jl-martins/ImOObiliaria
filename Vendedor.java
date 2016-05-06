@@ -9,10 +9,10 @@ public class Vendedor extends Utilizador
     
     /** Construtor parametrizado */
     public Vendedor(String email, String nome, String password, String morada,
-                    GregorianCalendar dataNascimento, Set<String> emVenda, Set<String> vendidos){
+                    GregorianCalendar dataNascimento){
         super(email, nome, password, morada, dataNascimento);
-        setEmVenda(emVenda);
-        setVendidos(vendidos);
+        this.emVenda = new TreeSet<String>();
+        this.vendidos = new TreeSet<String>();
     }
     
     /** Construtor de cópia */
@@ -50,6 +50,10 @@ public class Vendedor extends Utilizador
         
         for(String idImovel : vendidos)
             this.vendidos.add(idImovel);
+    }
+    
+    public void poeAVenda(String idImovel){
+        this.emVenda.add(idImovel);
     }
     
     public Vendedor clone(){
