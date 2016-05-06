@@ -46,7 +46,7 @@ public class Imoobiliaria
     }
     
     public void registaImovel(Imovel im) throws SemAutorizacaoException, ImovelExisteException{
-        if(utilizadorAutenticado == null || !(utilizadorAutenticado instanceof Vendedor))
+        if(!(utilizadorAutenticado instanceof Vendedor))
             throw new SemAutorizacaoException("Apenas vendedores têm autorização para registar imóveis.");
         else{
             String idImovel = im.getId();
@@ -72,7 +72,7 @@ public class Imoobiliaria
             
             // Completar...
         }
-        
+        return null; // MUDAR!
     }
     
     public void setEstado(String idImovel, String estado) 
