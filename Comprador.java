@@ -10,10 +10,10 @@ public class Comprador extends Utilizador
       * Construtor parametrizado.
       */
     public Comprador(String email, String nome, String password, String morada,
-                     GregorianCalendar dataNascimento, Set<String> favoritos)
+                     GregorianCalendar dataNascimento)
     {
         super(email, nome, password, morada, dataNascimento);
-        setFavoritos(favoritos);
+        favoritos = new TreeSet<String>();
     }
     
     /**
@@ -24,7 +24,7 @@ public class Comprador extends Utilizador
         setFavoritos(comp.getFavoritos());
     }
     
-    public TreeSet<String> getFavoritos(){
+    private TreeSet<String> getFavoritos(){
         TreeSet<String> copiaFav = new TreeSet<String>();
         
         for(String idFav : favoritos)
@@ -32,11 +32,15 @@ public class Comprador extends Utilizador
         return copiaFav;
     }
     
-    public void setFavoritos(Set<String> favoritos){
+    private void setFavoritos(Set<String> favoritos){
         this.favoritos = new TreeSet<String>(); 
         
         for(String idFav : favoritos)
             this.favoritos.add(idFav);
+    }
+    
+    public void setFavorito(String idImovel){
+        this.favoritos.add(idImovel);
     }
     
     public Comprador clone(){

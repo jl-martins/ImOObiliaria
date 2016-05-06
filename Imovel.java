@@ -1,37 +1,43 @@
+import java.util.ArrayList;
+
 public abstract class Imovel
 {
     // variáveis de instância
     private String id; // id do imóvel
     private String rua;
-    private String estado;
+    private EstadoImovel estado;
     private double precoPedido;
     private double precoMinimo;
-    private int quantasConsultas;    
+    private int quantasConsultas;
+    private ArrayList<Consulta> consultas;
     
     /**
      * Construtor por omissão.
      */
     public Imovel(){
-        this("n/a", "n/a", "n/a", 0, 0, 0);
+        this("n/a", "n/a", EstadoImovel.EM_VENDA, 0, 0);
     }
     
     /**
      * Construtor parametrizado.
      */
-    public Imovel(String id, String rua, String estado, double precoPedido, double precoMinimo, int quantasConsultas){
+    public Imovel(String id, String rua, EstadoImovel estado, double precoPedido, double precoMinimo){
         this.id = id;
         this.rua = rua;
         this.estado = estado;
         this.precoPedido = precoPedido;
         this.precoMinimo = precoMinimo;
         this.quantasConsultas = 0;
+        this.consultas = new ArrayList<Consulta>();
     }
     
     /**
      * Construtor de cópia.
      */
     public Imovel(Imovel imv){
-        this(imv.getId(), imv.getRua(), imv.getEstado(), imv.getPrecoPedido(), imv.precoMinimo, imv.quantasConsultas);
+        this(imv.getId(), imv.getRua(), imv.getEstado(), imv.getPrecoPedido(), imv.precoMinimo);
+        this.quantasConsultas = 0;
+        this.consultas = new ArrayList<Consulta>();
     }
     
     /** @return id deste imóvel. */
@@ -45,7 +51,7 @@ public abstract class Imovel
     }
     
     /** @return Estado deste Imovel. */
-    public String getEstado(){
+    public EstadoImovel getEstado(){
         return estado;
     }
     
@@ -79,7 +85,8 @@ public abstract class Imovel
         this.precoMinimo = precoMinimo;
     }
     
-    public void consultaImovel(){
+    public void registaConsulta(Consulta c){
+        this.consultas.add(c); /* Consulta e um tipo imutavel, nao preciso de fazer copia*/
         this.quantasConsultas++;
     }
     
@@ -94,6 +101,7 @@ public abstract class Imovel
         Imovel imv = (Imovel) o;
         return id.equals(imv.getId()) && rua.equals(imv.getRua()) && estado.equals(imv.getEstado()) &&
                precoPedido == imv.getPrecoPedido() && precoMinimo == imv.precoMinimo && quantasConsultas == imv.quantasConsultas;
+               /* falta fazer igualdade dos campos novos */
     }
     
     public String toString(){
