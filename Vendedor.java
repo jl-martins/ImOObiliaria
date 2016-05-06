@@ -8,11 +8,10 @@ public class Vendedor extends Utilizador
     private Set<String> vendidos = null;
     
     /** Construtor parametrizado */
-    public Vendedor(String email, String nome, String password, String morada,
-                    GregorianCalendar dataNascimento){
+    public Vendedor(String email, String nome, String password, String morada, GregorianCalendar dataNascimento){
         super(email, nome, password, morada, dataNascimento);
-        this.emVenda = new TreeSet<String>();
-        this.vendidos = new TreeSet<String>();
+        emVenda = new TreeSet<String>();
+        vendidos = new TreeSet<String>();
     }
     
     /** Construtor de cópia */
@@ -23,37 +22,23 @@ public class Vendedor extends Utilizador
     }
     
     public Set<String> getEmVenda(){
-        Set<String> emVenda = new TreeSet<String>();
-        
-        for(String idImovel : this.emVenda)
-            emVenda.add(idImovel);
-        return emVenda;
+        return new TreeSet<String>(emVenda); // Strings são imutáveis, logo não quebramos o encapsulamento
     }
     
     public Set<String> getVendidos(){
-        Set<String> vendidos = new TreeSet<String>();
-        
-        for(String idImovel : this.vendidos)
-            vendidos.add(idImovel);
-        return vendidos;
+        return new TreeSet<String>(vendidos); // Strings são imutáveis, logo não quebramos o encapsulamento
     }
     
     public void setEmVenda(Set<String> emVenda){
-        this.emVenda = new TreeSet<String>();
-        
-        for(String idImovel : emVenda)
-            this.emVenda.add(idImovel);
+        this.emVenda = new TreeSet<String>(emVenda);
     }
     
     public void setVendidos(Set<String> vendidos){
-        this.vendidos = new TreeSet<String>();
-        
-        for(String idImovel : vendidos)
-            this.vendidos.add(idImovel);
+        this.vendidos = new TreeSet<String>(vendidos);
     }
     
     public void poeAVenda(String idImovel){
-        this.emVenda.add(idImovel);
+        emVenda.add(idImovel);
     }
     
     public Vendedor clone(){

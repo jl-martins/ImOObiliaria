@@ -9,9 +9,7 @@ public class Comprador extends Utilizador
      /**
       * Construtor parametrizado.
       */
-    public Comprador(String email, String nome, String password, String morada,
-                     GregorianCalendar dataNascimento)
-    {
+    public Comprador(String email, String nome, String password, String morada, GregorianCalendar dataNascimento){
         super(email, nome, password, morada, dataNascimento);
         favoritos = new TreeSet<String>();
     }
@@ -19,28 +17,21 @@ public class Comprador extends Utilizador
     /**
      * Construtor de copia.
      */
-    public Comprador(Comprador comp){
-        super(comp);
-        setFavoritos(comp.getFavoritos());
+    public Comprador(Comprador comprador){
+        super(comprador);
+        setFavoritos(comprador.getFavoritos());
     }
     
-    private TreeSet<String> getFavoritos(){
-        TreeSet<String> copiaFav = new TreeSet<String>();
-        
-        for(String idFav : favoritos)
-            copiaFav.add(idFav);
-        return copiaFav;
+    public TreeSet<String> getFavoritos(){
+        return new TreeSet<String>(favoritos); // Strings são imutáveis, logo não quebramos o encapsulamento. 
     }
     
     private void setFavoritos(Set<String> favoritos){
-        this.favoritos = new TreeSet<String>(); 
-        
-        for(String idFav : favoritos)
-            this.favoritos.add(idFav);
+        this.favoritos = new TreeSet<String>(favoritos); // Strings são imutáveis, logo não quebramos o encapsulamento. 
     }
     
     public void setFavorito(String idImovel){
-        this.favoritos.add(idImovel);
+        favoritos.add(idImovel);
     }
     
     public Comprador clone(){
@@ -53,9 +44,9 @@ public class Comprador extends Utilizador
         else if(o == null || this.getClass() != o.getClass())
             return false;
         else{
-            Comprador comp = (Comprador) o;
+            Comprador comprador = (Comprador) o;
             
-            return super.equals(comp) && favoritos.equals(comp.getFavoritos());
+            return super.equals(comprador) && favoritos.equals(comprador.getFavoritos());
         }
     }
     

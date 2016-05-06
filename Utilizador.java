@@ -28,7 +28,7 @@ public abstract class Utilizador
      * Construtor de cópia
      */
     public Utilizador(Utilizador original){
-        this(original.email, original.nome, original.morada,
+        this(original.getEmail(), original.getNome(), original.getMorada(),
              original.password, original.getDataNascimento());
     }
     
