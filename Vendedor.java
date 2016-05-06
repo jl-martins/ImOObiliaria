@@ -41,8 +41,8 @@ public class Vendedor extends Utilizador
     public void setEmVenda(Set<String> emVenda){
         this.emVenda = new TreeSet<String>();
         
-        for(String imovel : emVenda)
-            this.emVenda.add(imovel);
+        for(String idImovel : emVenda)
+            this.emVenda.add(idImovel);
     }
     
     public void setVendidos(Set<String> vendidos){
@@ -80,5 +80,13 @@ public class Vendedor extends Utilizador
         for(String idImovel : vendidos)
             sb.append(idImovel + "\n");
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        
+        hash = 31*hash + ((emVenda == null) ? 0 : emVenda.hashCode());
+        hash = 31*hash + ((vendidos == null) ? 0 : vendidos.hashCode());
+        return hash;
     }
 }

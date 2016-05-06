@@ -3,11 +3,15 @@ import java.util.GregorianCalendar;
 public abstract class Utilizador
 {
     // variáveis de instancia
-    private String email = "n/a";
-    private String nome = "n/a";
-    private String password = "n/a";
-    private String morada = "n/a";
-    private GregorianCalendar dataNascimento = null;
+    private String email;
+    private String nome;
+    private String password;
+    private String morada;
+    private GregorianCalendar dataNascimento;
+    
+    public Utilizador(){
+        this("n/a", "n/a", "n/a", "n/a", null);
+    }
     
     /**
      * Construtor parametrizado.
@@ -17,19 +21,15 @@ public abstract class Utilizador
         this.nome = nome;
         this.password = password;
         this.morada = morada;
-        this.dataNascimento = (GregorianCalendar) dataNascimento.clone();
+        setDataNascimento(dataNascimento);
     }
     
     /**
      * Construtor de cópia
      */
     public Utilizador(Utilizador original){
-        this(original.email,
-             original.nome,
-             original.morada,
-             original.password,
-             original.getDataNascimento()
-        );
+        this(original.email, original.nome, original.morada,
+             original.password, original.getDataNascimento());
     }
     
     public String getEmail(){
@@ -45,7 +45,7 @@ public abstract class Utilizador
     }
     
     public GregorianCalendar getDataNascimento(){
-        return (GregorianCalendar) dataNascimento.clone();
+        return (dataNascimento == null) ? null : (GregorianCalendar) dataNascimento.clone();
     }
     
     public void setEmail(String email){
@@ -61,7 +61,7 @@ public abstract class Utilizador
     }
     
     public void setDataNascimento(GregorianCalendar dataNascimento){
-        this.dataNascimento = (GregorianCalendar) dataNascimento.clone();
+        this.dataNascimento = (dataNascimento == null) ? null : (GregorianCalendar) dataNascimento.clone() ;
     }
     
     public boolean validaPassword(String password){

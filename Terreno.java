@@ -17,10 +17,10 @@ public class Terreno extends Imovel
         temRedeEsgotos = false;
     }
     
-    public Terreno(String id, String rua, double precoPedido, double precoMinimo, int area, boolean terrenoHab,
-                   boolean terrenoArm, double diamCanalizacoes, double maxKWh, boolean temRedeEsgotos)
-    {
-        super(id, rua, precoPedido, precoMinimo);
+    public Terreno(String id, String rua, String estado, double precoPedido, double precoMinimo,
+                   int quantasConsultas, int area, boolean terrenoHab, boolean terrenoArm,
+                   double diamCanalizacoes, double maxKWh, boolean temRedeEsgotos){
+        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas);
         this.area = area;
         this.terrenoHab = terrenoHab;
         this.terrenoArm = terrenoArm;
@@ -30,7 +30,7 @@ public class Terreno extends Imovel
     }
     
     public Terreno(Terreno terr){
-        super(terr.getId(), terr.getRua(), terr.getPrecoPedido(), terr.getPrecoMinimo());
+        super(terr);
         area = terr.getArea();
         terrenoHab = terr.getTerrenoHab();
         terrenoArm = terr.getTerrenoArm();
@@ -116,5 +116,20 @@ public class Terreno extends Imovel
         sb.append("kWh máximos: " + maxKWh + "kWh\n");
         sb.append("Tem rede de esgotos: " + (temRedeEsgotos ? "sim\n" : "não\n"));
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        long aux;
+        
+        hash = 31*hash + area;
+        hash = 31*hash + (terrenoHab ? 1 : 0);
+        hash = 31*hash + (terrenoArm ? 1 : 0);
+        aux = Double.doubleToLongBits(diamCanalizacoes);
+        hash = 31*hash + (int) (aux^(aux >>> 32));
+        aux = Double.doubleToLongBits(maxKWh);
+        hash = 31*hash + (int) (aux^(aux >>> 32));
+        hash = 31*hash + (temRedeEsgotos ? 1 : 0);
+        return hash;
     }
 }

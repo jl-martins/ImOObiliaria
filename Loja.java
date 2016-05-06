@@ -13,9 +13,9 @@ public class Loja extends Imovel
         numDaPorta = 0;
     }
     
-    public Loja(String id, String rua, double precoPedido, double precoMinimo,
-                int area, boolean temWC, String tipoNegocio, int numDaPorta){
-        super(id, rua, precoPedido, precoMinimo);
+    public Loja(String id, String rua, String estado, double precoPedido, double precoMinimo,
+                int quantasConsultas, int area, boolean temWC, String tipoNegocio, int numDaPorta){
+        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas);
         this.area = area;
         this.temWC = temWC;
         this.tipoNegocio = tipoNegocio;
@@ -89,4 +89,14 @@ public class Loja extends Imovel
         sb.append("Número da porta: " + numDaPorta + "\n");
         return sb.toString();
     }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        
+        hash = 31*hash + area;
+        hash = 31*hash + (temWC ? 1 : 0);
+        hash = 31*hash + ((tipoNegocio == null) ? 0 : tipoNegocio.hashCode());
+        hash = 31*hash + numDaPorta;
+        return hash;
+    }   
 }

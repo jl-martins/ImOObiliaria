@@ -19,10 +19,10 @@ public class Moradia extends Imovel
         numQuartos = numWCs = numDaPorta = 0;
     }
     
-    public Moradia(String id, String rua, double precoPedido, double precoMinimo,
-                   String tipo, int areaImplantacao, int areaTotal, int areaEnv,
-                   int numQuartos, int numWCs, int numDaPorta){
-        super(id, rua, precoPedido, precoMinimo);
+    public Moradia(String id, String rua, String estado, double precoPedido, double precoMinimo,
+                   int quantasConsultas, String tipo, int areaImplantacao, int areaTotal,
+                   int areaEnv, int numQuartos, int numWCs, int numDaPorta){
+        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas);
         this.tipo = tipo;
         this.areaImplantacao = areaImplantacao;
         this.areaTotal = areaTotal;
@@ -42,7 +42,6 @@ public class Moradia extends Imovel
         numWCs = m.getNumWCs();
         numDaPorta = m.getNumDaPorta();
     }
-    
     
     // Getters
     public String getTipo(){
@@ -132,5 +131,18 @@ public class Moradia extends Imovel
         sb.append("Número de WCs: " + numWCs + "\n");
         sb.append("Número da porta: " + numDaPorta + "\n");
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        
+        hash = 31*hash + ((tipo == null) ? 0 : tipo.hashCode());
+        hash = 31*hash + areaImplantacao;
+        hash = 31*hash + areaTotal;
+        hash = 31*hash + areaEnv;
+        hash = 31*hash + numQuartos;
+        hash = 31*hash + numWCs;
+        hash = 31*hash + numDaPorta;
+        return hash;
     }
 }

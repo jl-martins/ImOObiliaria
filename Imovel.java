@@ -9,30 +9,29 @@ public abstract class Imovel
     private int quantasConsultas;    
     
     /**
-     * Construtor por omissão
-     * (declarado como privado para não ser possível construir um Imovel
-     *  sem especificar a rua, o preço mínimo e o preço pedido).
+     * Construtor por omissão.
      */
-    private Imovel(){
-        this("n/a", "n/a", 0, 0);
+    public Imovel(){
+        this("n/a", "n/a", "n/a", 0, 0, 0);
     }
     
     /**
-     * Construtor parametrizado
+     * Construtor parametrizado.
      */
-    public Imovel(String id, String rua, double precoPedido, double precoMinimo){
+    public Imovel(String id, String rua, String estado, double precoPedido, double precoMinimo, int quantasConsultas){
         this.id = id;
         this.rua = rua;
+        this.estado = estado;
         this.precoPedido = precoPedido;
         this.precoMinimo = precoMinimo;
         this.quantasConsultas = 0;
     }
     
     /**
-     * Construtor de cópia
+     * Construtor de cópia.
      */
     public Imovel(Imovel imv){
-        this(imv.getId(), imv.getRua(), imv.getPrecoPedido(), imv.getPrecoMinimo());
+        this(imv.getId(), imv.getRua(), imv.getEstado(), imv.getPrecoPedido(), imv.precoMinimo, imv.quantasConsultas);
     }
     
     /** @return id deste imóvel. */
@@ -45,6 +44,11 @@ public abstract class Imovel
         return rua;
     }
     
+    /** @return Estado deste Imovel. */
+    public String getEstado(){
+        return estado;
+    }
+    
     /** @return O preço pedido por este imóvel. */
     public double getPrecoPedido(){
         return precoPedido;
@@ -53,6 +57,10 @@ public abstract class Imovel
     /** @return O preço mínimo deste imóvel. */
     private double getPrecoMinimo(){
         return precoMinimo;
+    }
+    
+    public int getQuantasConsultas(){
+        return quantasConsultas;
     }
     
     public void setId(String id){
@@ -75,10 +83,6 @@ public abstract class Imovel
         this.quantasConsultas++;
     }
     
-    public int getNumeroConsultas(){
-        return quantasConsultas;
-    }
-    
     public abstract Imovel clone();
     
     public boolean equals(Object o){
@@ -88,10 +92,8 @@ public abstract class Imovel
             return false;
         
         Imovel imv = (Imovel) o;
-        return this.id.equals(imv.getId()) &&
-               this.rua.equals(imv.getRua()) &&
-               this.precoPedido == imv.getPrecoPedido() && 
-               this.precoMinimo == imv.getPrecoMinimo();
+        return id.equals(imv.getId()) && rua.equals(imv.getRua()) && estado.equals(imv.getEstado()) &&
+               precoPedido == imv.getPrecoPedido() && precoMinimo == imv.precoMinimo && quantasConsultas == imv.quantasConsultas;
     }
     
     public String toString(){
@@ -106,7 +108,15 @@ public abstract class Imovel
     }
     
     public int hashCode(){
-        //MUDAR!!
-        return 0;
+        int hash = 7;
+        long aux;
+        
+        hash = 31*hash + id.hashCode();
+        hash = 31*hash + rua.hashCode();
+        aux = Double.doubleToLongBits(precoPedido);
+        hash = 31*hash + (int) (aux^(aux >>> 32));
+        aux = Double.doubleToLongBits(precoMinimo);
+        hash = 31*hash + (int) (aux^(aux >>> 32));
+        return hash;
     }
 }

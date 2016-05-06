@@ -33,7 +33,7 @@ public class Comprador extends Utilizador
     }
     
     public void setFavoritos(Set<String> favoritos){
-        favoritos.clear();
+        this.favoritos = new TreeSet<String>(); 
         
         for(String idFav : favoritos)
             this.favoritos.add(idFav);
@@ -63,5 +63,12 @@ public class Comprador extends Utilizador
         for(String str : favoritos)
             sb.append(str + "\n");
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        
+        hash = 31*hash + (favoritos == null ? 0 : favoritos.hashCode());
+        return hash;
     }
 }

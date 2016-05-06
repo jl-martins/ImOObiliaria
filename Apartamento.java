@@ -11,18 +11,17 @@ public class Apartamento extends Imovel
     /**
      * Constructor for objects of class Apartamento
      */
-    public Apartamento()
-    {
+    public Apartamento(){
         super();
         tipo = "n/a";
-        areaTotal = numQuartos = numWCs = numDaPorta = andar = 0;
         temGaragem = false;
+        areaTotal = numQuartos = numWCs = numDaPorta = andar = 0;
     }
     
-    public Apartamento(String id, String rua, double precoPedido, double precoMinimo,
-                       String tipo, int areaTotal, int numQuartos, int numWCs,
+    public Apartamento(String id, String rua, String estado, double precoPedido, double precoMinimo,
+                       int quantasConsultas, String tipo, int areaTotal, int numQuartos, int numWCs,
                        int numDaPorta, int andar, boolean temGaragem){
-        super(id, rua, precoPedido, precoMinimo);
+        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas);
         this.tipo = tipo;
         this.areaTotal = areaTotal;
         this.numQuartos = numQuartos;
@@ -129,5 +128,18 @@ public class Apartamento extends Imovel
         sb.append("Andar: " + andar + "\n");
         sb.append("Tem garagem: " + (temGaragem ? "sim\n" : "não\n"));
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        
+        hash = 31*hash + ((tipo == null) ? 0 : tipo.hashCode());
+        hash = 31*hash + areaTotal;
+        hash = 31*hash + numQuartos;
+        hash = 31*hash + numWCs;
+        hash = 31*hash + numDaPorta;
+        hash = 31*hash + andar;
+        hash = 31*hash + (temGaragem ? 1 : 0);
+        return hash;
     }
 }
