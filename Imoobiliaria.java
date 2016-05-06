@@ -1,7 +1,7 @@
 public class Imoobiliaria
 {   
-    Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
-    Map<String, Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
+    Set<Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
+    Set<Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
     String emailUtilizadorAutenticado = null;
     
     public static void initApp(){

@@ -3,22 +3,11 @@ import java.util.GregorianCalendar;
 public abstract class Utilizador
 {
     // variáveis de instancia
-    private String email;
-    private String nome;
-    private String password;
-    private String morada;
-    private GregorianCalendar dataNascimento;
-
-    /**
-     * Construtor por omissao.
-     */
-    public Utilizador(){
-        email = "n/a";
-        nome = "n/a";
-        password = "n/a";
-        morada = "n/a";
-        dataNascimento = new GregorianCalendar();
-    }
+    private String email = "n/a";
+    private String nome = "n/a";
+    private String password = "n/a";
+    private String morada = "n/a";
+    private GregorianCalendar dataNascimento = null;
     
     /**
      * Construtor parametrizado.
@@ -35,10 +24,10 @@ public abstract class Utilizador
      * Construtor de cópia
      */
     public Utilizador(Utilizador original){
-        this(original.getEmail(),
-             original.getNome(),
-             original.getMorada(),
-             original.getPassword(),
+        this(original.email,
+             original.nome,
+             original.morada,
+             original.password,
              original.getDataNascimento()
         );
     }
@@ -53,10 +42,6 @@ public abstract class Utilizador
     
     public String getMorada(){
         return morada;
-    }
-    
-    public String getPassword(){
-        return password;
     }
     
     public GregorianCalendar getDataNascimento(){
@@ -75,12 +60,12 @@ public abstract class Utilizador
         this.morada = morada;
     }
     
-    public void setPassword(String password){
-        this.password = password;
-    }
-    
     public void setDataNascimento(GregorianCalendar dataNascimento){
         this.dataNascimento = (GregorianCalendar) dataNascimento.clone();
+    }
+    
+    public boolean validaPassword(String password){
+        return this.password == password;
     }
     
     public boolean equals(Object o){
@@ -90,10 +75,10 @@ public abstract class Utilizador
             return false;
         
         Utilizador utilizador = (Utilizador) o;
-        return email.equals(utilizador.getEmail()) &&
-               nome.equals(utilizador.getNome()) &&
-               morada.equals(utilizador.getMorada()) &&
-               password.equals(utilizador.getPassword()) &&
+        return email.equals(utilizador.email) &&
+               nome.equals(utilizador.nome) &&
+               morada.equals(utilizador.morada) &&
+               password.equals(utilizador.password) &&
                dataNascimento.equals(utilizador.getDataNascimento());
     }
     

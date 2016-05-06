@@ -4,15 +4,7 @@ import java.util.GregorianCalendar;
 
 public class Comprador extends Utilizador
 {
-    private Set<String> favoritos; // conjunto de ids dos imoveis favoritos do Comprador
-    
-    /**
-     * Construtor por omissao
-     */
-    public Comprador(){
-        super();
-        favoritos = new TreeSet<String>();
-    }
+    private Set<String> favoritos = null; // conjunto de ids dos imoveis favoritos do Comprador
     
      /**
       * Construtor parametrizado.

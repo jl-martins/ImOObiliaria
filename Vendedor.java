@@ -4,15 +4,8 @@ import java.util.GregorianCalendar;
 
 public class Vendedor extends Utilizador
 { 
-    private Set<String> emVenda;
-    private Set<String> vendidos;
-    
-    /** Construtor por omissao */
-    public Vendedor(){
-        super();
-        emVenda = new TreeSet<String>();
-        vendidos = new TreeSet<String>();
-    }
+    private Set<String> emVenda = null;
+    private Set<String> vendidos = null;
     
     /** Construtor parametrizado */
     public Vendedor(String email, String nome, String password, String morada,
@@ -24,7 +17,9 @@ public class Vendedor extends Utilizador
     
     /** Construtor de cópia */
     public Vendedor(Vendedor v){
-        this(v.getEmail(), v.getNome(), v.getPassword(), v.getMorada(), v.getDataNascimento(), v.getEmVenda(), v.getVendidos());
+        super(v);
+        setEmVenda(v.getEmVenda());
+        setVendidos(v.getVendidos());
     }
     
     public Set<String> getEmVenda(){
@@ -44,14 +39,14 @@ public class Vendedor extends Utilizador
     }
     
     public void setEmVenda(Set<String> emVenda){
-        this.emVenda.clear();
+        this.emVenda = new TreeSet<String>();
         
         for(String imovel : emVenda)
             this.emVenda.add(imovel);
     }
     
     public void setVendidos(Set<String> vendidos){
-        this.vendidos.clear();
+        this.vendidos = new TreeSet<String>();
         
         for(String idImovel : vendidos)
             this.vendidos.add(idImovel);
