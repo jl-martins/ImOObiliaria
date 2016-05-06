@@ -15,19 +15,19 @@ public abstract class Imovel
      * Construtor por omissão.
      */
     public Imovel(){
-        this("n/a", "n/a", EstadoImovel.EM_VENDA, 0, 0);
+        this("n/a", "n/a", 0, 0);
     }
     
     /**
      * Construtor parametrizado.
      */
-    public Imovel(String id, String rua, EstadoImovel estado, double precoPedido, double precoMinimo){
+    public Imovel(String id, String rua, double precoPedido, double precoMinimo){
         this.id = id;
         this.rua = rua;
-        this.estado = estado;
+        this.estado = EstadoImovel.EM_VENDA; // o estado inicial de um Imovel criado é sempre EM_VENDA.
         this.precoPedido = precoPedido;
         this.precoMinimo = precoMinimo;
-        this.quantasConsultas = 0;
+        this.quantasConsultas = 0; // o Imovel começa sempre por ter 0 consultas.
         this.consultas = new ArrayList<Consulta>();
     }
     
@@ -35,7 +35,8 @@ public abstract class Imovel
      * Construtor de cópia.
      */
     public Imovel(Imovel imv){
-        this(imv.getId(), imv.getRua(), imv.getEstado(), imv.getPrecoPedido(), imv.precoMinimo);
+        this(imv.getId(), imv.getRua(), imv.getPrecoPedido(), imv.precoMinimo);
+        this.estado = imv.getEstado();
         this.quantasConsultas = 0;
         this.consultas = new ArrayList<Consulta>();
     }
@@ -70,9 +71,7 @@ public abstract class Imovel
     }
     
     public ArrayList<Consulta> getConsultas(){
-        ArrayList<Consulta> todasConsultas = new ArrayList<Consulta>();
-        todasConsultas.addAll(consultas);
-        return todasConsultas;
+        return new ArrayList<Consulta>(consultas); // as instâncias de Consulta são imutáveis, logo não quebramos o encapsulamento.
     }
     
     public void setId(String id){
@@ -92,7 +91,7 @@ public abstract class Imovel
     }
     
     public void registaConsulta(Consulta c){
-        this.consultas.add(c); /* Consulta e um tipo imutavel, nao preciso de fazer copia*/
+        this.consultas.add(c); /* Consulta e um tipo imutavel. Nao e preciso fazer copia*/
         this.quantasConsultas++;
     }
     
@@ -105,9 +104,8 @@ public abstract class Imovel
             return false;
         
         Imovel imv = (Imovel) o;
-        return id.equals(imv.getId()) && rua.equals(imv.getRua()) && estado.equals(imv.getEstado()) &&
-               precoPedido == imv.getPrecoPedido() && precoMinimo == imv.precoMinimo && quantasConsultas == imv.quantasConsultas;
-               /* falta fazer igualdade dos campos novos */
+        return id.equals(imv.getId()) && rua.equals(imv.getRua()) && estado == imv.getEstado() && precoPedido == imv.getPrecoPedido() &&
+               precoMinimo == imv.precoMinimo && quantasConsultas == imv.quantasConsultas && consultas.equals(imv.getConsultas());
     }
     
     public String toString(){
@@ -116,8 +114,7 @@ public abstract class Imovel
         sb.append("id: " + id + "\n");
         sb.append("Rua: " + rua + "\n");
         sb.append("Preço pedido pelo imóvel: " + precoPedido + "\n");
-        //sb.append("Preço mínimo exigido: " + precoMinimo + "\n");
-        
+        // O preço mínimo não deverá ser apresentado aos compradores, logo não o incluimos na String retornada
         return sb.toString();
     }
     

@@ -17,10 +17,10 @@ public class Terreno extends Imovel
         temRedeEsgotos = false;
     }
     
-    public Terreno(String id, String rua, String estado, double precoPedido, double precoMinimo,
-                   int quantasConsultas, int area, boolean terrenoHab, boolean terrenoArm,
-                   double diamCanalizacoes, double maxKWh, boolean temRedeEsgotos){
-        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas);
+    public Terreno(String id, String rua, double precoPedido, double precoMinimo, int area, boolean terrenoHab,
+                   boolean terrenoArm, double diamCanalizacoes, double maxKWh, boolean temRedeEsgotos){
+        
+        super(id, rua, precoPedido, precoMinimo);
         this.area = area;
         this.terrenoHab = terrenoHab;
         this.terrenoArm = terrenoArm;

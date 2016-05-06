@@ -2,7 +2,7 @@ public class Apartamento extends Imovel
         implements Habitavel
 {
     // variaveis de instancia
-    private String tipo; // tipo de apartamento: Simples, Duplex, Triplex
+    private TipoApartamento tipo; // tipo de apartamento: Simples, Duplex, Triplex
     private int areaTotal;
     private int numQuartos, numWCs;
     private int numDaPorta, andar;
@@ -13,15 +13,15 @@ public class Apartamento extends Imovel
      */
     public Apartamento(){
         super();
-        tipo = "n/a";
+        tipo = null;
         temGaragem = false;
         areaTotal = numQuartos = numWCs = numDaPorta = andar = 0;
     }
     
-    public Apartamento(String id, String rua, String estado, double precoPedido, double precoMinimo,
-                       int quantasConsultas, String tipo, int areaTotal, int numQuartos, int numWCs,
-                       int numDaPorta, int andar, boolean temGaragem){
-        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas);
+    public Apartamento(String id, String rua, double precoPedido, double precoMinimo, TipoApartamento tipo,
+                       int areaTotal, int numQuartos, int numWCs, int numDaPorta, int andar, boolean temGaragem){
+        
+        super(id, rua, precoPedido, precoMinimo);
         this.tipo = tipo;
         this.areaTotal = areaTotal;
         this.numQuartos = numQuartos;
@@ -42,7 +42,7 @@ public class Apartamento extends Imovel
         temGaragem = a.getTemGaragem();
     }
     
-    public String getTipo(){
+    public TipoApartamento getTipo(){
         return tipo;
     }
     
@@ -70,8 +70,8 @@ public class Apartamento extends Imovel
         return temGaragem;
     }
     
-    public void setTipo(String tipo){
-        this.tipo = tipo;
+    private void setTipo(String tipo){
+        this.tipo = TipoApartamento.fromString(tipo);
     }
     
     public void setAreaTotal(int areaTotal){
@@ -110,7 +110,7 @@ public class Apartamento extends Imovel
         else{
             Apartamento a = (Apartamento) o;
             
-            return super.equals(a) && tipo.equals(a.getTipo()) && areaTotal == a.getAreaTotal() &&
+            return super.equals(a) && tipo == a.getTipo() && areaTotal == a.getAreaTotal() &&
                    numQuartos == a.getNumQuartos() && numWCs == a.getNumWCs() && numDaPorta == a.getNumDaPorta() &&
                    andar == a.getAndar() && temGaragem == a.getTemGaragem();
         }
@@ -120,7 +120,7 @@ public class Apartamento extends Imovel
         StringBuilder sb = new StringBuilder("-> Apartamento\n");
         
         sb.append(super.toString());
-        sb.append("Tipo: " + tipo + "\n");
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name() : "n/a") + "\n");
         sb.append("Área total: " + areaTotal + "m^2\n");
         sb.append("Número de quartos: " + numQuartos + "\n");
         sb.append("Número de WCs: " + numWCs + "\n");

@@ -10,9 +10,10 @@ public class LojaHabitavel extends Loja
         apartamento = new Apartamento();
     }
     
-    public LojaHabitavel(String id, String rua, String estado, double precoPedido, double precoMinimo, int quantasConsultas,
-                         int area, boolean temWC, String tipoNegocio, int numDaPorta, Apartamento apartamento){
-        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas, area, temWC, tipoNegocio, numDaPorta);
+    public LojaHabitavel(String id, String rua, double precoPedido, double precoMinimo, int area,
+                         boolean temWC, String tipoNegocio, int numDaPorta, Apartamento apartamento){
+        
+        super(id, rua, precoPedido, precoMinimo, area, temWC, tipoNegocio, numDaPorta);
         setApartamento(apartamento);
     }
     
@@ -22,11 +23,11 @@ public class LojaHabitavel extends Loja
     }
         
     public Apartamento getApartamento(){
-        return apartamento.clone();
+        return (apartamento == null) ? null : apartamento.clone();
     }
     
     public void setApartamento(Apartamento apartamento){
-        this.apartamento = apartamento.clone();
+        this.apartamento = (apartamento == null) ? null : apartamento.clone();
     }
     
     public LojaHabitavel clone(){

@@ -2,7 +2,7 @@ public class Moradia extends Imovel
         implements Habitavel
 {
     // Variáveis de instância
-    private String tipo; // tipo da moradia (isolada, geminada, banda, gaveto)
+    private TipoMoradia tipo; // tipo da moradia (isolada, geminada, banda, gaveto)
     private int areaImplantacao; // area de implantacao
     private int areaTotal; // area total coberta
     private int areaEnv; // area do terreno envolvente
@@ -14,15 +14,14 @@ public class Moradia extends Imovel
      */
     public Moradia(){
         super();
-        tipo = "n/a";
+        tipo = null;
         areaImplantacao = areaTotal = areaEnv = 0;
         numQuartos = numWCs = numDaPorta = 0;
     }
     
-    public Moradia(String id, String rua, String estado, double precoPedido, double precoMinimo,
-                   int quantasConsultas, String tipo, int areaImplantacao, int areaTotal,
-                   int areaEnv, int numQuartos, int numWCs, int numDaPorta){
-        super(id, rua, estado, precoPedido, precoMinimo, quantasConsultas);
+    public Moradia(String id, String rua, double precoPedido, double precoMinimo, TipoMoradia tipo,
+                   int areaImplantacao, int areaTotal, int areaEnv, int numQuartos, int numWCs, int numDaPorta){
+        super(id, rua, precoPedido, precoMinimo);
         this.tipo = tipo;
         this.areaImplantacao = areaImplantacao;
         this.areaTotal = areaTotal;
@@ -44,7 +43,7 @@ public class Moradia extends Imovel
     }
     
     // Getters
-    public String getTipo(){
+    public TipoMoradia getTipo(){
         return tipo;
     }
     
@@ -73,8 +72,10 @@ public class Moradia extends Imovel
     }
     
     // Setters
-    public void setTipo(String tipo){
-        this.tipo = tipo;
+    
+    // Declarado como privado para não ser possível mudar o tipo de uma moradia fora desta classe
+    private void setTipo(String tipo){
+        this.tipo = TipoMoradia.fromString(tipo);
     }
     
     public void setAreaImplantacao(int areaImplantacao){
@@ -113,7 +114,7 @@ public class Moradia extends Imovel
         else{
             Moradia m = (Moradia) o;
             
-            return super.equals(m) && tipo.equals(m.getTipo()) && areaImplantacao == m.getAreaImplantacao() &&
+            return super.equals(m) && tipo == m.getTipo() && areaImplantacao == m.getAreaImplantacao() &&
                    areaTotal == m.getAreaTotal() && areaEnv == m.getAreaEnv() && numQuartos == m.getNumQuartos() &&
                    numWCs == m.getNumWCs() && numDaPorta == m.getNumDaPorta();
         }
@@ -123,7 +124,7 @@ public class Moradia extends Imovel
         StringBuilder sb = new StringBuilder("-> Moradia\n");
         
         sb.append(super.toString());
-        sb.append("Tipo: " + tipo + "\n");
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name() : "n/a") + "\n");
         sb.append("Área de implantação: " + areaImplantacao + "m^2\n");
         sb.append("Área total: " + areaTotal + "m^2\n");
         sb.append("Área envolvente: " + areaEnv + "m^2\n");
