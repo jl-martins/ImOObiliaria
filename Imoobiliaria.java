@@ -1,3 +1,6 @@
+import java.util.Map;
+import java.util.Set;
+
 public class Imoobiliaria
 {   
     Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
@@ -42,15 +45,17 @@ public class Imoobiliaria
     }
     
     public void registaImovel(Imovel im) throws SemAutorizacaoException, ImovelExisteException{
-        if(emailUtilizadorAutenticado == null || !(utilizadores.get(emailUtilizadorAutenticado) instanceOf Vendedor))
+        if(emailUtilizadorAutenticado == null || !(utilizadores.get(emailUtilizadorAutenticado) instanceof Vendedor))
             throw new SemAutorizacaoException("Apenas vendedores têm autorização para registar imóveis.");
         else{
             String idImovel = im.getId();
             
             if(imoveis.containsKey(idImovel))
                 throw new ImovelExisteException("Já existe um imóvel com o id: " + idImovel);
-            else
+            else{
                 imoveis.put(idImovel, im);
+                /* inserir no portfolio do vendedor */
+            }
         }
     }
     
@@ -58,7 +63,7 @@ public class Imoobiliaria
         // Esta verificação também é feita em registaImovel(). Pensar em fazer um método privado que realize esta verificação!!!
         Utilizador utilizador = utilizadores.get(emailUtilizadorAutenticado);
         
-        if((utilizador instanceOf Vendedor) == false)
+        if((utilizador instanceof Vendedor) == false)
             throw new SemAutorizacaoException("Apenas vendedores têm autorização para registar imóveis.");
         else{ // o utilizador autenticado é um vendedor
             Vendedor vendedor = (Vendedor) utilizador;
