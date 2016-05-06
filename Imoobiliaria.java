@@ -1,6 +1,6 @@
 public class Imoobiliaria
 {   
-    Set<Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
+    Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
     Set<Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
     String emailUtilizadorAutenticado = null;
     
@@ -30,7 +30,7 @@ public class Imoobiliaria
     public void iniciaSessao(String email, String password) throws SemAutorizacaoException{
         Utilizador utilizador = utilizadores.get(email);
         
-        if(utilizador == null || !utilizador.getPassword().equals(password)) // e-mail e/ou a password inválidos
+        if(utilizador == null || !utilizador.validaPassword(password)) // e-mail e/ou a password inválidos
             throw new SemAutorizacaoException("E-mail e/ou palavra-passe inválido(s)");
         else // autenticação bem sucedida
             emailUtilizadorAutenticado = email;
