@@ -9,11 +9,14 @@ public enum EstadoImovel
 {
     EM_VENDA, RESERVADO, VENDIDO;
     
-    public static EstadoImovel fromString(String str) throws IllegalArgumentException{
+    public static EstadoImovel fromString(String str) throws EstadoInvalidoException {
         EstadoImovel estado = null;
-        
-        if(str != null)
-            estado = valueOf(str.trim().toUpperCase());
+        try {
+            if(str != null)
+                estado = valueOf(str.trim().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                throw new EstadoInvalidoException(str + " não é um estado válido.");
+            }
         return estado;
     }
 }

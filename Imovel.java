@@ -82,6 +82,10 @@ public abstract class Imovel
         this.rua = rua;
     }
     
+    public void setEstado(EstadoImovel estado){
+        this.estado = estado;
+    }
+    
     public void setPrecoPedido(double precoPedido){
         this.precoPedido = precoPedido;
     }

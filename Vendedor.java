@@ -29,6 +29,20 @@ public class Vendedor extends Utilizador
         return new TreeSet<String>(vendidos); // Strings são imutáveis, logo não quebramos o encapsulamento
     }
     
+    public boolean registouImovel(String idImovel){
+        return emVenda.contains(idImovel) || vendidos.contains(idImovel);
+    }
+    
+    public void alteraEstadoImovel(String idImovel, EstadoImovel estado) {
+        if(estado == EstadoImovel.VENDIDO){
+            emVenda.remove(idImovel);
+            vendidos.add(idImovel);
+        } else {
+            emVenda.add(idImovel);
+            vendidos.remove(idImovel);
+        }
+    }
+    
     public void setEmVenda(Set<String> emVenda){
         this.emVenda = new TreeSet<String>(emVenda);
     }
@@ -43,7 +57,7 @@ public class Vendedor extends Utilizador
     
     public Vendedor clone(){
         return new Vendedor(this);
-    }
+    }    
     
     public boolean equals(Object o){
         if(this == o)
