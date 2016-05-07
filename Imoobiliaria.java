@@ -3,6 +3,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TreeSet;
 
 public class Imoobiliaria
 {   
@@ -94,14 +95,33 @@ public class Imoobiliaria
             throw new ImovelInexistenteException("O imóvel " + idImovel + " não está registado.");
         }
         confirmaVendedorAutenticado();
-        if(((Vendedor) utilizadorAutenticado).registouImovel(idImovel))
+        Vendedor vendedor = (Vendedor) utilizadorAutenticado;
+        if(!vendedor.registouImovel(idImovel))
             throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o Imovel.");
         EstadoImovel estadoImovel = EstadoImovel.fromString(estado);
-        ((Vendedor) utilizadorAutenticado).alteraEstadoImovel(idImovel, estadoImovel);
+        vendedor.alteraEstadoImovel(idImovel, estadoImovel);
         imv.setEstado(estadoImovel);     
     } 
     
-    /*public Set<String> getTopImoveis(int n){
+    public Set<String> getTopImoveis(int n){
+        int inicio, fim;
+        Set<String> idsImoveis = new TreeSet<String>();
+        List<Imovel> imoveis = new ArrayList<Imovel>();
         
-    }*/
+        if(!(utilizadorAutenticado instanceof Vendedor))
+            return idsImoveis;
+        Vendedor vendedor = (Vendedor) utilizadorAutenticado;
+        idsImoveis.addAll(vendedor.getEmVenda());
+        idsImoveis.addAll(vendedor.getVendidos());
+        Collections.sort(imoveis);
+        
+        fim = imoveis.size();
+        inicio = (fim >= n)? fim - n : 0;
+        imoveis = imoveis.subList(inicio, fim); 
+        
+        idsImoveis.clear();
+        for(Imovel imv : imoveis)
+            idsImoveis.add(imv.getId());
+        return idsImoveis;        
+    }
 }

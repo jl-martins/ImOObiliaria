@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public abstract class Imovel
+public abstract class Imovel implements Comparable
 {
     // variáveis de instância
     private String id; // id do imóvel
@@ -97,6 +97,15 @@ public abstract class Imovel
     public void registaConsulta(Consulta c){
         this.consultas.add(c); /* Consulta e um tipo imutavel. Nao e preciso fazer copia*/
         this.quantasConsultas++;
+    }
+    
+    /* Comparação baseada no número de consultas */
+    public int compareTo(Imovel imv){
+        if (this.quantasConsultas == imv.quantasConsultas)
+            return 0;
+        else if(this.quantasConsultas > imv.quantasConsultas)
+            return 1;
+        else return -1;
     }
     
     public abstract Imovel clone();
