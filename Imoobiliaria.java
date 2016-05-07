@@ -3,6 +3,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Collection;
 import java.util.TreeSet;
 
 public class Imoobiliaria
@@ -102,26 +103,44 @@ public class Imoobiliaria
         vendedor.alteraEstadoImovel(idImovel, estadoImovel);
         imv.setEstado(estadoImovel);     
     } 
-    
+
     public Set<String> getTopImoveis(int n){
         int inicio, fim;
         Set<String> idsImoveis = new TreeSet<String>();
         List<Imovel> imoveis = new ArrayList<Imovel>();
-        
+
         if(!(utilizadorAutenticado instanceof Vendedor))
             return idsImoveis;
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
         idsImoveis.addAll(vendedor.getEmVenda());
         idsImoveis.addAll(vendedor.getVendidos());
         Collections.sort(imoveis);
-        
+
         fim = imoveis.size();
         inicio = (fim >= n)? fim - n : 0;
         imoveis = imoveis.subList(inicio, fim); 
-        
+
         idsImoveis.clear();
         for(Imovel imv : imoveis)
             idsImoveis.add(imv.getId());
         return idsImoveis;        
+    }
+
+    public List<Imovel> getImovel(String classe, int preco){
+        List<Imovel> resultados = new ArrayList<Imovel>();
+        Class tipoImovel;
+        try{
+            tipoImovel = Class.forName(classe);
+        } catch(ClassNotFoundException e){
+            return resultados;
+        }
+        
+        Collection<Imovel> todosImoveis = imoveis.values();
+        for(Imovel imv : todosImoveis){
+            if(tipoImovel.isInstance(imv) && imv.getPrecoPedido() < preco){
+                resultados.add(imv.clone());
+            }
+        }
+        return resultados;
     }
 }
