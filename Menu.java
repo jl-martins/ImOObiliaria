@@ -1,5 +1,5 @@
 /**
- * Write a description of class MenuMain here.
+ * Write a description of class Menu here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
@@ -7,37 +7,40 @@
 
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.InputMismatchException;
 import static java.lang.System.out;
 
-final public class MenuMain
+final public class Menu
 {
     private final String[] opcoes;
     private final int numOpcoes;
+    private int op;
     
     /**
      * Construtor por omissão
      * (declarado como privado para não ser possível construir menus vazios)
      */
-    private MenuMain(){
+    private Menu(){
         opcoes = null;
         numOpcoes = 0;
+        op = -1;
     }   
     
     /**
      * Construtor parametrizado.
      * @param opcoes Opções do menu a criar.
      */
-    public MenuMain(String[] opcoes){
-        this.numOpcoes = opcoes.length;
+    public Menu(String[] opcoes){
+        numOpcoes = opcoes.length;
         this.opcoes = new String[numOpcoes];
-        System.arraycopy(opcoes, 0, this.opcoes, 0, this.numOpcoes);
+        System.arraycopy(opcoes, 0, this.opcoes, 0, numOpcoes);
     }
     
     /**
      * Construtor de cópia.
      * @param menu Menu a copiar.
      */
-    public MenuMain(MenuMain menu){
+    public Menu(Menu menu){
         this(menu.getOpcoes());
     }
     
@@ -49,23 +52,45 @@ final public class MenuMain
     }
     
     /** @return Número de opções deste menu. */
-    public int getNumOpcoes(){
-        return numOpcoes;
+    public int getOpcao(){
+        return op;
     }
     
     /** Imprime as opções deste menu. */
     public void executa(){
+        do{
+            apresentaMenu();
+            op = lerOpcao();
+        } while(op == -1);
+    }
+    
+    private void apresentaMenu(){
         out.print(toString());
     }
     
-    public int getOpcao(){
+    private int lerOpcao(){
+        int op;
         Scanner input = new Scanner(System.in);
-        return input.nextInt();
+        
+        out.print(">>> ");
+        try {
+            op = input.nextInt();
+        }
+        catch(InputMismatchException e){
+            op = -1;
+            input.nextLine(); // consome a linha que ficou no buffer do stdin 
+        }
+        
+        if(op < 0 || op > opcoes.length){
+            out.println("Opção inválida!");
+            op = -1;
+        }
+        return op;
     }
     
     /** @return Clone deste menu. */
-    public MenuMain clone(){
-        return new MenuMain(this);
+    public Menu clone(){
+        return new Menu(this);
     }
     
     /** 
@@ -78,18 +103,17 @@ final public class MenuMain
             return true;
         if(o == null || o.getClass() != this.getClass())
             return false;
-        MenuMain menu = (MenuMain) o;
+        Menu menu = (Menu) o;
         
         return Arrays.equals(opcoes, menu.getOpcoes()); // se os arrays forem iguais, têm o mesmo número de opções.
     }
     
     /** @return String com as opções deste menu e uma prompt no final das opções. */
     public String toString(){
-        StringBuilder sb = new StringBuilder("Opções:\n");
+        StringBuilder sb = new StringBuilder("\n *** Menu *** ");
         
         for(int i = 1; i <= numOpcoes; ++i)
             sb.append(i + ". " + opcoes[i-1] + "\n");
-        sb.append("\n>>> ");
         return sb.toString(); // não acrescentamos numOpcoes à String, porque as opções já estão numeradas e dá para perceber quantas opções existem.
     }
     
@@ -99,7 +123,7 @@ final public class MenuMain
         
         for(int i = 0; i < numOpcoes; ++i)
             hash = 31*hash + opcoes[i].hashCode();
-        hash = 31*hash + numOpcoes;
+        hash = 31*hash + op;
         return hash;
     } 
 }
