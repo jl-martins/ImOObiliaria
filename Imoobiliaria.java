@@ -213,7 +213,7 @@ public class Imoobiliaria implements Serializable
         Collection<Imovel> todosImoveis = imoveis.values();
         List<Habitavel> resultados = new ArrayList<Habitavel>();
         for(Imovel imv : todosImoveis){
-            if(imv instanceof Habitavel)
+            if(imv instanceof Habitavel && imv.getPrecoPedido() > preco)
                 resultados.add((Habitavel) imv.clone());
         }
         return resultados;
