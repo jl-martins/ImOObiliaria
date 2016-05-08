@@ -65,14 +65,17 @@ final public class Menu
     }
     
     private void apresentaMenu(){
-        out.print(toString());
+        out.println("\n*** Menu ***");
+        for(int i = 0; i < numOpcoes; ++i)
+            out.printf("%2d. %s\n", i+1, opcoes[i]);
+        out.println(" 0. Sair");
     }
     
     private int lerOpcao(){
         int op;
         Scanner input = new Scanner(System.in);
         
-        out.print(">>> ");
+        out.print("\n>>> ");
         try {
             op = input.nextInt();
         }
@@ -110,11 +113,13 @@ final public class Menu
     
     /** @return String com as opções deste menu e uma prompt no final das opções. */
     public String toString(){
-        StringBuilder sb = new StringBuilder("\n *** Menu ***\n");
+        StringBuilder sb = new StringBuilder("\n*** Menu ***\n");
         
-        for(int i = 1; i <= numOpcoes; ++i)
-            sb.append(i + ". " + opcoes[i-1] + "\n");
-        sb.append("0. Sair\n");
+        for(int i = 0; i < numOpcoes; ++i)
+            sb.append(opcoes[i]).append("\n");
+        sb.append("Sair\n");
+        sb.append("Número de opções: " + numOpcoes);
+        sb.append("Opção: " + op);
         return sb.toString(); // não acrescentamos numOpcoes à String, porque as opções já estão numeradas e dá para perceber quantas opções existem.
     }
     

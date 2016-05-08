@@ -26,7 +26,9 @@ import static java.lang.System.err;
 public class ImoobiliariaApp
 {
     private static Imoobiliaria imoobiliaria;
-    private static Menu menuMain, menuTipoUtilizador, menuTipoImovel;
+    private static Menu menuMain; // menu principal
+    private static Menu menuTipoUtilizador, menuTipoImovel; // menus para selecionar o tipo de utilizador e o tipo de imóvel, respetivamente
+    private static Menu menuSimNao; // menu para ler respostas do tipo sim/nao
     
     public static void main(String[] args){
         int numOpcao;
@@ -39,7 +41,7 @@ public class ImoobiliariaApp
             if(numOpcao > 0){ // o resto das validações do número da opção são feitas na classe Menu
                 try{
                     Method m = ImoobiliariaApp.class.getDeclaredMethod("opcao" + numOpcao);
-                    m.invoke(null); // null indica que o método é static
+                    m.invoke(null); // null indica que o método inovcado é static
                 }
                 catch(NoSuchMethodException e){err.println("O método escolhido não existe!");}
                 catch(IllegalAccessException e){err.println("Tentativa de aceder a um método a que não tem acesso!");}
@@ -84,9 +86,12 @@ public class ImoobiliariaApp
             "Registar uma loja habitável.",
             "Registar um terreno."
         };
+        String[] opcoesSimNao = {"Sim", "Não"};
+        
         menuMain = new Menu(opcoesMain);
         menuTipoUtilizador = new Menu(opcoesTipoUtilizador);
         menuTipoImovel = new Menu(opcoesTipoImovel);
+        menuSimNao = new Menu(opcoesSimNao);
     }  
     
     public static void carregarDados(){
@@ -122,6 +127,7 @@ public class ImoobiliariaApp
                     out.print("Data de nascimento (aaaa-mm-dd): ");
                     strData = input.nextLine();
                     dataNascimento = LocalDate.parse(strData, formatador);
+                    
                     switch(numOpcao){
                         case 1: // registar comprador
                             novoUtilizador = new Comprador(email, nome, password, morada, dataNascimento);
@@ -129,7 +135,7 @@ public class ImoobiliariaApp
                         case 2: // registar vendedor
                             novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
                             break;
-                    }        
+                    }  
                     imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
                 }
                 else // o email introduzido é inválido
@@ -201,7 +207,10 @@ public class ImoobiliariaApp
                         im = leDadosTerreno(id, rua, precoPedido, precoMinimo);
                         break;
                 }
-                imoobiliaria.registaImovel(im);
+                if(im == null) // o utilizador optou por cancelar o registo
+                    out.println("Registo cancelado.\nA voltar ao menu principal.");
+                else
+                    imoobiliaria.registaImovel(im);
             }
             catch(ImovelExisteException e){err.println(e.getMessage());}
             catch(SemAutorizacaoException e){err.println(e.getMessage());}
@@ -242,7 +251,7 @@ public class ImoobiliariaApp
         Scanner input = new Scanner(System.in);
         TipoApartamento tipo;
         int areaTotal, numQuartos, numWCs;
-        int numDaPorta, andar;
+        int numDaPorta, andar, numOpcao;
         boolean temGaragem = false;
         
         out.print("Tipo de apartamento [Simples/Duplex/Triplex]: ");
@@ -257,8 +266,13 @@ public class ImoobiliariaApp
         numDaPorta = input.nextInt();
         out.print("Andar: ");
         andar = input.nextInt();
-        out.print("O apartamento tem garagem [S/N]: ");
-        // COMPLETAR!
+        
+        out.println("O apartamento tem garagem?");
+        menuSimNao.executa();
+        numOpcao = menuSimNao.getOpcao();
+        if(numOpcao == 0)
+            return null;
+        temGaragem = (numOpcao == 1);
         return new Apartamento(id, rua, precoPedido, precoMinimo, tipo, areaTotal,
                                numQuartos, numWCs, numDaPorta, andar, temGaragem);
     }
@@ -266,14 +280,20 @@ public class ImoobiliariaApp
     /** Pede ao utilizador para introduzir os dados relativos a uma loja e, em caso de sucesso, devolve a Loja criada. */
     private static Loja leDadosLoja(String id, String rua, int precoPedido, int precoMinimo){
         Scanner input = new Scanner(System.in);
-        int area, numDaPorta;
+        int area, numDaPorta, numOpcao;
         String tipoNegocio;
-        boolean temWC = false; // MUDAR!
+        boolean temWC;
         
         out.print("Área da loja: ");
         area = input.nextInt();
-        out.print("A loja tem WC [S/N]: ");
-        // COMPLETAR!
+        
+        out.println("A loja tem WC?");
+        menuSimNao.executa();
+        numOpcao = menuSimNao.getOpcao();
+        if(numOpcao == 0)
+            return null; // permite indicar que o registo foi cancelado
+        temWC = (numOpcao == 1);
+        
         out.print("Tipo de negócio: ");
         tipoNegocio = input.nextLine();
         out.print("Número da porta: ");
@@ -284,22 +304,37 @@ public class ImoobiliariaApp
     /** Pede ao utilizador para introduzir os dados relativos a um terreno e, em caso de sucesso, devolve o Terreno criado. */
     private static Terreno leDadosTerreno(String id, String rua, int precoPedido, int precoMinimo){
         Scanner input = new Scanner(System.in);
-        int area;
+        int area, numOpcao;
         double diamCanalizacoes, maxKWh;
-        boolean terrenoHab = false, terrenoArm = false, temRedeEsgotos = false; // MUDAR!
+        boolean terrenoHab, terrenoArm, temRedeEsgotos;
         
         out.print("Área do terreno: ");
         area = input.nextInt();
-        out.print("O terreno é apropriado para construção de habitação? [S/N]: ");
-        // COMPLETAR!
-        out.print("O terreno é apropriado para construção de armazéns? [S/N]: ");
-        // COMPLETAR!
+        
+        out.println("O terreno é apropriado para construção de habitação?");
+        menuSimNao.executa();
+        numOpcao = menuSimNao.getOpcao();
+        if(numOpcao == 0)
+            return null;
+        terrenoHab = (numOpcao == 1);
+        
+        out.println("O terreno é apropriado para construção de armazéns?");
+        menuSimNao.executa();
+        numOpcao = menuSimNao.getOpcao();
+        if(numOpcao == 0)
+            return null;
+        terrenoArm = (numOpcao == 1);
         out.print("Diâmetro das canalizações (em mm): ");
         diamCanalizacoes = input.nextDouble();
         out.print("kWh máximos: ");
         maxKWh = input.nextDouble();
-        out.print("O terreno tem rede de esgotos? [S/N]: ");
-        // COMPLETAR!
+        
+        out.println("O terreno tem rede de esgotos?");
+        menuSimNao.executa();
+        numOpcao = menuSimNao.getOpcao();
+        if(numOpcao == 0)
+            return null;
+        temRedeEsgotos = (numOpcao == 1);
         return new Terreno(id, rua, precoPedido, precoMinimo, area, terrenoHab, 
                            terrenoArm, diamCanalizacoes, maxKWh, temRedeEsgotos);
     }
