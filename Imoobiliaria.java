@@ -6,7 +6,13 @@ import java.util.Collections;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.HashMap;
+
 import java.io.Serializable;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 
 public class Imoobiliaria implements Serializable
 {   
@@ -16,7 +22,27 @@ public class Imoobiliaria implements Serializable
 
     public static void initApp(){
     }
-
+    
+    /**
+     * Grava a Imoobiliaria em ficheiro.
+     * @param fich String com o caminho do ficheiro onde a Imoobiliaria será gravada.
+     */
+    public void gravaObj(String fich) throws IOException{
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fich));
+        oos.writeObject(this);
+        
+        oos.flush();
+        oos.close();
+    }
+    
+    // Mudar para a Imoobiliaria
+    public static Imoobiliaria leObj(String fich) throws IOException, ClassNotFoundException{
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fich));
+        
+        Imoobiliaria imoobiliaria = (Imoobiliaria) ois.readObject();
+        ois.close();
+        return imoobiliaria;
+    }
     /**
      * Regista um utilizador, quer vendedor, quer comprador.
      * @param utilizador Utilizador a registar

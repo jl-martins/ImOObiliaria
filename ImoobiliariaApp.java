@@ -1,7 +1,3 @@
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.io.IOException;
 
 import java.util.Scanner;
@@ -9,10 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.NoSuchElementException;
+import java.util.InputMismatchException;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import static java.lang.System.out;
 import static java.lang.System.err;
 
@@ -28,6 +29,7 @@ public class ImoobiliariaApp
     private static Menu menuMain, menuTipoUtilizador, menuTipoImovel;
     
     public static void main(String[] args){
+        int numOpcao;
         carregarMenus();
         carregarDados();
         
@@ -35,14 +37,19 @@ public class ImoobiliariaApp
             menuMain.executa();
             numOpcao = menuMain.getOpcao();
             if(numOpcao > 0){ // o resto das validações do número da opção são feitas na classe Menu
-                Method m = ImoobiliariaApp.class.getDeclaredMethod("opcao" + numOpcao, null);
-                m.invoke(null, null); // 1º null indica que o método é static. O 2º indica que este não tem argumentos.
+                try{
+                    Method m = ImoobiliariaApp.class.getDeclaredMethod("opcao" + numOpcao);
+                    m.invoke(null); // null indica que o método é static
+                }
+                catch(NoSuchMethodException e){err.println("O método escolhido não existe!");}
+                catch(IllegalAccessException e){err.println("Tentativa de aceder a um método a que não tem acesso!");}
+                catch(InvocationTargetException e){err.println("Exceção no método invocado com invoke()!");}
             }
         } while(numOpcao != 0);
         
         try{
-            imoobiliaria.gravaObj("imoobiliaria.dat");
-            imoobiliaria.log("log.txt");
+            imoobiliaria.gravaObj("imoobiliaria.ser");
+            // IMPLEMENTAR ==> imoobiliaria.log("log.txt");
         }
         catch(IOException e){err.println("Não foi possível gravar os dados!");}
         out.println("A sair da aplicação...");
@@ -92,20 +99,20 @@ public class ImoobiliariaApp
      * existir qualquer utilizador com o email introduzido, regista o novo utilizador na Imoobiliaria.
      */
     private static void opcao1(){
+        int numOpcao; // número da opção do menu
         Scanner input = new Scanner(System.in);
         String email, nome, password, morada, strData;
         DateTimeFormatter formatador = DateTimeFormatter.ofPattern("aaaa-mm-dd");
-        LocalDate dataNascimento;
-        Utilizador novoUtilizador;
-        int numOpcao;
+        LocalDate dataNascimento = null;
+        Utilizador novoUtilizador = null;
         
         menuTipoUtilizador.executa();
         numOpcao = menuTipoUtilizador.getOpcao();
-        if(opcao != 0){
+        if(numOpcao != 0){
             try{
                 out.print("Email: ");
                 email = input.nextLine();
-                if(validadorEmail.validar(email) == true){ // ver se vale a pena criar uma EmailInvalidoException
+                if(ValidadorEmail.validar(email) == true){ // ver se vale a pena criar uma EmailInvalidoException
                     out.print("Nome: ");
                     nome = input.nextLine();
                     out.print("Password: ");
@@ -123,7 +130,7 @@ public class ImoobiliariaApp
                             novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
                             break;
                     }        
-                    imoobiliaria.registaUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
+                    imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
                 }
                 else // o email introduzido é inválido
                     err.print("O email: '" + email + "' é inválido.\n");  
@@ -162,7 +169,7 @@ public class ImoobiliariaApp
         String id, rua;
         int precoPedido, precoMinimo, numOpcao;
         Scanner input = new Scanner(System.in);
-        Imovel im;
+        Imovel im = null;
         
         menuTipoImovel.executa();
         numOpcao = menuTipoImovel.getOpcao();
@@ -194,7 +201,7 @@ public class ImoobiliariaApp
                         im = leDadosTerreno(id, rua, precoPedido, precoMinimo);
                         break;
                 }
-                imoobiliaria.registaImovel
+                imoobiliaria.registaImovel(im);
             }
             catch(ImovelExisteException e){err.println(e.getMessage());}
             catch(SemAutorizacaoException e){err.println(e.getMessage());}
@@ -236,7 +243,7 @@ public class ImoobiliariaApp
         TipoApartamento tipo;
         int areaTotal, numQuartos, numWCs;
         int numDaPorta, andar;
-        boolean temGaragem;
+        boolean temGaragem = false;
         
         out.print("Tipo de apartamento [Simples/Duplex/Triplex]: ");
         tipo = TipoApartamento.fromString(input.nextLine());
@@ -261,7 +268,7 @@ public class ImoobiliariaApp
         Scanner input = new Scanner(System.in);
         int area, numDaPorta;
         String tipoNegocio;
-        boolean temWC;
+        boolean temWC = false; // MUDAR!
         
         out.print("Área da loja: ");
         area = input.nextInt();
@@ -278,9 +285,8 @@ public class ImoobiliariaApp
     private static Terreno leDadosTerreno(String id, String rua, int precoPedido, int precoMinimo){
         Scanner input = new Scanner(System.in);
         int area;
-        boolean terrenoHab, terrenoArm;
         double diamCanalizacoes, maxKWh;
-        boolean temRedeEsgotos;
+        boolean terrenoHab = false, terrenoArm = false, temRedeEsgotos = false; // MUDAR!
         
         out.print("Área do terreno: ");
         area = input.nextInt();
@@ -291,7 +297,7 @@ public class ImoobiliariaApp
         out.print("Diâmetro das canalizações (em mm): ");
         diamCanalizacoes = input.nextDouble();
         out.print("kWh máximos: ");
-        numDaPorta = input.nextDouble();
+        maxKWh = input.nextDouble();
         out.print("O terreno tem rede de esgotos? [S/N]: ");
         // COMPLETAR!
         return new Terreno(id, rua, precoPedido, precoMinimo, area, terrenoHab, 
@@ -300,8 +306,8 @@ public class ImoobiliariaApp
     
     /** Pede ao utilizador para introduzir os dados relativos a uma loja habitável e, em caso de sucesso, devolve o LojaHabitavel criada. */
     private static LojaHabitavel leDadosLojaHabitavel(String id, String rua, int precoPedido, int precoMinimo){
-        Loja loja = leDadosLoja();
-        Apartamento apartamento = leDadosApartamento();
+        Loja loja = leDadosLoja(id, rua, precoPedido, precoMinimo);
+        Apartamento apartamento = leDadosApartamento(id, rua, precoPedido, precoMinimo);
         
         return new LojaHabitavel(loja, apartamento); // ADICIONAR CONSTRUTOR A LOJA HABITAVEL!
     }
@@ -342,15 +348,15 @@ public class ImoobiliariaApp
         int N;
         Set<String> setIds;
         
-        try{
+        //try{
             out.print("Limite inferior do número consultas dos imóveis a consultar: ");
             N = input.nextInt();
-            setIds = getTopImoveis(N);
+            setIds = imoobiliaria.getTopImoveis(N);
             out.println("IDs dos imóveis com mais do que N consultas\n");
             for(String id : setIds) // ! se este setIds puder ser null, temos que alterar este ciclo
                 out.println(id);
-        }
-        catch(SemAutorizacaoException e){err.println(e.getMessage());}
+        //}
+        // NOTA: Este método devia atirar a SemAutorizacaoException!!! catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
     
     /** Lê um tipo e um preço e apresenta a lista de todos os imóveis desse tipo, até ao preço especificado. */
@@ -370,7 +376,7 @@ public class ImoobiliariaApp
             for(Imovel im : l)
                 out.println(im.toString());
         }
-        catch(InputMismatchException | NoSuchElementException e){err.println("Input inválido.");}
+        catch(InputMismatchException e){err.println("Input inválido.");}
         // !falta fazer catch da excepção atirada quando o tipo de Imovel é invalido.
     }
     
@@ -386,16 +392,16 @@ public class ImoobiliariaApp
             for(Habitavel hab : l)
                 out.println(hab.toString()); // podemos usar o toString() logo ou temos que fazer cast para um tipo de Imovel???
         }
-        catch(InputMismatchException | NoSuchElementException){err.println("Input inválido.");}
+        catch(InputMismatchException e){err.println("Input inválido.");}
     }
     
     /** Apresenta um mapeamento entre imóveis e respectivos vendedores. */
     private static void opcao10(){
-        Map<Imovel, Vendedor> mapeamentoImoveis = imoobiliaria.getMapeamentoImoveis();
+        /* Map<Imovel, Vendedor> mapeamentoImoveis = imoobiliaria.getMapeamentoImoveis();
         
         for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis){
-            // COMPLETAR!
-        }
+        }*/
+        out.println("Por implementar!");
     }
     
     /** Marca um imóvel como favorito (opção de comprador). */
@@ -417,7 +423,7 @@ public class ImoobiliariaApp
         TreeSet<Imovel> favoritos;
         
         try{
-            imoobiliaria.getFavoritos();
+            favoritos = imoobiliaria.getFavoritos();
             for(Imovel fav : favoritos)
                 out.print(fav.toString());
         }
@@ -434,13 +440,13 @@ public class ImoobiliariaApp
         Imoobiliaria imoobiliaria = null;
         
         try{
-            imoobiliaria = leImoobiliaria("imoobiliaria.dat");
+            imoobiliaria = Imoobiliaria.leObj("imoobiliaria.ser");
         }
         catch(IOException e){
             imoobiliaria = new Imoobiliaria();
             err.println("Não foi possível ler os dados!\nErro de leitura.");
         }
-        catch(ClassNotFoundException){
+        catch(ClassNotFoundException e){
             imoobiliaria = new Imoobiliaria();
             err.println("Não foi possível ler os dados!\nFicheiro com formato desconhecido.");
         }
@@ -448,26 +454,6 @@ public class ImoobiliariaApp
             imoobiliaria = new Imoobiliaria();
             err.println("Não foi possível ler os dados!\nErro de formato.");
         }
-    }
         return imoobiliaria;
     }
-    
-    // Mudar para a Imoobiliaria
-    public void gravaImoobiliaria(String fich) throws IOException{
-        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fich));
-        
-        oos.writeObject(imoobiliaria);
-        oos.flush();
-        oos.close();
-    }
-    
-    // Mudar para a Imoobiliaria
-    public static Imoobiliaria leImoobiliaria(String fich) throws IOException{
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fich));
-        
-        Imoobiliaria imoobiliaria = (Imoobiliaria) ois.readObject();
-        ois.close();
-        return imoobiliaria;
-    }
-    
 }
