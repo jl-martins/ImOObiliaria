@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Collection;
 import java.util.TreeSet;
+import java.util.HashMap;
 
 public class Imoobiliaria
 {   
@@ -51,7 +52,12 @@ public class Imoobiliaria
 
     public void confirmaVendedorAutenticado() throws SemAutorizacaoException{
         if(!(utilizadorAutenticado instanceof Vendedor))
-            throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o Imóvel.");
+            throw new SemAutorizacaoException("O utilizador atual não é um Vendedor Autenticado.");
+    }
+    
+    public void confirmaCompradorAutenticado() throws SemAutorizacaoException{
+        if(!(utilizadorAutenticado instanceof Comprador))
+            throw new SemAutorizacaoException("O utilizador atual não é um Comprador Autenticado");
     }
 
     public void registaImovel(Imovel im) throws SemAutorizacaoException, ImovelExisteException{
@@ -143,4 +149,50 @@ public class Imoobiliaria
         }
         return resultados;
     }
+    
+    public List <Habitavel> getHabitaveis (int preco){
+        Collection<Imovel> todosImoveis = imoveis.values();
+        List<Habitavel> resultados = new ArrayList<Habitavel>();
+        for(Imovel imv : todosImoveis){
+            if(imv instanceof Habitavel)
+                resultados.add((Habitavel) imv.clone());
+        }
+        return resultados;
+    }
+    
+    public Map<Imovel, Vendedor> getMapeamentoImoveis(){
+        Map<Imovel, Vendedor> mapeamento = new HashMap<Imovel,Vendedor>();
+        Collection<Utilizador> todosUtilizadores = utilizadores.values();
+        
+        for(Utilizador usr : todosUtilizadores){
+            if(usr instanceof Vendedor){
+                Vendedor vendedor = (Vendedor) usr;
+                Set<String> imoveisDoVendedor = vendedor.todosImoveisVendedor();
+                for(String idImv : imoveisDoVendedor){
+                    mapeamento.put(imoveis.get(idImv),vendedor);
+                }
+            }
+        }
+        return mapeamento;
+    }
+
+    public void setFavorito(String idImovel) throws ImovelInexistenteException, SemAutorizacaoException{
+        confirmaCompradorAutenticado();
+        Comprador comprador = (Comprador) utilizadorAutenticado;
+        if(!imoveis.containsKey(idImovel))
+            throw new ImovelInexistenteException("O imóvel em questão não existe.");
+        comprador.setFavorito(idImovel);        
+    }
+    
+    public TreeSet<Imovel> getFavoritos() throws SemAutorizacaoException{
+        confirmaCompradorAutenticado();
+        Comprador comprador = (Comprador) utilizadorAutenticado;
+        TreeSet<String> idsFavoritos = comprador.getFavoritos();
+        TreeSet<Imovel> favoritos = new TreeSet<Imovel>();
+        
+        for(String id : idsFavoritos){
+            favoritos.add(imoveis.get(id).clone());
+        }
+        return favoritos;
+    }    
 }

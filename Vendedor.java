@@ -55,6 +55,12 @@ public class Vendedor extends Utilizador
         emVenda.add(idImovel);
     }
     
+    public Set<String> todosImoveisVendedor(){
+        Set<String> todosImoveis = new TreeSet<String>(emVenda);
+        todosImoveis.addAll(vendidos);
+        return todosImoveis;
+    }
+    
     public Vendedor clone(){
         return new Vendedor(this);
     }    
