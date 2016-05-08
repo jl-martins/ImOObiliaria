@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public abstract class Imovel implements Comparable
+public abstract class Imovel implements Comparable<Imovel>
 {
     // variáveis de instância
     private String id; // id do imóvel
