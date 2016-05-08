@@ -198,6 +198,7 @@ target13.editor.x=0
 target13.editor.y=0
 target13.height=50
 target13.name=Menu
+target13.naviview.expanded=false
 target13.showInterface=false
 target13.type=ClassTarget
 target13.typeParameters=

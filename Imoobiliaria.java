@@ -13,14 +13,39 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
+import static java.lang.System.err;
 
 public class Imoobiliaria implements Serializable
 {   
     Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
     Map<String, Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
     Utilizador utilizadorAutenticado = null;
-
-    public static void initApp(){
+    
+    /** Construtor por omissão. */
+    public Imoobiliaria(){
+        utilizadores = new HashMap<String, Utilizador>();
+        imoveis = new HashMap<String, Imovel>();
+    }
+        
+    public static Imoobiliaria initApp(){
+        Imoobiliaria imoobiliaria = null;
+        
+        try{
+            imoobiliaria = Imoobiliaria.leObj("Imoobiliaria.ser");
+        }
+        catch(IOException e){
+            imoobiliaria = new Imoobiliaria();
+            err.println("Não foi possível ler os dados!\nErro de leitura.");
+        }
+        catch(ClassNotFoundException e){
+            imoobiliaria = new Imoobiliaria();
+            err.println("Não foi possível ler os dados!\nFicheiro com formato desconhecido.");
+        }
+        catch(ClassCastException e){
+            imoobiliaria = new Imoobiliaria();
+            err.println("Não foi possível ler os dados!\nErro de formato.");
+        }
+        return imoobiliaria;
     }
     
     /**

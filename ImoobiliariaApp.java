@@ -43,12 +43,12 @@ public class ImoobiliariaApp
                 }
                 catch(NoSuchMethodException e){err.println("O método escolhido não existe!");}
                 catch(IllegalAccessException e){err.println("Tentativa de aceder a um método a que não tem acesso!");}
-                catch(InvocationTargetException e){err.println("Exceção no método invocado com invoke()!");}
+                catch(InvocationTargetException e){e.printStackTrace(); err.println("Exceção no método invocado com invoke()!");}
             }
         } while(numOpcao != 0);
         
         try{
-            imoobiliaria.gravaObj("imoobiliaria.ser");
+            imoobiliaria.gravaObj("Imoobiliaria.ser");
             // IMPLEMENTAR ==> imoobiliaria.log("log.txt");
         }
         catch(IOException e){err.println("Não foi possível gravar os dados!");}
@@ -90,7 +90,7 @@ public class ImoobiliariaApp
     }  
     
     public static void carregarDados(){
-        imoobiliaria = initApp();
+        imoobiliaria = Imoobiliaria.initApp();
     }
     
     /**
@@ -102,7 +102,7 @@ public class ImoobiliariaApp
         int numOpcao; // número da opção do menu
         Scanner input = new Scanner(System.in);
         String email, nome, password, morada, strData;
-        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("aaaa-mm-dd");
+        DateTimeFormatter formatador = DateTimeFormatter.ISO_LOCAL_DATE; // data na forma aaaa-mm-dd
         LocalDate dataNascimento = null;
         Utilizador novoUtilizador = null;
         
@@ -435,25 +435,4 @@ public class ImoobiliariaApp
     private static void opcao14(){}
     
     private static void opcao15(){}
-    
-    public static Imoobiliaria initApp(){
-        Imoobiliaria imoobiliaria = null;
-        
-        try{
-            imoobiliaria = Imoobiliaria.leObj("imoobiliaria.ser");
-        }
-        catch(IOException e){
-            imoobiliaria = new Imoobiliaria();
-            err.println("Não foi possível ler os dados!\nErro de leitura.");
-        }
-        catch(ClassNotFoundException e){
-            imoobiliaria = new Imoobiliaria();
-            err.println("Não foi possível ler os dados!\nFicheiro com formato desconhecido.");
-        }
-        catch(ClassCastException e){
-            imoobiliaria = new Imoobiliaria();
-            err.println("Não foi possível ler os dados!\nErro de formato.");
-        }
-        return imoobiliaria;
-    }
 }

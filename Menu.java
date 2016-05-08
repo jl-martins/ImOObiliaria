@@ -110,10 +110,11 @@ final public class Menu
     
     /** @return String com as opções deste menu e uma prompt no final das opções. */
     public String toString(){
-        StringBuilder sb = new StringBuilder("\n *** Menu *** ");
+        StringBuilder sb = new StringBuilder("\n *** Menu ***\n");
         
         for(int i = 1; i <= numOpcoes; ++i)
             sb.append(i + ". " + opcoes[i-1] + "\n");
+        sb.append("0. Sair\n");
         return sb.toString(); // não acrescentamos numOpcoes à String, porque as opções já estão numeradas e dá para perceber quantas opções existem.
     }
     
