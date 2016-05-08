@@ -10,11 +10,16 @@ public class LojaHabitavel extends Loja
         apartamento = new Apartamento();
     }
     
-    public LojaHabitavel(String id, String rua, double precoPedido, double precoMinimo, int area,
-                         boolean temWC, String tipoNegocio, int numDaPorta, Apartamento apartamento){
-        
+    public LojaHabitavel(String id, String rua, int precoPedido, int precoMinimo, int area,
+                         boolean temWC, String tipoNegocio, int numDaPorta, Apartamento apartamento)
+    {
         super(id, rua, precoPedido, precoMinimo, area, temWC, tipoNegocio, numDaPorta);
         setApartamento(apartamento);
+    }
+    
+    public LojaHabitavel(Loja l, Apartamento a){
+        super(l);
+        apartamento = new Apartamento(a);
     }
     
     public LojaHabitavel(LojaHabitavel lh){
