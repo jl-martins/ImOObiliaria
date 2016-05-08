@@ -7,7 +7,7 @@
  */
 public enum TipoApartamento
 {
-    SIMPLEX, DUPLEX, TRIPLEX;
+    SIMPLES, DUPLEX, TRIPLEX;
     
     public static TipoApartamento fromString(String str) throws IllegalArgumentException{
         TipoApartamento tipo = null;

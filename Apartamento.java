@@ -18,8 +18,8 @@ public class Apartamento extends Imovel
         areaTotal = numQuartos = numWCs = numDaPorta = andar = 0;
     }
     
-    public Apartamento(String id, String rua, double precoPedido, double precoMinimo, TipoApartamento tipo,
-                       int areaTotal, int numQuartos, int numWCs, int numDaPorta, int andar, boolean temGaragem){
+    public Apartamento(String id, String rua, int precoPedido, int precoMinimo, TipoApartamento tipo, int areaTotal,
+                       int numQuartos, int numWCs, int numDaPorta, int andar, boolean temGaragem){
         
         super(id, rua, precoPedido, precoMinimo);
         this.tipo = tipo;

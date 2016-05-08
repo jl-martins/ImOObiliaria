@@ -6,8 +6,8 @@ public abstract class Imovel implements Comparable<Imovel>
     private String id; // id do imóvel
     private String rua;
     private EstadoImovel estado;
-    private double precoPedido;
-    private double precoMinimo;
+    private int precoPedido;
+    private int precoMinimo;
     private int quantasConsultas;
     private ArrayList<Consulta> consultas;
     
@@ -21,7 +21,7 @@ public abstract class Imovel implements Comparable<Imovel>
     /**
      * Construtor parametrizado.
      */
-    public Imovel(String id, String rua, double precoPedido, double precoMinimo){
+    public Imovel(String id, String rua, int precoPedido, int precoMinimo){
         this.id = id;
         this.rua = rua;
         this.estado = EstadoImovel.EM_VENDA; // o estado inicial de um Imovel criado é sempre EM_VENDA.
@@ -57,12 +57,12 @@ public abstract class Imovel implements Comparable<Imovel>
     }
     
     /** @return O preço pedido por este imóvel. */
-    public double getPrecoPedido(){
+    public int getPrecoPedido(){
         return precoPedido;
     }
     
     /** @return O preço mínimo deste imóvel. */
-    private double getPrecoMinimo(){
+    private int getPrecoMinimo(){
         return precoMinimo;
     }
     
@@ -86,11 +86,11 @@ public abstract class Imovel implements Comparable<Imovel>
         this.estado = estado;
     }
     
-    public void setPrecoPedido(double precoPedido){
+    public void setPrecoPedido(int precoPedido){
         this.precoPedido = precoPedido;
     }
     
-    private void setPrecoMinimo(double precoMinimo){
+    private void setPrecoMinimo(int precoMinimo){
         this.precoMinimo = precoMinimo;
     }
     
@@ -133,14 +133,11 @@ public abstract class Imovel implements Comparable<Imovel>
     
     public int hashCode(){
         int hash = 7;
-        long aux;
         
         hash = 31*hash + id.hashCode();
         hash = 31*hash + rua.hashCode();
-        aux = Double.doubleToLongBits(precoPedido);
-        hash = 31*hash + (int) (aux^(aux >>> 32));
-        aux = Double.doubleToLongBits(precoMinimo);
-        hash = 31*hash + (int) (aux^(aux >>> 32));
+        hash = 31*hash + precoPedido;
+        hash = 31*hash + precoMinimo;
         return hash;
     }
 }

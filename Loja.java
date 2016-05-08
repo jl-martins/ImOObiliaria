@@ -13,8 +13,8 @@ public class Loja extends Imovel
         numDaPorta = 0;
     }
     
-    public Loja(String id, String rua, double precoPedido, double precoMinimo,
-                 int area, boolean temWC, String tipoNegocio, int numDaPorta){
+    public Loja(String id, String rua, int precoPedido, int precoMinimo,
+                int area, boolean temWC, String tipoNegocio, int numDaPorta){
         
         super(id, rua, precoPedido, precoMinimo);
         this.area = area;

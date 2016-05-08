@@ -19,8 +19,8 @@ public class Moradia extends Imovel
         numQuartos = numWCs = numDaPorta = 0;
     }
     
-    public Moradia(String id, String rua, double precoPedido, double precoMinimo, TipoMoradia tipo,
-                   int areaImplantacao, int areaTotal, int areaEnv, int numQuartos, int numWCs, int numDaPorta){
+    public Moradia(String id, String rua, int precoPedido, int precoMinimo, TipoMoradia tipo, int areaImplantacao,
+                   int areaTotal, int areaEnv, int numQuartos, int numWCs, int numDaPorta){
         super(id, rua, precoPedido, precoMinimo);
         this.tipo = tipo;
         this.areaImplantacao = areaImplantacao;
