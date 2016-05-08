@@ -54,7 +54,7 @@ public class Imoobiliaria
         if(!(utilizadorAutenticado instanceof Vendedor))
             throw new SemAutorizacaoException("O utilizador atual não é um Vendedor Autenticado.");
     }
-    
+
     public void confirmaCompradorAutenticado() throws SemAutorizacaoException{
         if(!(utilizadorAutenticado instanceof Comprador))
             throw new SemAutorizacaoException("O utilizador atual não é um Comprador Autenticado");
@@ -85,12 +85,12 @@ public class Imoobiliaria
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
         emVenda = vendedor.getEmVenda();
         for(String idImovel : emVenda){
-            ultimasConsultas.addAll(imoveis.get(idImovel).getConsultas());
-            Collections.sort(ultimasConsultas);
-            fim = ultimasConsultas.size();
-            inicio = (fim >= N_CONSULTAS)? fim - N_CONSULTAS : 0;
-            ultimasConsultas = ultimasConsultas.subList(inicio, fim);             
+            ultimasConsultas.addAll(imoveis.get(idImovel).getConsultas());       
         }
+        Collections.sort(ultimasConsultas);
+        fim = ultimasConsultas.size();
+        inicio = (fim >= N_CONSULTAS)? fim - N_CONSULTAS : 0;
+        ultimasConsultas = ultimasConsultas.subList(inicio, fim); 
 
         return ultimasConsultas;
     }
@@ -111,12 +111,13 @@ public class Imoobiliaria
     } 
 
     public Set<String> getTopImoveis(int n){
+        /*
         int inicio, fim;
         Set<String> idsImoveis = new TreeSet<String>();
         List<Imovel> imoveis = new ArrayList<Imovel>();
 
         if(!(utilizadorAutenticado instanceof Vendedor))
-            return idsImoveis;
+        return idsImoveis;
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
         idsImoveis.addAll(vendedor.getEmVenda());
         idsImoveis.addAll(vendedor.getVendidos());
@@ -128,8 +129,21 @@ public class Imoobiliaria
 
         idsImoveis.clear();
         for(Imovel imv : imoveis)
-            idsImoveis.add(imv.getId());
-        return idsImoveis;        
+        idsImoveis.add(imv.getId());
+        return idsImoveis;    
+         */
+        Set<String> resultados = new TreeSet<String>();
+        if(!(utilizadorAutenticado instanceof Vendedor))
+            return resultados;
+        Vendedor vendedor = (Vendedor) utilizadorAutenticado;
+
+        Set<String> idsImoveis = vendedor.todosImoveisVendedor();
+        for(String id : idsImoveis){
+            Imovel imv = imoveis.get(id);
+            if(imv.getQuantasConsultas() > n)
+                resultados.add(id);
+        }
+        return resultados;
     }
 
     public List<Imovel> getImovel(String classe, int preco){
@@ -140,7 +154,7 @@ public class Imoobiliaria
         } catch(ClassNotFoundException e){
             return resultados;
         }
-        
+
         Collection<Imovel> todosImoveis = imoveis.values();
         for(Imovel imv : todosImoveis){
             if(tipoImovel.isInstance(imv) && imv.getPrecoPedido() < preco){
@@ -149,7 +163,7 @@ public class Imoobiliaria
         }
         return resultados;
     }
-    
+
     public List <Habitavel> getHabitaveis (int preco){
         Collection<Imovel> todosImoveis = imoveis.values();
         List<Habitavel> resultados = new ArrayList<Habitavel>();
@@ -159,11 +173,11 @@ public class Imoobiliaria
         }
         return resultados;
     }
-    
+
     public Map<Imovel, Vendedor> getMapeamentoImoveis(){
         Map<Imovel, Vendedor> mapeamento = new HashMap<Imovel,Vendedor>();
         Collection<Utilizador> todosUtilizadores = utilizadores.values();
-        
+
         for(Utilizador usr : todosUtilizadores){
             if(usr instanceof Vendedor){
                 Vendedor vendedor = (Vendedor) usr;
@@ -183,13 +197,13 @@ public class Imoobiliaria
             throw new ImovelInexistenteException("O imóvel em questão não existe.");
         comprador.setFavorito(idImovel);        
     }
-    
+
     public TreeSet<Imovel> getFavoritos() throws SemAutorizacaoException{
         confirmaCompradorAutenticado();
         Comprador comprador = (Comprador) utilizadorAutenticado;
         TreeSet<String> idsFavoritos = comprador.getFavoritos();
         TreeSet<Imovel> favoritos = new TreeSet<Imovel>();
-        
+
         for(String id : idsFavoritos){
             favoritos.add(imoveis.get(id).clone());
         }
