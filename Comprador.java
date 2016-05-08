@@ -1,6 +1,6 @@
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.io.Serializable;
 
 public class Comprador extends Utilizador implements Serializable
@@ -10,7 +10,7 @@ public class Comprador extends Utilizador implements Serializable
      /**
       * Construtor parametrizado.
       */
-    public Comprador(String email, String nome, String password, String morada, GregorianCalendar dataNascimento){
+    public Comprador(String email, String nome, String password, String morada, LocalDate dataNascimento){
         super(email, nome, password, morada, dataNascimento);
         favoritos = new TreeSet<String>();
     }

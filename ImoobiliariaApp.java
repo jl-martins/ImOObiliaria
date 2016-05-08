@@ -65,7 +65,7 @@ public class ImoobiliariaApp
             "Iniciar leilão (opção de Vendedor).",
             "Adicionar comprador ao leilão atual (opção de Vendedor).",
             "Encerrar leilão (opção de Vendedor)."
-        }
+        };
         String[] opcoesTipoUtilizador = {
             "Adicionar comprador.",
             "Adicionar vendedor."
@@ -128,9 +128,9 @@ public class ImoobiliariaApp
                 else // o email introduzido é inválido
                     err.print("O email: '" + email + "' é inválido.\n");  
             }
-            catch(NoSuchElementException){err.println("Erro: Introduziu uma linha em branco.");}
-            catch(DateTimeParseException){err.println("Erro: A data de nascimento '" + dataNascimento + "' é inválida.\nFormato esperado: aaaa-mm-dd.");}
-            catch(UtilizadorExistenteException msg){err.println(msg);}
+            catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
+            catch(DateTimeParseException e){err.println("Erro: A data de nascimento '" + dataNascimento + "' é inválida.\nFormato esperado: aaaa-mm-dd.");}
+            catch(UtilizadorExistenteException e){err.println(e.getMessage());}
         }
         else // o utilizador optou por sair
             out.println("Registo cancelado.\nA voltar ao menu principal.");
@@ -148,7 +148,7 @@ public class ImoobiliariaApp
             password = input.nextLine();
             imoobiliaria.iniciaSessao(email, password);
         }
-        catch(NoSuchElementException){err.println("Erro: Introduziu uma linha em branco.");}
+        catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
     

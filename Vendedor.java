@@ -1,6 +1,6 @@
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.io.Serializable;
 
 public class Vendedor extends Utilizador implements Serializable
@@ -9,7 +9,7 @@ public class Vendedor extends Utilizador implements Serializable
     private Set<String> vendidos = null;
     
     /** Construtor parametrizado */
-    public Vendedor(String email, String nome, String password, String morada, GregorianCalendar dataNascimento){
+    public Vendedor(String email, String nome, String password, String morada, LocalDate dataNascimento){
         super(email, nome, password, morada, dataNascimento);
         emVenda = new TreeSet<String>();
         vendidos = new TreeSet<String>();

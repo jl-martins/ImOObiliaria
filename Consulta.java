@@ -1,17 +1,17 @@
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 import java.io.Serializable;
 
-public class Consulta implements Comparable<Consulta>, Serializable
+public final class Consulta implements Comparable<Consulta>, Serializable
 {   
     // Variaveis de instancia
-    private GregorianCalendar data; // data da consulta
-    private String email; // email do utilizador que fez a consulta (valor opcional) 
+    private final LocalDate data; // data da consulta
+    private final String email; // email do utilizador que fez a consulta (valor opcional) 
     
     /**
      * Construtor por omissao
      */
     public Consulta(){
-        data = new GregorianCalendar(); // data atual
+        data = LocalDate.now(); // data atual
         email = null; // e-mail desconhecido
     }
     
@@ -19,8 +19,8 @@ public class Consulta implements Comparable<Consulta>, Serializable
      * Construtor parametrizado
      */
     public Consulta(String email){
+        this.data = LocalDate.now();
         this.email = email;
-        this.data = new GregorianCalendar();
     }
       
     /**
@@ -32,8 +32,8 @@ public class Consulta implements Comparable<Consulta>, Serializable
     }
     
     // Getters
-    public GregorianCalendar getData(){
-        return (data == null)? null : (GregorianCalendar) data.clone();
+    public LocalDate getData(){
+        return data; // objetos da classe LocalDate são imutáveis. Não precisamos de fazer clone().
     }
     
     public String getEmail(){
@@ -67,12 +67,11 @@ public class Consulta implements Comparable<Consulta>, Serializable
     
     @Override
     public int compareTo(Consulta c){
-        return this.data.compareTo(c.data);
+        return data.compareTo(c.getData());
     }
     
     public String toString(){
-        String aux = (data == null) ? "n/a" : data.toString(); 
-        return "E-mail: " + email + "\nData: " + aux + "\n";
+        return "E-mail: " + ((email == null) ? "n/a" : email) + "\nData: " + data.toString() + "\n";
     }
     
     public int hashCode(){

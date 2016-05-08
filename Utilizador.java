@@ -1,4 +1,4 @@
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
 
 public abstract class Utilizador
 {
@@ -7,7 +7,7 @@ public abstract class Utilizador
     private String nome;
     private String password;
     private String morada;
-    private GregorianCalendar dataNascimento;
+    private LocalDate dataNascimento;
     
     public Utilizador(){
         this("n/a", "n/a", "n/a", "n/a", null);
@@ -16,12 +16,12 @@ public abstract class Utilizador
     /**
      * Construtor parametrizado.
      */
-    public Utilizador(String email, String nome, String password, String morada, GregorianCalendar dataNascimento){
+    public Utilizador(String email, String nome, String password, String morada, LocalDate dataNascimento){
         this.email = email;
         this.nome = nome;
         this.password = password;
         this.morada = morada;
-        setDataNascimento(dataNascimento);
+        this.dataNascimento = dataNascimento; // As instâncias de LocalDate são imutáveis, logo não precisamos de fazer clone()
     }
     
     /**
@@ -44,8 +44,8 @@ public abstract class Utilizador
         return morada;
     }
     
-    public GregorianCalendar getDataNascimento(){
-        return (dataNascimento == null) ? null : (GregorianCalendar) dataNascimento.clone();
+    public LocalDate getDataNascimento(){
+        return dataNascimento;
     }
     
     public void setEmail(String email){
@@ -60,12 +60,12 @@ public abstract class Utilizador
         this.morada = morada;
     }
     
-    public void setDataNascimento(GregorianCalendar dataNascimento){
-        this.dataNascimento = (dataNascimento == null) ? null : (GregorianCalendar) dataNascimento.clone() ;
+    public void setDataNascimento(LocalDate dataNascimento){
+        this.dataNascimento = dataNascimento; // As instâncias de LocalDate são imutáveis, logo não precisamos de fazer clone()
     }
     
     public boolean validaPassword(String password){
-        return this.password == password;
+        return this.password.equals(password);
     }
     
     public boolean equals(Object o){
@@ -91,9 +91,7 @@ public abstract class Utilizador
         sb.append("Nome: " + nome + "\n");
         sb.append("Morada: " + morada + "\n");
         sb.append("Password: " + password + "\n");
-        sb.append("Data de nascimento: " + dataNascimento.get(GregorianCalendar.DAY_OF_YEAR) + "/"
-                                         + dataNascimento.get(GregorianCalendar.MONTH) + "/"
-                                         + dataNascimento.get(GregorianCalendar.YEAR) + "\n");
+        sb.append("Data de nascimento: " + dataNascimento.toString());
         return sb.toString();
     }
 }
