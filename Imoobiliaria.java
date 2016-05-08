@@ -26,6 +26,20 @@ public class Imoobiliaria implements Serializable
         utilizadores = new HashMap<String, Utilizador>();
         imoveis = new HashMap<String, Imovel>();
     }
+    
+    public Imoobiliaria(Imoobiliaria original){
+        this.utilizadores = new HashMap<String, Utilizador>();
+        this.imoveis = new HashMap<String, Imovel>();
+        Collection<Imovel> imoveisAdicionar = original.imoveis.values();
+        Collection<Utilizador> utilizadoresAdicionar = original.utilizadores.values();
+        for(Imovel imv : imoveisAdicionar)
+            this.imoveis.put(imv.getId(), imv.clone());
+        for(Utilizador utilizador: utilizadoresAdicionar)
+            this.utilizadores.put(utilizador.getEmail(), utilizador.clone());
+        if(original.utilizadorAutenticado != null){
+            this.utilizadorAutenticado = this.utilizadores.get(original.utilizadorAutenticado.getEmail());
+        }
+    }
         
     public static Imoobiliaria initApp(){
         Imoobiliaria imoobiliaria = null;
@@ -163,27 +177,6 @@ public class Imoobiliaria implements Serializable
     } 
 
     public Set<String> getTopImoveis(int n){
-        /*
-        int inicio, fim;
-        Set<String> idsImoveis = new TreeSet<String>();
-        List<Imovel> imoveis = new ArrayList<Imovel>();
-
-        if(!(utilizadorAutenticado instanceof Vendedor))
-        return idsImoveis;
-        Vendedor vendedor = (Vendedor) utilizadorAutenticado;
-        idsImoveis.addAll(vendedor.getEmVenda());
-        idsImoveis.addAll(vendedor.getVendidos());
-        Collections.sort(imoveis);
-
-        fim = imoveis.size();
-        inicio = (fim >= n)? fim - n : 0;
-        imoveis = imoveis.subList(inicio, fim); 
-
-        idsImoveis.clear();
-        for(Imovel imv : imoveis)
-        idsImoveis.add(imv.getId());
-        return idsImoveis;    
-         */
         Set<String> resultados = new TreeSet<String>();
         if(!(utilizadorAutenticado instanceof Vendedor))
             return resultados;
@@ -261,4 +254,39 @@ public class Imoobiliaria implements Serializable
         }
         return favoritos;
     }    
+    
+    public int hashCode(){
+        int hash = 7;
+        hash = 31*hash + utilizadores.hashCode();
+        hash = 31*hash + imoveis.hashCode();
+        hash = 31*hash + utilizadorAutenticado.hashCode();
+        return hash;
+    }
+    
+    public Imoobiliaria clone(){
+        Imoobiliaria copia = new Imoobiliaria(this);
+        return copia;
+    }
+    
+    public boolean equals(Object o){
+        if(this == o)
+            return true;
+        if(o == null || this.getClass() != o.getClass())
+            return false;
+        Imoobiliaria imb = (Imoobiliaria) o;
+        return this.imoveis.equals(imb.imoveis) &&
+               this.utilizadores.equals(imb.utilizadores) &&
+               this.utilizadorAutenticado.equals(imb.utilizadorAutenticado);
+    }
+    
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Utilizadores: ");
+        sb.append(utilizadores.values().toString());
+        sb.append("\n Imoveis: ");
+        sb.append(imoveis.values().toString());
+        sb.append("\n Utilizador Atual ");
+        sb.append(((utilizadorAutenticado == null)? "n.a." : utilizadorAutenticado.toString()) + "\n");
+        return sb.toString();
+    }
 }
