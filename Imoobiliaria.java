@@ -6,8 +6,9 @@ import java.util.Collections;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.HashMap;
+import java.io.Serializable;
 
-public class Imoobiliaria
+public class Imoobiliaria implements Serializable
 {   
     Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
     Map<String, Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel

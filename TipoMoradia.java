@@ -1,4 +1,4 @@
-
+import java.io.Serializable;
 /**
  * Enumeration class TipoMoradia - write a description of the enum class here
  * 

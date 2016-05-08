@@ -1,8 +1,9 @@
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.GregorianCalendar;
+import java.io.Serializable;
 
-public class Vendedor extends Utilizador
+public class Vendedor extends Utilizador implements Serializable
 { 
     private Set<String> emVenda = null;
     private Set<String> vendidos = null;

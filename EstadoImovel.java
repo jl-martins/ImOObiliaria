@@ -1,11 +1,11 @@
-
+import java.io.Serializable;
 /**
  * Enumeration class EstadoImovel - write a description of the enum class here
  * 
  * @author (your name here)
  * @version (version number or date here)
  */
-public enum EstadoImovel
+public enum EstadoImovel implements Serializable
 {
     EM_VENDA, RESERVADO, VENDIDO;
     

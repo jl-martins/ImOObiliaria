@@ -1,5 +1,7 @@
+import java.io.Serializable;
+
 public class Moradia extends Imovel
-        implements Habitavel
+        implements Habitavel, Serializable
 {
     // Variáveis de instância
     private TipoMoradia tipo; // tipo da moradia (isolada, geminada, banda, gaveto)

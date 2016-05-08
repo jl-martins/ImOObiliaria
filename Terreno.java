@@ -1,4 +1,6 @@
-public class Terreno extends Imovel
+import java.io.Serializable;
+
+public class Terreno extends Imovel implements Serializable
 {
     // variaveis de instancia
     private int area;

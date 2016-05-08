@@ -1,4 +1,6 @@
-public class Loja extends Imovel
+import java.io.Serializable;
+
+public class Loja extends Imovel implements Serializable
 {
     private int area;
     private boolean temWC;

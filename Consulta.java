@@ -1,6 +1,7 @@
 import java.util.GregorianCalendar;
+import java.io.Serializable;
 
-public class Consulta implements Comparable<Consulta>
+public class Consulta implements Comparable<Consulta>, Serializable
 {   
     // Variaveis de instancia
     private GregorianCalendar data; // data da consulta

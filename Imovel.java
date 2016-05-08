@@ -1,6 +1,7 @@
 import java.util.ArrayList;
+import java.io.Serializable;
 
-public abstract class Imovel implements Comparable<Imovel>
+public abstract class Imovel implements Comparable<Imovel>, Serializable
 {
     // variáveis de instância
     private String id; // id do imóvel

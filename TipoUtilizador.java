@@ -1,11 +1,11 @@
-
+import java.io.Serializable;
 /**
  * Enumeration class TipoUtilizador - write a description of the enum class here
  * 
  * @author (your name here)
  * @version (version number or date here)
  */
-public enum TipoUtilizador
+public enum TipoUtilizador implements Serializable
 {
     COMPRADOR, VENDEDOR;
     

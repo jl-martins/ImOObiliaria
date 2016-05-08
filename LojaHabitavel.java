@@ -1,7 +1,6 @@
+import java.io.Serializable;
 
-
-public class LojaHabitavel extends Loja
-        implements Habitavel
+public class LojaHabitavel extends Loja implements Serializable, Habitavel
 {   
     Apartamento apartamento;
     

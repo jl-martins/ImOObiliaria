@@ -1,5 +1,7 @@
+import java.io.Serializable;
+
 public class Apartamento extends Imovel
-        implements Habitavel
+        implements Habitavel, Serializable
 {
     // variaveis de instancia
     private TipoApartamento tipo; // tipo de apartamento: Simples, Duplex, Triplex

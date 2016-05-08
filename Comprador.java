@@ -1,8 +1,9 @@
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.GregorianCalendar;
+import java.io.Serializable;
 
-public class Comprador extends Utilizador
+public class Comprador extends Utilizador implements Serializable
 {
     private Set<String> favoritos = null; // conjunto de ids dos imoveis favoritos do Comprador
     
