@@ -17,6 +17,11 @@ public class LojaHabitavel extends Loja
         setApartamento(apartamento);
     }
     
+    public LojaHabitavel(Loja l, Apartamento a){
+        super(l);
+        apartamento = new Apartamento(a);
+    }
+    
     public LojaHabitavel(LojaHabitavel lh){
         super(lh);
         apartamento = lh.getApartamento();
