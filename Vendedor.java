@@ -34,6 +34,10 @@ public class Vendedor extends Utilizador implements Serializable
         return emVenda.contains(idImovel) || vendidos.contains(idImovel);
     }
     
+    public boolean vendeImovel(String idImovel){
+        return emVenda.contains(idImovel);
+    }
+    
     public void alteraEstadoImovel(String idImovel, EstadoImovel estado) {
         if(estado == EstadoImovel.VENDIDO){
             emVenda.remove(idImovel);
