@@ -440,6 +440,7 @@ target8.editor.x=33
 target8.editor.y=20
 target8.height=50
 target8.name=ValidadorEmail
+target8.naviview.expanded=false
 target8.showInterface=false
 target8.type=ClassTarget
 target8.typeParameters=

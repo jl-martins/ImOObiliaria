@@ -56,7 +56,7 @@ public class ImoobiliariaApp
     
     private static void enterParaContinuar(){
         Scanner input = new Scanner(System.in);
-        out.println("Prima ENTER para continuar... ");
+        out.print("Prima ENTER para continuar... ");
         input.nextLine();
         limparEcra();
     }
@@ -171,7 +171,7 @@ public class ImoobiliariaApp
                             break;
                     }  
                     imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
-                    out.println("-> Utilizador registado com sucesso. <-");
+                    out.println("\n-> Utilizador registado com sucesso. <-\n");
                 }
                 else // o email introduzido é inválido
                     err.print("O email: '" + email + "' é inválido.\n");  
@@ -195,7 +195,7 @@ public class ImoobiliariaApp
             out.print("Password: ");
             password = input.nextLine();
             imoobiliaria.iniciaSessao(email, password);
-            out.println("-> Sessão iniciada com sucesso! E-mail do utilizador autenticado: " + email + " <-");
+            out.println("\n-> Sessão iniciada com sucesso! E-mail do utilizador autenticado: " + email + " <-\n");
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
@@ -204,7 +204,7 @@ public class ImoobiliariaApp
     /** Fecha sessão. */
     private static void opcao3(){
         imoobiliaria.fechaSessao();
-        out.println("-> Sessão fechada com sucesso. <-");
+        out.println("-> Sessão fechada com sucesso. <-\n");
     }
     
     /** Regista um imóvel. */
@@ -248,7 +248,7 @@ public class ImoobiliariaApp
                     out.println("Registo cancelado.");
                 else{
                     imoobiliaria.registaImovel(im);
-                    out.println("-> Registo do imóvel " + id + " efetuado com sucesso. <-");
+                    out.println("\n-> Registo do imóvel " + id + " efetuado com sucesso. <-\n");
                 }
             }
             catch(ImovelExisteException e){err.println(e.getMessage());}
@@ -407,7 +407,7 @@ public class ImoobiliariaApp
             out.print("Novo estado do imóvel: ");
             novoEstado = input.nextLine();
             imoobiliaria.setEstado(idImovel, novoEstado);
-            out.println("-> Estado do imóvel " + idImovel + " alterado com sucesso para: " + novoEstado);
+            out.println("\n-> Estado do imóvel " + idImovel + " alterado com sucesso para: " + novoEstado + "\n");
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
         catch(ImovelInexistenteException e){err.println(e.getMessage());}
