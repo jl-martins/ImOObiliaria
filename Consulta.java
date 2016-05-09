@@ -12,7 +12,7 @@ public final class Consulta implements Comparable<Consulta>, Serializable
      */
     public Consulta(){
         data = LocalDate.now(); // data atual
-        email = null; // e-mail desconhecido
+        email = "n/a"; // e-mail desconhecido
     }
     
     /**
@@ -71,7 +71,7 @@ public final class Consulta implements Comparable<Consulta>, Serializable
     }
     
     public String toString(){
-        return "E-mail: " + ((email == null) ? "n/a" : email) + "\nData: " + data.toString() + "\n";
+        return "E-mail: " + email + "\nData: " + data.toString() + "\n";
     }
     
     public int hashCode(){
