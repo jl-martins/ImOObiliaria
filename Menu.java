@@ -75,6 +75,7 @@ final public class Menu
     }
     
     private void apresentaMenu(){
+        out.println(separador);
         out.println(titulo);
         out.println(separador);
         for(int i = 0; i < numOpcoes; ++i)
