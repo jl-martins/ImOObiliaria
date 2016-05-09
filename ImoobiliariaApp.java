@@ -306,7 +306,7 @@ public class ImoobiliariaApp
         out.print("Andar: ");
         andar = input.nextInt();
         
-        out.println("O apartamento tem garagem?");
+        out.println("O apartamento tem garagem?\n");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         if(numOpcao == 0)
@@ -326,7 +326,7 @@ public class ImoobiliariaApp
         out.print("Área da loja: ");
         area = input.nextInt();
         
-        out.println("A loja tem WC?");
+        out.println("A loja tem WC?\n");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         if(numOpcao == 0)
@@ -350,14 +350,14 @@ public class ImoobiliariaApp
         out.print("Área do terreno: ");
         area = input.nextInt();
         
-        out.println("O terreno é apropriado para construção de habitação?");
+        out.println("O terreno é apropriado para construção de habitação?\n");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         if(numOpcao == 0)
             return null;
         terrenoHab = (numOpcao == 1);
         
-        out.println("O terreno é apropriado para construção de armazéns?");
+        out.println("O terreno é apropriado para construção de armazéns?\n");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         if(numOpcao == 0)
@@ -368,7 +368,7 @@ public class ImoobiliariaApp
         out.print("kWh máximos: ");
         maxKWh = input.nextDouble();
         
-        out.println("O terreno tem rede de esgotos?");
+        out.println("O terreno tem rede de esgotos?\n");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         if(numOpcao == 0)
@@ -490,11 +490,15 @@ public class ImoobiliariaApp
     
     /** Apresenta um mapeamento entre imóveis e respectivos vendedores. */
     private static void opcao10(){
-        /* Map<Imovel, Vendedor> mapeamentoImoveis = imoobiliaria.getMapeamentoImoveis();
+        Map<Imovel, Vendedor> mapeamentoImoveis = imoobiliaria.getMapeamentoImoveis();
         
-        for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis){
-        }*/
-        out.println("Por implementar!");
+        for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis.entrySet()){
+            Imovel im = entrada.getKey();
+            Vendedor vendedor = entrada.getValue();
+            out.println(im.toString());
+            out.println("-> Vendedor:\nNome: " + vendedor.getNome() + "\nEmail: " + vendedor.getEmail());
+            out.println("--------------------------------------------------------------------------------------------------");
+        }
     }
     
     /** Marca um imóvel como favorito (opção de comprador). */
