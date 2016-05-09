@@ -22,6 +22,11 @@ public final class Consulta implements Comparable<Consulta>, Serializable
         this.data = LocalDate.now();
         this.email = email;
     }
+    
+    public Consulta(Utilizador usr){
+        this.data = LocalDate.now();
+        this.email = usr == null? "n/a" : usr.getEmail();
+    }
       
     /**
      * Construtor de copia
