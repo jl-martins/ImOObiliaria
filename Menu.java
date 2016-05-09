@@ -11,9 +11,11 @@ import java.util.InputMismatchException;
 import static java.lang.System.out;
 
 final public class Menu
-{
+{   
+    private final String titulo;
     private final String[] opcoes;
     private final int numOpcoes;
+    private final String separador; // separa a última opção da prompt
     private int op;
     
     /**
@@ -21,6 +23,7 @@ final public class Menu
      * (declarado como privado para não ser possível construir menus vazios)
      */
     private Menu(){
+        titulo = separador = null;
         opcoes = null;
         numOpcoes = 0;
         op = -1;
@@ -30,9 +33,11 @@ final public class Menu
      * Construtor parametrizado.
      * @param opcoes Opções do menu a criar.
      */
-    public Menu(String[] opcoes){
-        numOpcoes = opcoes.length;
+    public Menu(String titulo, String[] opcoes){
+        this.titulo = titulo;
+        this.numOpcoes = opcoes.length;
         this.opcoes = new String[numOpcoes];
+        this.separador = geraSeparador(titulo, opcoes); // gera um separador adequado a este menu.
         System.arraycopy(opcoes, 0, this.opcoes, 0, numOpcoes);
     }
     
@@ -41,7 +46,12 @@ final public class Menu
      * @param menu Menu a copiar.
      */
     public Menu(Menu menu){
-        this(menu.getOpcoes());
+        this(menu.getTitulo(), menu.getOpcoes());
+    }
+    
+    /** @return Título deste menu. */
+    public String getTitulo(){
+        return titulo;
     }
     
     /** @return Array de String com as opções deste menu. */
@@ -65,17 +75,31 @@ final public class Menu
     }
     
     private void apresentaMenu(){
-        out.println("\n*** Menu ***");
+        out.println(titulo);
+        out.println(separador);
         for(int i = 0; i < numOpcoes; ++i)
             out.printf("%2d. %s\n", i+1, opcoes[i]);
         out.println(" 0. Sair");
+        out.println(separador);
+    }
+    
+    /* Gera o separador a colocar entre a última opção e a prompt. */
+    private static String geraSeparador(String titulo, String[] opcoes){
+        int maxLen = titulo.length();
+        int numOpcoes = opcoes.length;
+        
+        for(int i = 0; i < numOpcoes; ++i)
+            if((opcoes[i].length() + 4) > maxLen) // o número da opção seguido do carater '.' e de um espaço correspondem a 4 caratéres
+                maxLen = opcoes[i].length() + 4;
+
+        return new String(new char[maxLen]).replace("\0", "*"); // string com '-' repetido maxLen vezes
     }
     
     private int lerOpcao(){
         int op;
         Scanner input = new Scanner(System.in);
         
-        out.print("\n>>> ");
+        out.print(">>> ");
         try {
             op = input.nextInt();
         }
@@ -108,19 +132,21 @@ final public class Menu
             return false;
         Menu menu = (Menu) o;
         
-        return Arrays.equals(opcoes, menu.getOpcoes()); // se os arrays forem iguais, têm o mesmo número de opções.
+        return titulo.equals(menu.getTitulo()) && Arrays.equals(opcoes, menu.getOpcoes()); // se os arrays forem iguais, têm o mesmo número de opções.
     }
     
-    /** @return String com as opções deste menu e uma prompt no final das opções. */
+    /** @return Representação textual dos campos deste menu. */
     public String toString(){
-        StringBuilder sb = new StringBuilder("\n*** Menu ***\n");
+        StringBuilder sb = new StringBuilder("Menu:\n");
         
+        sb.append("Título: " + titulo);
+        sb.append("\nOpções:\n");
         for(int i = 0; i < numOpcoes; ++i)
             sb.append(opcoes[i]).append("\n");
         sb.append("Sair\n");
         sb.append("Número de opções: " + numOpcoes);
-        sb.append("Opção: " + op);
-        return sb.toString(); // não acrescentamos numOpcoes à String, porque as opções já estão numeradas e dá para perceber quantas opções existem.
+        sb.append("Opção atual: " + op);
+        return sb.toString();
     }
     
     /** @return Valor do hash code deste menu. */

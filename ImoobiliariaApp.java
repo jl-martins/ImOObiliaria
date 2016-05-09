@@ -34,7 +34,6 @@ public class ImoobiliariaApp
     
     public static void splashScreen(){
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        Scanner input = new Scanner(System.in);
         
         try{
             bw.write("*********************************************************************************************************************\n");
@@ -46,13 +45,22 @@ public class ImoobiliariaApp
             bw.write("*  |__| |__|  |__|  \\______/   \\______/  |______/  |__| |_______||__| /__/     \\__\\ | _| `._\\    |__| /__/     \\__\\ *\n");
             bw.write("*                                                                                                                   *\n");
             bw.write("*********************************************************************************************************************\n");
-            bw.write("\n                                            Prima ENTER para continuar... ");
+            bw.write("                                            "); // permite centrar a mensagem de "prima ENTER para continuar"
             bw.flush();
-            input.nextLine();
+            enterParaContinuar();
         }
         catch(IOException e){err.println("Erro de IO: Não foi possível apresentar o ecrã inicial.");}
     }
-
+    
+    private static void limparEcra(){System.out.print("\f");}
+    
+    private static void enterParaContinuar(){
+        Scanner input = new Scanner(System.in);
+        out.println("Prima ENTER para continuar... ");
+        input.nextLine();
+        limparEcra();
+    }
+    
     public static void main(String[] args){
         int numOpcao;
         splashScreen();
@@ -62,10 +70,12 @@ public class ImoobiliariaApp
         do{
             menuMain.executa();
             numOpcao = menuMain.getOpcao();
+            limparEcra();
             if(numOpcao > 0){ // o resto das validações do número da opção são feitas na classe Menu
                 try{
                     Method m = ImoobiliariaApp.class.getDeclaredMethod("opcao" + numOpcao);
                     m.invoke(null); // null indica que o método inovcado é static
+                    enterParaContinuar();
                 }
                 catch(NoSuchMethodException e){err.println("O método escolhido não existe!");}
                 catch(IllegalAccessException e){err.println("Tentativa de aceder a um método a que não tem acesso!");}
@@ -78,47 +88,47 @@ public class ImoobiliariaApp
             // IMPLEMENTAR ==> imoobiliaria.log("log.txt");
         }
         catch(IOException e){err.println("Não foi possível gravar os dados!");}
-        out.println("A sair da aplicação...");
+        out.println("Volte sempre!");
     }
     
     private static void carregarMenus(){
         String[] opcoesMain = {
-            "Registar novo utilizador.",
-            "Iniciar sessão.",
-            "Fechar sessão.",
-            "Registar um imóvel (opção de Vendedor).",
-            "Obter as 10 últimas consultas (opção de Vendedor).",
-            "Alterar o estado de um imóvel (opção de Vendedor).",
+            "Registar novo utilizador",
+            "Iniciar sessão",
+            "Fechar sessão",
+            "Registar um imóvel (opção de Vendedor)",
+            "Obter as 10 últimas consultas (opção de Vendedor)",
+            "Alterar o estado de um imóvel (opção de Vendedor)",
             "Obter imóveis com mais de N consultas (opção de Vendedor)",
-            "Listar imóveis de um certo tipo.",
-            "Obter lista dos imóveis habitáveis.",
-            "Obter correspondência entre imóveis e vendedores.",
-            "Marcar um imóvel como favorito (opção de Comprador).",
-            "Consultar imóveis favoritos (opção de Comprador).",
-            "Iniciar leilão (opção de Vendedor).",
-            "Adicionar comprador ao leilão atual (opção de Vendedor).",
-            "Encerrar leilão (opção de Vendedor)."
+            "Listar imóveis de um certo tipo",
+            "Obter lista dos imóveis habitáveis",
+            "Obter correspondência entre imóveis e vendedores",
+            "Marcar um imóvel como favorito (opção de Comprador)",
+            "Consultar imóveis favoritos (opção de Comprador)",
+            "Iniciar leilão (opção de Vendedor)",
+            "Adicionar comprador ao leilão atual (opção de Vendedor)",
+            "Encerrar leilão (opção de Vendedor)"
         };
         String[] opcoesTipoUtilizador = {
-            "Adicionar comprador.",
-            "Adicionar vendedor."
+            "Comprador",
+            "Vendedor"
         };
         String[] opcoesTipoImovel = {
-            "Registar uma moradia.",
-            "Registar um apartamento.",
-            "Registar uma loja não habitável.",
-            "Registar uma loja habitável.",
-            "Registar um terreno."
+            "Moradia",
+            "Apartamento",
+            "Loja não habitável",
+            "Loja habitável",
+            "Terreno"
         };
         String[] opcoesSimNao = {"Sim", "Não"};
-        
-        menuMain = new Menu(opcoesMain);
-        menuTipoUtilizador = new Menu(opcoesTipoUtilizador);
-        menuTipoImovel = new Menu(opcoesTipoImovel);
-        menuSimNao = new Menu(opcoesSimNao);
+        // o espaço inicial dos títulos é intencional
+        menuMain = new Menu(" Menu Principal", opcoesMain);
+        menuTipoUtilizador = new Menu(" Selecionar tipo de utilizador", opcoesTipoUtilizador);
+        menuTipoImovel = new Menu(" Selecionar tipo de imóvel", opcoesTipoImovel);
+        menuSimNao = new Menu(" Resposta Sim/Não", opcoesSimNao);
     }  
     
-    public static void carregarDados(){
+    private static void carregarDados(){
         imoobiliaria = Imoobiliaria.initApp();
     }
     
@@ -171,7 +181,7 @@ public class ImoobiliariaApp
             catch(UtilizadorExistenteException e){err.println(e.getMessage());}
         }
         else // o utilizador optou por sair
-            out.println("Registo cancelado.\nA voltar ao menu principal.");
+            out.println("Registo cancelado.");
     }
     
     /** Inicia sessão. */
@@ -185,7 +195,7 @@ public class ImoobiliariaApp
             out.print("Password: ");
             password = input.nextLine();
             imoobiliaria.iniciaSessao(email, password);
-            out.println("-> Sessão iniciada com sucesso! E-mail do utilizador autenticado " + email + " <-");
+            out.println("-> Sessão iniciada com sucesso! E-mail do utilizador autenticado: " + email + " <-");
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
@@ -235,7 +245,7 @@ public class ImoobiliariaApp
                         break;
                 }
                 if(im == null) // o utilizador optou por cancelar o registo
-                    out.println("Registo cancelado.\nA voltar ao menu principal.");
+                    out.println("Registo cancelado.");
                 else{
                     imoobiliaria.registaImovel(im);
                     out.println("-> Registo do imóvel " + id + " efetuado com sucesso. <-");
@@ -247,7 +257,7 @@ public class ImoobiliariaApp
             // FALTA APANHAR EXCEÇÕES GERADAS QUANDO UMA STRING NAO PODE SER CONVERTIDA PRA ENUM
         }
         else // o utilizador optou por sair
-            out.println("Registo cancelado.\nA voltar ao menu principal.");
+            out.println("Registo cancelado.");
     }
     
     /** Pede ao utilizador para introduzir os dados relativos a uma moradia e, em caso de sucesso, devolve a Moradia criada. */
@@ -397,6 +407,7 @@ public class ImoobiliariaApp
             out.print("Novo estado do imóvel: ");
             novoEstado = input.nextLine();
             imoobiliaria.setEstado(idImovel, novoEstado);
+            out.println("-> Estado do imóvel " + idImovel + " alterado com sucesso para: " + novoEstado);
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
         catch(ImovelInexistenteException e){err.println(e.getMessage());}
@@ -413,10 +424,10 @@ public class ImoobiliariaApp
         Set<String> setIds;
         
         //try{
-            out.print("Limite inferior do número consultas dos imóveis a consultar: ");
+            out.print("Limite inferior do número consultas dos imóveis a apresentar: ");
             N = input.nextInt();
             setIds = imoobiliaria.getTopImoveis(N);
-            out.println("IDs dos imóveis com mais do que N consultas\n");
+            out.println("-> IDs dos imóveis com mais do que " + N + " consultas\n");
             for(String id : setIds) // ! se este setIds puder ser null, temos que alterar este ciclo
                 out.println(id);
         //}
