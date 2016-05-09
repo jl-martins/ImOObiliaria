@@ -91,7 +91,7 @@ public abstract class Utilizador implements Serializable
         sb.append("Email: " + email + "\n");
         sb.append("Nome: " + nome + "\n");
         sb.append("Morada: " + morada + "\n");
-        sb.append("Password: " + password + "\n");
+        // a password não é adicionada à String devolvida para que não a revelemos.
         sb.append("Data de nascimento: " + dataNascimento.toString());
         return sb.toString();
     }
