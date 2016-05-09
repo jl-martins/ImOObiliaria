@@ -220,7 +220,7 @@ public class Imoobiliaria implements Serializable
     }
 
     public Map<Imovel, Vendedor> getMapeamentoImoveis(){
-        Map<Imovel, Vendedor> mapeamento = new HashMap<Imovel,Vendedor>();
+        Map<Imovel, Vendedor> mapeamento = new HashMap<Imovel,Vendedor>((int) Math.ceil(imoveis.size() / 0.75));
         Collection<Utilizador> todosUtilizadores = utilizadores.values();
 
         for(Utilizador usr : todosUtilizadores){

@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
 
 import java.util.Scanner;
 import java.util.List;
@@ -30,8 +32,30 @@ public class ImoobiliariaApp
     private static Menu menuTipoUtilizador, menuTipoImovel; // menus para selecionar o tipo de utilizador e o tipo de imóvel, respetivamente
     private static Menu menuSimNao; // menu para ler respostas do tipo sim/nao
     
+    public static void splashScreen(){
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        Scanner input = new Scanner(System.in);
+        
+        try{
+            bw.write("*********************************************************************************************************************\n");
+            bw.write("*   __   ___  ___    ______     ______    ______    __   __       __       ___       ______       __       ___      *\n");
+            bw.write("*  |  | |   \\/   |  /  __  \\   /  __  \\  |   _  \\  |  | |  |     |  |     /   \\     |   _  \\     |  |     /   \\     *\n");
+            bw.write("*  |  | |  \\  /  | |  |  |  | |  |  |  | |  |_)  | |  | |  |     |  |    /  ^  \\    |  |_)  |    |  |    /  ^  \\    *\n");
+            bw.write("*  |  | |  |\\/|  | |  |  |  | |  |  |  | |   _  <  |  | |  |     |  |   /  /_\\  \\   |      /     |  |   /  /_\\  \\   *\n");
+            bw.write("*  |  | |  |  |  | |  `--'  | |  `--'  | |  |_)  | |  | |  `----.|  |  /  _____  \\  |  |\\  \\     |  |  /  _____  \\  *\n");
+            bw.write("*  |__| |__|  |__|  \\______/   \\______/  |______/  |__| |_______||__| /__/     \\__\\ | _| `._\\    |__| /__/     \\__\\ *\n");
+            bw.write("*                                                                                                                   *\n");
+            bw.write("*********************************************************************************************************************\n");
+            bw.write("\n                                            Prima ENTER para continuar... ");
+            bw.flush();
+            input.nextLine();
+        }
+        catch(IOException e){err.println("Erro de IO: Não foi possível apresentar o ecrã inicial.");}
+    }
+
     public static void main(String[] args){
         int numOpcao;
+        splashScreen();
         carregarMenus();
         carregarDados();
         
@@ -137,6 +161,7 @@ public class ImoobiliariaApp
                             break;
                     }  
                     imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
+                    out.println("-> Utilizador registado com sucesso. <-");
                 }
                 else // o email introduzido é inválido
                     err.print("O email: '" + email + "' é inválido.\n");  
@@ -160,6 +185,7 @@ public class ImoobiliariaApp
             out.print("Password: ");
             password = input.nextLine();
             imoobiliaria.iniciaSessao(email, password);
+            out.println("-> Sessão iniciada com sucesso! E-mail do utilizador autenticado " + email + " <-");
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
@@ -168,6 +194,7 @@ public class ImoobiliariaApp
     /** Fecha sessão. */
     private static void opcao3(){
         imoobiliaria.fechaSessao();
+        out.println("-> Sessão fechada com sucesso. <-");
     }
     
     /** Regista um imóvel. */
@@ -209,8 +236,10 @@ public class ImoobiliariaApp
                 }
                 if(im == null) // o utilizador optou por cancelar o registo
                     out.println("Registo cancelado.\nA voltar ao menu principal.");
-                else
+                else{
                     imoobiliaria.registaImovel(im);
+                    out.println("-> Registo do imóvel " + id + " efetuado com sucesso. <-");
+                }
             }
             catch(ImovelExisteException e){err.println(e.getMessage());}
             catch(SemAutorizacaoException e){err.println(e.getMessage());}
