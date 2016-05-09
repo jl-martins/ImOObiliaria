@@ -170,7 +170,7 @@ public class Imoobiliaria implements Serializable
         confirmaVendedorAutenticado();
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
         if(!vendedor.registouImovel(idImovel))
-            throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o Imovel.");
+            throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o estado do imóvel " + idImovel);
         EstadoImovel estadoImovel = EstadoImovel.fromString(estado);
         vendedor.alteraEstadoImovel(idImovel, estadoImovel);
         imv.setEstado(estadoImovel);     
@@ -202,7 +202,7 @@ public class Imoobiliaria implements Serializable
 
         Collection<Imovel> todosImoveis = imoveis.values();
         for(Imovel imv : todosImoveis){
-            if(tipoImovel.isInstance(imv) && imv.getPrecoPedido() < preco){
+            if(tipoImovel.isInstance(imv) && imv.getPrecoPedido() <= preco){
                 resultados.add(imv.clone());
             }
         }
@@ -213,7 +213,7 @@ public class Imoobiliaria implements Serializable
         Collection<Imovel> todosImoveis = imoveis.values();
         List<Habitavel> resultados = new ArrayList<Habitavel>();
         for(Imovel imv : todosImoveis){
-            if(imv instanceof Habitavel && imv.getPrecoPedido() > preco)
+            if(imv instanceof Habitavel && imv.getPrecoPedido() <= preco)
                 resultados.add((Habitavel) imv.clone());
         }
         return resultados;

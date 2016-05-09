@@ -390,8 +390,13 @@ public class ImoobiliariaApp
     private static void opcao5(){
         try{
             List<Consulta> consultas = imoobiliaria.getConsultas();
-            for(Consulta c : consultas) // se consultas puder ser null, temos que mudar este ciclo.
-                out.println(c.toString());
+            
+            if(consultas == null || consultas.isEmpty())
+                out.println("Não existem consultas para apresentar.");
+            else{
+                for(Consulta c : consultas) // se consultas puder ser null, temos que mudar este ciclo.
+                    out.println(c.toString());
+            }
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
@@ -427,9 +432,13 @@ public class ImoobiliariaApp
             out.print("Limite inferior do número consultas dos imóveis a apresentar: ");
             N = input.nextInt();
             setIds = imoobiliaria.getTopImoveis(N);
-            out.println("-> IDs dos imóveis com mais do que " + N + " consultas\n");
-            for(String id : setIds) // ! se este setIds puder ser null, temos que alterar este ciclo
-                out.println(id);
+            if(setIds == null || setIds.isEmpty())
+                out.println("Não existem imóveis com mais do que " + N + " consultas.");
+            else{
+                out.println("-> IDs dos imóveis com mais do que " + N + " consultas\n");
+                for(String id : setIds) // ! se este setIds puder ser null, temos que alterar este ciclo
+                    out.println(id);
+            }
         //}
         // NOTA: Este método devia atirar a SemAutorizacaoException!!! catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
@@ -438,18 +447,22 @@ public class ImoobiliariaApp
     private static void opcao8(){
         Scanner input = new Scanner(System.in);
         String tipo;
-        int precoMinimo;
+        int precoMaximo;
         List<Imovel> l;
         
         try{
             out.print("Tipo de imóvel: ");
             tipo = input.nextLine();
-            out.print("Preço mínimo: ");
-            precoMinimo = input.nextInt();
-            l = imoobiliaria.getImovel(tipo, precoMinimo);
+            out.print("Preço máximo dos imóveis a consultar: ");
+            precoMaximo = input.nextInt();
+            l = imoobiliaria.getImovel(tipo, precoMaximo);
             
-            for(Imovel im : l)
-                out.println(im.toString());
+            if(l == null || l.isEmpty())
+                out.println("Não existem imóveis do tipo '" + tipo + "', com preço não superior a " + precoMaximo + "€");
+            else{
+                for(Imovel im : l)
+                    out.println(im.toString());
+            }
         }
         catch(InputMismatchException e){err.println("Input inválido.");}
         // !falta fazer catch da excepção atirada quando o tipo de Imovel é invalido.
@@ -458,14 +471,19 @@ public class ImoobiliariaApp
     /** Apresenta a lista de todos os imóveis habitáveis. */
     private static void opcao9(){
         Scanner input = new Scanner(System.in);
-        int precoMinimo;
+        int precoMaximo;
         
         try{
-            out.print("Preço acima do qual pretende consultar imóveis habitáveis: ");
-            precoMinimo = input.nextInt();
-            List<Habitavel> l = imoobiliaria.getHabitaveis(precoMinimo);
-            for(Habitavel hab : l)
-                out.println(hab.toString()); // podemos usar o toString() logo ou temos que fazer cast para um tipo de Imovel???
+            out.print("Preço máximo dos imóveis habitáveis: ");
+            precoMaximo = input.nextInt();
+            List<Habitavel> l = imoobiliaria.getHabitaveis(precoMaximo);
+            
+            if(l == null || l.isEmpty())
+                out.println("Não existem imóveis habitáveis com preço abaixo de " + precoMaximo + "€");
+            else{
+                for(Habitavel hab : l)
+                    out.println(hab.toString());
+            }
         }
         catch(InputMismatchException e){err.println("Input inválido.");}
     }
@@ -499,8 +517,13 @@ public class ImoobiliariaApp
         
         try{
             favoritos = imoobiliaria.getFavoritos();
-            for(Imovel fav : favoritos)
-                out.print(fav.toString());
+            
+            if(favoritos == null || favoritos.isEmpty())
+                out.println("Ainda não tem nenhum imóvel favorito.");
+            else{
+                for(Imovel fav : favoritos)
+                    out.print(fav.toString());
+            }
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
