@@ -23,10 +23,12 @@ public class Imoobiliaria implements Serializable
     Utilizador utilizadorAutenticado = null;
 
     /* variaveis para gerar estados aleatorios */
-    public static final int N_VENDEDORES = 10;
-    public static final int N_IMOVEIS = 100;
-    public static final int N_COMPRADORES = 50;
-
+    /*
+    public final int N_VENDEDORES = 10;
+    public final int N_IMOVEIS = 100;
+    public final int N_COMPRADORES = 50;
+    */
+   
     /** Construtor por omissão. */
     public Imoobiliaria(){
         utilizadores = new HashMap<String, Utilizador>();
