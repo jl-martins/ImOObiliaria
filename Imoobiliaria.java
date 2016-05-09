@@ -257,9 +257,9 @@ public class Imoobiliaria implements Serializable
     
     public int hashCode(){
         int hash = 7;
-        hash = 31*hash + utilizadores.hashCode();
-        hash = 31*hash + imoveis.hashCode();
-        hash = 31*hash + utilizadorAutenticado.hashCode();
+        hash = 31*hash + ((utilizadores == null) ? 0 : utilizadores.hashCode());
+        hash = 31*hash + ((imoveis == null) ? 0 : imoveis.hashCode());
+        hash = 31*hash + ((utilizadorAutenticado == null) ? 0 : utilizadorAutenticado.hashCode());
         return hash;
     }
     
