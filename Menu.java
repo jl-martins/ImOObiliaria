@@ -92,7 +92,7 @@ final public class Menu
             if((opcoes[i].length() + 4) > maxLen) // o número da opção seguido do carater '.' e de um espaço correspondem a 4 caratéres
                 maxLen = opcoes[i].length() + 4;
 
-        return new String(new char[maxLen]).replace("\0", "*"); // string com '-' repetido maxLen vezes
+        return new String(new char[maxLen+5]).replace("\0", "*"); // string com '-' repetido (maxLen+5) vezes
     }
     
     private int lerOpcao(){
