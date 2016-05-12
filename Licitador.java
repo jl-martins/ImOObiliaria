@@ -9,9 +9,8 @@ import java.lang.Comparable;
 public class Licitador implements Serializable, Comparable<Licitador>
 {
     private String idComprador;
-    private int limite,
-    minutos,
-    incrementos;
+    private int limite, minutos, incrementos;
+    private int proximaLicitacao; /* serve como referencia para a ordem com que os Licitadores devem licitar */
 
     private Licitador() {}
 
@@ -25,9 +24,13 @@ public class Licitador implements Serializable, Comparable<Licitador>
     public Licitador(Licitador l){
         this(l.idComprador, l.limite, l.incrementos, l.minutos);
     }
-    
+
     public int compareTo(Licitador l){
-       /* que criterio devemos usar para compara-los?*/
-        this.
+        /* que criterio devemos usar para compara-los?*/
+        if(this.proximaLicitacao == l.proximaLicitacao)
+            return 0;
+        if(this.proximaLicitacao > l.proximaLicitacao)
+            return 1;
+        else return -1;      
     }
 }

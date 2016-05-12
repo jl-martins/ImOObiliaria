@@ -311,23 +311,29 @@ public class Imoobiliaria implements Serializable
     }    
 
     /* API de Leiloes */
-    public void iniciaLeilao(Imovel im, int horas) throws SemAutorizacaoException {
-        if(!(utilizadorAutenticado instanceof Vendedor) || !utilizadorAutenticado.vendeImovel(im.getId()))
+    public void iniciaLeilao(Imovel im, int horas) throws SemAutorizacaoException{
+        if(!(utilizadorAutenticado instanceof Vendedor) || !((Vendedor) utilizadorAutenticado).vendeImovel(im.getId()))
             throw new SemAutorizacaoException("O Utilizador atual não tem autorização para iniciar o Leilão deste imóvel.");
-        /* depende da implementação(se podem haver varios leiloes em simultaneo) */ = new Leilao(inicioLeilao, horas);
+        leilao = new Leilao(im.getId(), utilizadorAutenticado.getEmail(), horas);
     }
 
-    public void adicionaComprador(String idComprador, double limite, double incrementos, double minutos) throws LeilaoTerminadoException {
-        if(/* */.terminouLeilao())
+    public void adicionaComprador(String idComprador, int limite, int incrementos, int minutos) throws LeilaoTerminadoException {
+        if(leilao.terminouLeilao())
             throw new LeilaoTerminadoException("O leilão terminou, não pode inserir mais compradores");
-        /* */.registaCompradorLeilao(idComprador, limite, incrementos, minutos);
+        leilao.registaCompradorLeilao(idComprador, limite, incrementos, minutos);
     }
 
-    public Comprador encerraLeilao() {
-        String idVencedor = /* */.simula();
-        return utilizadores.get(idVencedor);
+    public Comprador encerraLeilao() throws SemAutorizacaoException{
+        if(!(utilizadorAutenticado instanceof Vendedor) || !utilizadorAutenticado.getEmail().equals(leilao.getResponsavel()))
+            throw new SemAutorizacaoException("Este utilizador não tem permissões para encerrar o leilao");
+        String idVencedor = leilao.simulaLeilao();
+        return (Comprador) utilizadores.get(idVencedor);
     }
 
+    public Comprador simulaLeilao(){
+        return (Comprador) utilizadores.get(leilao.simulaLeilao());
+    }
+    
     public int hashCode(){
         int hash = 7;
         hash = 31*hash + ((utilizadores == null) ? 0 : utilizadores.hashCode());
