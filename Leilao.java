@@ -38,7 +38,7 @@ public class Leilao implements Serializable
 
     }
 
-    public String encerraLeilao(){
+    /*public String encerraLeilao(){
 
-    }    
+    }    */
 }
