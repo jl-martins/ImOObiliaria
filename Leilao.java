@@ -1,44 +1,50 @@
 import java.io.Serializable;
+import java.util.Set;
+import Java.util.TreeSet;
+
 /**
  * Write a description of class Leilao here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Leilao implements Serializable
+public class Leilao implements Serializable /* implementar Comparable se for para fazer varios leiloes */
 {
     private String emailResponsavelLeilao;
     private String idImovelEmLeilao;
-    private long fimDoLeilao;
+    private Set<Licitador> licitadores;
+    private boolean terminou; 
+
     /* referir estrutura que vai conter os compradores inscritos no leilao */
-
-//    private Leilao(){};
-
+    //    private Leilao(){};
     public Leilao(String idVendedor){
         this.emailResponsavelLeilao = idVendedor;
+        licitadores = new TreeSet<Licitador>();
     }
 
     public void iniciaLeilao(Imovel im, int horas) /*throws SemAutorizacaoException*/{
-        /*if(!this.emailResponsavelLeilao.vendeImovel(im.getId()))
-            throw new SemAutorizacaoException("Este utilizador nao tem autorização para iniciar o leilao");
-        imovelEmLeilao = im.clone();*/
-        fimDoLeilao = System.currentTimeMillis() + 3600 * 1000 * horas;
 
     }
-    /*public void adicionaComprador(String idComprador, double limite, double incrementos, double minutos) 
+
+    public void adicionaCompradorLeilao(String idComprador, int limite, int incrementos, int minutos) 
     throws LeilaoTerminadoException{
-        if(System.currentTimeMillis() > fimDoLeilao)
-            throw new LeilaoTerminadoException("O leilão terminou, não pode adcionar mais compradores");
+        if(terminou)
+            throw new LeilaoTerminadoException("Não pode adicionar mais vendedores, o leilão terminou.");
 
-    }*/
-    
-    public void terminouLeilao() throws LeilaoTerminadoException{
-        if(System.currentTimeMillis() > fimDoLeilao)
-            throw new LeilaoTerminadoException("O leilão terminou, não pode adcionar mais compradores");
+        Licitador novoLicitador = new Licitador(idComprador, limite, incrementos, minutos);
+        
 
     }
 
-    /*public String encerraLeilao(){
+    public boolean terminouLeilao(){
+        return terminou;
+    }
 
-    }    */
+    public String simulaVencedor(){
+
+    }
+
+    public String encerraLeilao(){
+
+    }
 }

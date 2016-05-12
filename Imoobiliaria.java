@@ -17,18 +17,19 @@ import java.io.ObjectInputStream;
 import static java.lang.System.err;
 
 public class Imoobiliaria implements Serializable
-{   
+{
     Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
     Map<String, Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
-    Utilizador utilizadorAutenticado = null;
+    Utilizador utilizadorAutenticado;
+    Leilao leilao;
 
     /* variaveis para gerar estados aleatorios */
     /*
     public final int N_VENDEDORES = 10;
     public final int N_IMOVEIS = 100;
     public final int N_COMPRADORES = 50;
-    */
-   
+     */
+
     /** Construtor por omissão. */
     public Imoobiliaria(){
         utilizadores = new HashMap<String, Utilizador>();
@@ -50,7 +51,7 @@ public class Imoobiliaria implements Serializable
     }
 
     public static Imoobiliaria initApp(){
-        Imoobiliaria imoobiliaria = null;
+        Imoobiliaria imoobiliaria;
 
         try{
             imoobiliaria = Imoobiliaria.leObj("Imoobiliaria.ser");
@@ -69,46 +70,46 @@ public class Imoobiliaria implements Serializable
         }
         return imoobiliaria;
     }
-/*
+    /*
     public static Imoobiliaria geraEstadoAleatorio(){
-        Imoobiliaria imb = new Imoobiliaria();
-        String passwordPadrao = "1234";
-        Set<String> emails = new TreeSet<String>();
-        Set<String> idsImoveis = new TreeSet<String>()
+    Imoobiliaria imb = new Imoobiliaria();
+    String passwordPadrao = "1234";
+    Set<String> emails = new TreeSet<String>();
+    Set<String> idsImoveis = new TreeSet<String>()
 
-        // Utilizadores comuns para ser facil testar estados 
-        Vendedor vendedorPadrao = new Vendedor("a75273@uminho.pt", "João Pereira", passwordPadrao, "", LocalDate.of(1996, 12, 19));
-        Comprador compradorPadrao = new Comprador("a68646@uminho.pt", "João Martins", passwordPadrao, "", LocalDate.of(1994, 8, 8)); 
+    // Utilizadores comuns para ser facil testar estados 
+    Vendedor vendedorPadrao = new Vendedor("a75273@uminho.pt", "João Pereira", passwordPadrao, "", LocalDate.of(1996, 12, 19));
+    Comprador compradorPadrao = new Comprador("a68646@uminho.pt", "João Martins", passwordPadrao, "", LocalDate.of(1994, 8, 8)); 
 
-        usrs.add(vendedorPadrao);
-        usrs.add(utilizadorPadrao);        
+    usrs.add(vendedorPadrao);
+    usrs.add(utilizadorPadrao);        
 
-        for(int i=0; i < N_COMPRADORES; i++){
-            String randomEmail = geraEmail();
-            if(emails.add(randomEmail)){
-                Comprador comprador = new Comprador(randomEmail, geraNome(), "", ...); // usamos valores sem sentido para o nome, a morada e o ano?
-                imb.utilizadores.put(randomEmail, comprador);
-            }       
-        }
-
-        for(int i=0; i < N_VENDEDORES; i++){
-            String randomEmail = geraEmail();
-            if(emails.add(randomEmail)){
-                Vendedor vendedor = new Vendedor(randomEmail, geraNome(), "", ...);
-                imb.utilizadores.put(randomEmail, vendedor);
-            }       
-        }
-        
-        //Como gerar imoveis de classes diferentes?
-        for(int i=0; i < N_IMOVEIS; i++){
-            
-        }
-        
-        // adiciona-se um imovel aleatriamente a à lista de venda de um vendedor 
-
-        return imb;
+    for(int i=0; i < N_COMPRADORES; i++){
+    String randomEmail = geraEmail();
+    if(emails.add(randomEmail)){
+    Comprador comprador = new Comprador(randomEmail, geraNome(), "", ...); // usamos valores sem sentido para o nome, a morada e o ano?
+    imb.utilizadores.put(randomEmail, comprador);
+    }       
     }
-*/
+
+    for(int i=0; i < N_VENDEDORES; i++){
+    String randomEmail = geraEmail();
+    if(emails.add(randomEmail)){
+    Vendedor vendedor = new Vendedor(randomEmail, geraNome(), "", ...);
+    imb.utilizadores.put(randomEmail, vendedor);
+    }       
+    }
+
+    //Como gerar imoveis de classes diferentes?
+    for(int i=0; i < N_IMOVEIS; i++){
+
+    }
+
+    // adiciona-se um imovel aleatriamente a à lista de venda de um vendedor 
+
+    return imb;
+    }
+     */
     /**
      * Grava a Imoobiliaria em ficheiro.
      * @param fich String com o caminho do ficheiro onde a Imoobiliaria será gravada.
@@ -308,6 +309,24 @@ public class Imoobiliaria implements Serializable
         }
         return favoritos;
     }    
+
+    /* API de Leiloes */
+    public void iniciaLeilao(Imovel im, int horas) throws SemAutorizacaoException {
+        if(!(utilizadorAutenticado instanceof Vendedor) || !utilizadorAutenticado.vendeImovel(im.getId()))
+            throw new SemAutorizacaoException("O Utilizador atual não tem autorização para iniciar o Leilão deste imóvel.");
+        /* depende da implementação(se podem haver varios leiloes em simultaneo) */ = new Leilao(inicioLeilao, horas);
+    }
+
+    public void adicionaComprador(String idComprador, double limite, double incrementos, double minutos) throws LeilaoTerminadoException {
+        if(/* */.terminouLeilao())
+            throw new LeilaoTerminadoException("O leilão terminou, não pode inserir mais compradores");
+        /* */.registaCompradorLeilao(idComprador, limite, incrementos, minutos);
+    }
+
+    public Comprador encerraLeilao() {
+        String idVencedor = /* */.simula();
+        return utilizadores.get(idVencedor);
+    }
 
     public int hashCode(){
         int hash = 7;
