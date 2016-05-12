@@ -14,34 +14,35 @@ public class Leilao implements Serializable /* implementar Comparable se for par
     private String imovelEmLeilao;
     private Set<Licitador> licitadores; /* usar uma heap? */
     private int duracao;
-    private boolean terminou; 
+    private long inicioLeilao;
 
     private Leilao(){}
-    
+
     public Leilao(String imovelEmLeilao, String responsavel, int duracao){
         this.responsavel = responsavel;
         this.imovelEmLeilao = imovelEmLeilao;
         this.duracao = duracao;
-        this.terminou = false;
-        licitadores = new TreeSet<>();
+        this.licitadores = new TreeSet<>();
+        this.inicioLeilao = System.currentTimeMillis();
     };
-    
+
     public String getResponsavel(){
         return responsavel;
     }
-    
+
     /* o id do comprador corresponde ao seu mail*/
     public void registaCompradorLeilao(String idComprador, int limite, int incrementos, int minutos) 
     throws LeilaoTerminadoException{
-        if(terminou)
+        if(this.terminouLeilao())
             throw new LeilaoTerminadoException("Não pode adicionar mais vendedores, o leilão terminou.");
-
-        Licitador novoLicitador = new Licitador(idComprador, limite, incrementos, minutos);
+        int minutosDesdeInicioLeilao = (int) ((System.currentTimeMillis() - inicioLeilao)/60000);
+        Licitador novoLicitador = new Licitador(idComprador, limite, incrementos, minutos, minutosDesdeInicioLeilao);
         licitadores.add(novoLicitador);
     }
 
     public boolean terminouLeilao(){
-        return terminou;
+        long fimDoLeilao = inicioLeilao + duracao * 60 * 60 * 1000;
+        return System.currentTimeMillis() >= fimDoLeilao;
     }
 
     public String simulaLeilao(){
@@ -50,7 +51,6 @@ public class Leilao implements Serializable /* implementar Comparable se for par
     }
 
     public String encerraLeilao(){
-        terminou = true;
         return simulaLeilao();
     }
 }

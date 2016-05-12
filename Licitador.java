@@ -9,22 +9,29 @@ import java.lang.Comparable;
 public class Licitador implements Serializable, Comparable<Licitador>
 {
     private String idComprador;
-    private int limite, minutos, incrementos;
-    private int proximaLicitacao; /* serve como referencia para a ordem com que os Licitadores devem licitar */
+    private int limite, 
+    intervaloIncrementos, /* indica de quanto em quanto tempo é que o utilizador faz incrementos */
+    incrementos,
+    minutosDesdeInicio, /* indica quantos minutos passaram entre o inicio do leilao e o registo do cliente */
+    proximaLicitacao; /* indica qual o minuto (relativo ao inicio do leilao) em que o utilizador vai incrementar a sua oferta */
 
     private Licitador() {}
 
-    public Licitador(String idComprador, int limite, int incrementos, int minutos){
+    public Licitador(String idComprador, int limite, int incrementos, int intervaloIncrementos, int minutosDesdeInicio){
         this.idComprador = idComprador;
         this.limite = limite;
         this.incrementos = incrementos;
-        this.minutos = minutos;
+        this.intervaloIncrementos = intervaloIncrementos;
+        this.minutosDesdeInicio = minutosDesdeInicio;
+        this.proximaLicitacao = minutosDesdeInicio;
     }
 
     public Licitador(Licitador l){
-        this(l.idComprador, l.limite, l.incrementos, l.minutos);
+        this(l.idComprador, l.limite, l.incrementos, l.intervaloIncrementos, l.minutosDesdeInicio);
     }
 
+    
+    
     public int compareTo(Licitador l){
         /* que criterio devemos usar para compara-los?*/
         if(this.proximaLicitacao == l.proximaLicitacao)

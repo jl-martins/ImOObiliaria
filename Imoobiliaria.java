@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.TreeSet;
 import java.util.HashMap;
 import java.time.LocalDate;
-
 import java.io.Serializable;
 import java.io.IOException;
 import java.io.FileOutputStream;
@@ -15,6 +14,7 @@ import java.io.FileInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import static java.lang.System.err;
+import java.util.Random;
 
 public class Imoobiliaria implements Serializable
 {
@@ -22,13 +22,6 @@ public class Imoobiliaria implements Serializable
     Map<String, Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
     Utilizador utilizadorAutenticado;
     Leilao leilao;
-
-    /* variaveis para gerar estados aleatorios */
-    /*
-    public final int N_VENDEDORES = 10;
-    public final int N_IMOVEIS = 100;
-    public final int N_COMPRADORES = 50;
-     */
 
     /** Construtor por omissão. */
     public Imoobiliaria(){
@@ -70,46 +63,7 @@ public class Imoobiliaria implements Serializable
         }
         return imoobiliaria;
     }
-    /*
-    public static Imoobiliaria geraEstadoAleatorio(){
-    Imoobiliaria imb = new Imoobiliaria();
-    String passwordPadrao = "1234";
-    Set<String> emails = new TreeSet<String>();
-    Set<String> idsImoveis = new TreeSet<String>()
-
-    // Utilizadores comuns para ser facil testar estados 
-    Vendedor vendedorPadrao = new Vendedor("a75273@uminho.pt", "João Pereira", passwordPadrao, "", LocalDate.of(1996, 12, 19));
-    Comprador compradorPadrao = new Comprador("a68646@uminho.pt", "João Martins", passwordPadrao, "", LocalDate.of(1994, 8, 8)); 
-
-    usrs.add(vendedorPadrao);
-    usrs.add(utilizadorPadrao);        
-
-    for(int i=0; i < N_COMPRADORES; i++){
-    String randomEmail = geraEmail();
-    if(emails.add(randomEmail)){
-    Comprador comprador = new Comprador(randomEmail, geraNome(), "", ...); // usamos valores sem sentido para o nome, a morada e o ano?
-    imb.utilizadores.put(randomEmail, comprador);
-    }       
-    }
-
-    for(int i=0; i < N_VENDEDORES; i++){
-    String randomEmail = geraEmail();
-    if(emails.add(randomEmail)){
-    Vendedor vendedor = new Vendedor(randomEmail, geraNome(), "", ...);
-    imb.utilizadores.put(randomEmail, vendedor);
-    }       
-    }
-
-    //Como gerar imoveis de classes diferentes?
-    for(int i=0; i < N_IMOVEIS; i++){
-
-    }
-
-    // adiciona-se um imovel aleatriamente a à lista de venda de um vendedor 
-
-    return imb;
-    }
-     */
+ 
     /**
      * Grava a Imoobiliaria em ficheiro.
      * @param fich String com o caminho do ficheiro onde a Imoobiliaria será gravada.
@@ -117,12 +71,10 @@ public class Imoobiliaria implements Serializable
     public void gravaObj(String fich) throws IOException{
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fich));
         oos.writeObject(this);
-
         oos.flush();
         oos.close();
     }
 
-    // Mudar para a Imoobiliaria
     public static Imoobiliaria leObj(String fich) throws IOException, ClassNotFoundException{
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fich));
 
@@ -333,7 +285,7 @@ public class Imoobiliaria implements Serializable
     public Comprador simulaLeilao(){
         return (Comprador) utilizadores.get(leilao.simulaLeilao());
     }
-    
+
     public int hashCode(){
         int hash = 7;
         hash = 31*hash + ((utilizadores == null) ? 0 : utilizadores.hashCode());
