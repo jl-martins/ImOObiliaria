@@ -509,8 +509,8 @@ public class ImoobiliariaApp
             if(consultas == null || consultas.isEmpty())
                 out.println("Não existem consultas para apresentar.");
             else{
+                out.println("--------------------------------------------------------------------------------------------------");
                 for(Consulta c : consultas){
-                    out.println("--------------------------------------------------------------------------------------------------");
                     out.print(c.toString());
                     out.println("--------------------------------------------------------------------------------------------------");
                 }
@@ -578,8 +578,8 @@ public class ImoobiliariaApp
             if(l == null || l.isEmpty())
                 out.println("Não existem imóveis do tipo '" + tipo + "', com preço não superior a " + precoMaximo + "€");
             else{
+                out.println("--------------------------------------------------------------------------------------------------");
                 for(Imovel im : l){
-                    out.println("--------------------------------------------------------------------------------------------------");
                     out.print(im.toString());
                     out.println("--------------------------------------------------------------------------------------------------");
                 }
@@ -602,8 +602,8 @@ public class ImoobiliariaApp
             if(l == null || l.isEmpty())
                 out.println("Não existem imóveis habitáveis com preço abaixo de " + precoMaximo + "€");
             else{
+                out.println("--------------------------------------------------------------------------------------------------");
                 for(Habitavel hab : l){
-                    out.println("--------------------------------------------------------------------------------------------------");
                     out.print(hab.toString());
                     out.println("--------------------------------------------------------------------------------------------------");
                 }
@@ -619,8 +619,8 @@ public class ImoobiliariaApp
         if(mapeamentoImoveis == null || mapeamentoImoveis.isEmpty())
             out.println("A imobiliária ainda não tem imóveis nem vendedores.");
         else{
+            out.println("--------------------------------------------------------------------------------------------------");
             for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis.entrySet()){
-                out.println("--------------------------------------------------------------------------------------------------");
                 Imovel im = entrada.getKey();
                 Vendedor vendedor = entrada.getValue();
                 out.println(im.toString());
@@ -654,8 +654,8 @@ public class ImoobiliariaApp
             if(favoritos == null || favoritos.isEmpty())
                 out.println("Ainda não tem nenhum imóvel favorito.");
             else{
+                out.println("--------------------------------------------------------------------------------------------------");
                 for(Imovel fav : favoritos){
-                    out.println("--------------------------------------------------------------------------------------------------");
                     out.print(fav.toString());
                     out.println("--------------------------------------------------------------------------------------------------");
                 }
