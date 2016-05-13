@@ -50,11 +50,12 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         int precoAtual = 0;
         int proxI;
         Licitador aGanhar = null;
-        /*copiar estado antes de executar??*/
+        /*copiar estado antes de executar para ser possivel fazer simulaçoes nao-destrutivas dos leiloes*/
+        List<Licitador> copiaLicitadores = new ArrayList<>(licitadores);
 
         for(int i = 0; i <= duracaoMinutos; i = proxI){
             proxI = duracaoMinutos + 1;
-            for(Licitador l : licitadores){
+            for(Licitador l : copiaLicitadores){
                 int minutoProxLicitacao = l.getQuandoProximaLicitacao();
 
                 if(minutoProxLicitacao == i){
@@ -62,7 +63,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
                         l.atualizaQuandoProxIncremento();
                     }
                     else if(l.getLimite() <= precoAtual){ 
-                        licitadores.remove(l);                        
+                        copiaLicitadores.remove(l);                        
                     }    
                     else{
                         precoAtual = l.setMenorLicitacaoQuePasse(precoAtual);
@@ -76,6 +77,8 @@ public class Leilao implements Serializable /* implementar Comparable se for par
             }
         }
         /* fazer reset a todos os licitadores */
+        for(Licitador l : licitadores)
+            l.reset();
         return (aGanhar == null)? null : aGanhar.getIdComprador();
     }
 }

@@ -282,10 +282,6 @@ public class Imoobiliaria implements Serializable
         return (Comprador) utilizadores.get(idVencedor);
     }
 
-    public Comprador simulaLeilao(){
-        return (Comprador) utilizadores.get(leilao.simulaLeilao());
-    }
-
     public int hashCode(){
         int hash = 7;
         hash = 31*hash + ((utilizadores == null) ? 0 : utilizadores.hashCode());
