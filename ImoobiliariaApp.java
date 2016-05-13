@@ -108,6 +108,10 @@ public class ImoobiliariaApp
     
     private static void carregarDados(){imoobiliaria = Imoobiliaria.initApp();}
     
+    /** 
+     * Apresenta um splash screen, carrega dados e menus e em seguida lê e executa as opções do menu principal.
+     * Ao sair, o utilizador tem a opção de guardar o estado do programa.
+     */
     public static void main(String[] args){
         int numOpcao;
         splashScreen();
@@ -146,10 +150,15 @@ public class ImoobiliariaApp
             }
         } while(numOpcao != 0);
         
-        gravarEstado();
+        menuSimNao.setTitulo("Deseja guardar o estado do programa?");
+        menuSimNao.executa();
+        if(menuSimNao.getOpcao() == 1)
+            gravarEstado();
+        
         out.println("Volte sempre!");
     }
     
+    /** Apresenta, lê e executa as opções do menu de comprador. */
     private static int menuComprador(){
         int numOpcao;
         
@@ -190,6 +199,7 @@ public class ImoobiliariaApp
         return numOpcao;
     }
     
+    /** Apresenta, lê e executa as opções do menu de vendedor. */
     private static int menuVendedor(){
         int numOpcao;
         
@@ -292,7 +302,7 @@ public class ImoobiliariaApp
                 err.print("O email: '" + email + "' é inválido.\n");  
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
-        catch(DateTimeParseException e){err.println("Erro: A data de nascimento '" + dataNascimento + "' é inválida.\nFormato esperado: aaaa-mm-dd.");}
+        catch(DateTimeParseException e){err.println("Erro: Data de nascimento inválida.\nFormato esperado: aaaa-mm-dd.");}
         catch(UtilizadorExistenteException e){err.println(e.getMessage());}
     }
     
@@ -404,7 +414,7 @@ public class ImoobiliariaApp
         numDaPorta = input.nextInt(); input.nextLine();
         
         return new Moradia(id, rua, precoPedido, precoMinimo, tipo, areaImplantacao,
-                             areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
+                                   areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
     }
     
     /** Pede ao utilizador para introduzir os dados relativos a um apartamento e, em caso de sucesso, devolve o Apartamento criado. */
@@ -434,7 +444,7 @@ public class ImoobiliariaApp
         temGaragem = (numOpcao == 1);
         
         return new Apartamento(id, rua, precoPedido, precoMinimo, tipo, areaTotal,
-                               numQuartos, numWCs, numDaPorta, andar, temGaragem);
+                                numQuartos, numWCs, numDaPorta, andar, temGaragem);
     }
     
     /** Pede ao utilizador para introduzir os dados relativos a uma loja e, em caso de sucesso, devolve a Loja criada. */
@@ -456,6 +466,7 @@ public class ImoobiliariaApp
         tipoNegocio = input.nextLine();
         out.print("Número da porta: ");
         numDaPorta = input.nextInt(); input.nextLine();
+        
         return new Loja(id, rua, precoPedido, precoMinimo, area, temWC, tipoNegocio, numDaPorta);
     }
     
@@ -496,9 +507,32 @@ public class ImoobiliariaApp
     /** Pede ao utilizador para introduzir os dados relativos a uma loja habitável e, em caso de sucesso, devolve o LojaHabitavel criada. */
     private static LojaHabitavel leDadosLojaHabitavel(String id, String rua, int precoPedido, int precoMinimo){
         Loja loja = leDadosLoja(id, rua, precoPedido, precoMinimo);
-        Apartamento apartamento = leDadosApartamento(id, rua, precoPedido, precoMinimo);
+        Scanner input = new Scanner(System.in);
+        TipoApartamento tipo;
+        int andar, numOpcao; // não lemos o número da porta, porque assumimos que este é igual ao da loja
+        int areaTotal, numQuartos, numWCs;
+        boolean temGaragem = false;
+        Apartamento apartamento;
         
-        return new LojaHabitavel(loja, apartamento); // ADICIONAR CONSTRUTOR A LOJA HABITAVEL!
+        out.println("Introduza os dados do apartamento.");
+        out.print("Tipo de apartamento [Simples/Duplex/Triplex]: ");
+        tipo = TipoApartamento.fromString(input.nextLine());
+        out.print("Área total: ");
+        areaTotal = input.nextInt(); input.nextLine();
+        out.print("Número de quartos: ");
+        numQuartos = input.nextInt(); input.nextLine();
+        out.print("Número de WCs: ");
+        numWCs = input.nextInt(); input.nextLine();
+        out.print("Andar: ");
+        andar = input.nextInt(); input.nextLine();
+        
+        menuSimNao.setTitulo("O apartamento tem garagem?");
+        menuSimNao.executa();
+        numOpcao = menuSimNao.getOpcao();
+        temGaragem = (numOpcao == 1);
+        apartamento = new Apartamento(id, rua, precoPedido, precoMinimo, tipo, areaTotal, numQuartos, numWCs, loja.getNumDaPorta(), andar, temGaragem);
+        
+        return new LojaHabitavel(loja, apartamento);
     }
     
     /** Apresenta as 10 últimas consultas (opção de vendedor). */
@@ -665,10 +699,42 @@ public class ImoobiliariaApp
     }
     
     private static void iniciarLeilao(){
+        Scanner input = new Scanner(System.in);
+        String id;
         
+        try{
+            out.print("Id do imóvel que pretende leiloar: ");
+            id = input.nextLine();
+            imoobiliaria.iniciaLeilao(id);
+        }
+        catch(SemAutorizacaoException e){err.print(e.getMessage());}
     }
     
-    private static void adicionarComprador(){}
+    private static void adicionarComprador(){
+        Scanner input = new Scanner(System.in);
+        String idComprador = imoobiliaria.getEmailUtilizadorAutenticado();
+        int limite, incrementos, minutos;
+        
+        out.print("Valor máximo que está disposto a dar pelo imóvel: ");
+        limite = input.nextInt(); input.nexLine();
+        out.print("Incrementos a efetuar: ");
+        incrementos = input.nextInt(); input.nexLine();
+        out.print("Número de minutos entre incrementos: ");
+        minutos = input.nextInt(); input.nexLine();
+        try{
+            imoobiliaria.adicionaComprador(idComprador, limite, incrementos, minutos);
+        }
+        catch(LeilaoTerminadoException e){err.println(e.getMessage());}
+        // catch(SemAutorizacaoException e){err.println(e.getMessage());}
+    }
     
-    private static void encerrarLeilao(){}
+    private static void encerrarLeilao(){
+        Comprador vencedor;
+        
+        vencedor = imoobiliaria.encerraLeilao();
+        if(vencedor != null)
+            out.println("Vencedor do leilão: " + vencedor.toString());
+        else
+            out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
+    }
 }

@@ -15,8 +15,8 @@ final public class Menu
     private String titulo;
     private String separador; // separa o título das opções e a última opção da prompt
     private final String[] opcoes;
-    private int op;
     private boolean temOpcaoSair;
+    private int op;
     
     /**
      * Construtor por omissão
