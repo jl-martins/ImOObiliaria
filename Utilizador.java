@@ -41,6 +41,10 @@ public abstract class Utilizador implements Serializable
         return nome;
     }
     
+    public String getPassword(){
+        return password;
+    }
+    
     public String getMorada(){
         return morada;
     }
@@ -55,6 +59,10 @@ public abstract class Utilizador implements Serializable
     
     public void setNome(String nome){
         this.nome = nome;
+    }
+    
+    public void setPassword(String password){
+        this.password = password;
     }
     
     public void setMorada(String morada){
