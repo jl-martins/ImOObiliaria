@@ -1,6 +1,6 @@
 import java.io.Serializable;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Write a description of class Leilao here.
@@ -12,7 +12,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
 {
     private String responsavel;
     private String imovelEmLeilao;
-    private Set<Licitador> licitadores; /* usar uma heap? */
+    private List<Licitador> licitadores; /* vai ter a lista de todos os licitadores por ordem de registo no leilao */
     private int duracao;
     private long inicioLeilao;
 
@@ -22,7 +22,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         this.responsavel = responsavel;
         this.imovelEmLeilao = imovelEmLeilao;
         this.duracao = duracao;
-        this.licitadores = new TreeSet<>();
+        this.licitadores = new ArrayList<>();
         this.inicioLeilao = System.currentTimeMillis();
     };
 
@@ -46,11 +46,36 @@ public class Leilao implements Serializable /* implementar Comparable se for par
     }
 
     public String simulaLeilao(){
-        /* acabar isto */
-        return "";
-    }
+        int duracaoMinutos = 60 * duracao;
+        int precoAtual = 0;
+        int proxI;
+        Licitador aGanhar = null;
+        /*copiar estado antes de executar??*/
 
-    public String encerraLeilao(){
-        return simulaLeilao();
+        for(int i = 0; i <= duracaoMinutos; i = proxI){
+            proxI = duracaoMinutos + 1;
+            for(Licitador l : licitadores){
+                int minutoProxLicitacao = l.getQuandoProximaLicitacao();
+
+                if(minutoProxLicitacao == i){
+                    if(l == aGanhar){
+                        l.atualizaQuandoProxIncremento();
+                    }
+                    else if(l.getLimite() <= precoAtual){ 
+                        licitadores.remove(l);                        
+                    }    
+                    else{
+                        precoAtual = l.setMenorLicitacaoQuePasse(precoAtual);
+                        aGanhar = l;
+                        l.atualizaQuandoProxIncremento();
+                        l.atualizaValorProxIncremento();
+                    }
+                } else if(minutoProxLicitacao < proxI){
+                    proxI = i;
+                }
+            }
+        }
+        /* fazer reset a todos os licitadores */
+        return (aGanhar == null)? null : aGanhar.getIdComprador();
     }
 }
