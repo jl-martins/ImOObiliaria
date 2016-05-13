@@ -95,4 +95,15 @@ public abstract class Utilizador implements Serializable
         sb.append("Data de nascimento: " + dataNascimento.toString());
         return sb.toString();
     }
+    
+    public int hashCode(){
+        int hash = 7;
+        
+        hash = 31*hash + (email == null ? 0 : email.hashCode());
+        hash = 31*hash + (nome == null ? 0 : nome.hashCode());
+        hash = 31*hash + (morada == null ? 0 : morada.hashCode());
+        hash = 31*hash + (password == null ? 0 : password.hashCode());
+        hash = 31*hash + (dataNascimento == null ? 0 : dataNascimento.hashCode());
+        return hash;
+    }
 }

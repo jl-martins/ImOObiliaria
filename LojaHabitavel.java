@@ -2,7 +2,7 @@ import java.io.Serializable;
 
 public class LojaHabitavel extends Loja implements Serializable, Habitavel
 {   
-    Apartamento apartamento;
+    private Apartamento apartamento;
     
     public LojaHabitavel(){
         super();

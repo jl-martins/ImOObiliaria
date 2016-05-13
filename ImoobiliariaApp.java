@@ -61,53 +61,38 @@ public class ImoobiliariaApp
         limparEcra();
     }
     
-    public static void main(String[] args){
-        int numOpcao;
-        splashScreen();
-        carregarMenus();
-        carregarDados();
-        
-        do{
-            menuMain.executa();
-            numOpcao = menuMain.getOpcao();
-            limparEcra();
-            if(numOpcao > 0){ // o resto das validações do número da opção são feitas na classe Menu
-                try{
-                    Method m = ImoobiliariaApp.class.getDeclaredMethod("opcao" + numOpcao);
-                    m.invoke(null); // null indica que o método inovcado é static
-                    enterParaContinuar();
-                }
-                catch(NoSuchMethodException e){err.println("O método escolhido não existe!");}
-                catch(IllegalAccessException e){err.println("Tentativa de aceder a um método a que não tem acesso!");}
-                catch(InvocationTargetException e){e.printStackTrace(); err.println("Exceção no método invocado com invoke()!");}
-            }
-        } while(numOpcao != 0);
-        
-        try{
-            imoobiliaria.gravaObj("Imoobiliaria.ser");
-            // IMPLEMENTAR ==> imoobiliaria.log("log.txt");
-        }
-        catch(IOException e){err.println("Não foi possível gravar os dados!");}
-        out.println("Volte sempre!");
-    }
-    
     private static void carregarMenus(){
+
         String[] opcoesMain = {
-            "Registar novo utilizador",
-            "Iniciar sessão",
-            "Fechar sessão",
-            "Registar um imóvel (opção de Vendedor)",
-            "Obter as 10 últimas consultas (opção de Vendedor)",
-            "Alterar o estado de um imóvel (opção de Vendedor)",
-            "Obter imóveis com mais de N consultas (opção de Vendedor)",
+            "Registar utilizador"
+            "Iniciar sessão"
             "Listar imóveis de um certo tipo",
-            "Obter lista dos imóveis habitáveis",
-            "Obter correspondência entre imóveis e vendedores",
-            "Marcar um imóvel como favorito (opção de Comprador)",
-            "Consultar imóveis favoritos (opção de Comprador)",
-            "Iniciar leilão (opção de Vendedor)",
-            "Adicionar comprador ao leilão atual (opção de Vendedor)",
-            "Encerrar leilão (opção de Vendedor)"
+            "Listar imóveis habitáveis",
+            "Correspondência entre imóveis e vendedores",
+            "Gravar estado"
+        };
+        
+        String[] opcoesComprador = {
+            "Fechar sessão"
+            "Listar imóveis de um certo tipo",
+            "Listar imóveis habitáveis",
+            "Correspondência entre imóveis e vendedores",
+            "Marcar um imóvel como favorito",
+            "Consultar imóveis favoritos",
+            "Participar em leilão"
+        };
+        
+        String[] opcoesVendedor = {
+            "Fechar sessão"
+            "Listar imóveis de um certo tipo",
+            "Listar imóveis habitáveis",
+            "Correspondência entre imóveis e vendedores",
+            "Registar um imóvel",
+            "Obter as 10 últimas consultas",
+            "Alterar o estado de um imóvel",
+            "Obter imóveis com mais de N consultas",
+            "Iniciar leilão",
+            "Encerrar leilão"
         };
         String[] opcoesTipoUtilizador = {
             "Comprador",
@@ -123,13 +108,139 @@ public class ImoobiliariaApp
         String[] opcoesSimNao = {"Sim", "Não"};
         // o espaço inicial dos títulos é intencional
         menuMain = new Menu(" Menu Principal", opcoesMain);
+        menuComprador = new Menu(" Menu Comprador", opcoesComprador);
+        menuVendedor = new Menu(" Menu Vendedor", opcoesVendedor);
         menuTipoUtilizador = new Menu(" Selecionar tipo de utilizador", opcoesTipoUtilizador);
         menuTipoImovel = new Menu(" Selecionar tipo de imóvel", opcoesTipoImovel);
         menuSimNao = new Menu(" Resposta Sim/Não", opcoesSimNao);
-    }  
+    }
     
     private static void carregarDados(){
         imoobiliaria = Imoobiliaria.initApp();
+    }
+    
+    public static void main(String[] args){
+        int numOpcao;
+        splashScreen();
+        carregarMenus();
+        carregarDados();
+        
+        do{
+            menuMain.executa();
+            numOpcao = menuMain.getOpcao();
+            limparEcra();
+            if(numOpcao > 0){ // o resto das validações do número da opção são feitas na classe Menu
+                switch(numOpcao){
+                    case 1:
+                        registarUtilizador();
+                        break;
+                    case 2:
+                        iniciarSessao();
+                        break;
+                    case 3:
+                        listarImoveisTipo();
+                        break;
+                    case 4:
+                        listarHabitaveis();
+                        break;
+                    case 5:
+                        mapImovelVend();
+                        break;
+                    case 6:
+                        gravarEstado();
+                        break;
+            }
+        } while(numOpcao != 0);
+        
+        gravarEstado();
+        out.println("Volte sempre!");
+    }
+    
+    private static void menuComprador(){
+        int numOpcao;
+        
+        do{
+            menuComprador.executa();
+            numOpcao = menuComprador.getOpcao();
+            switch(numOpcao){
+                case 0:
+                case 1:
+                    fechaSessao();
+                    break;
+                case 2:
+                    listarImoveis();
+                    break;
+                case 3:
+                    listarHabitaveis();
+                    break;
+                case 4:
+                    mapImovelVend();
+                    break;
+                case 5:
+                    registarFavorito();
+                    break;
+                case 6:
+                    apresentarFavoritos();
+                    break;
+                case 7:
+                    adicionarComprador();
+                    break;
+                case 8:
+                    gravarEstado();
+                    break;
+        } while(numOpcao > 1); // numOpcao != 0 && numOpcao != 1
+    }
+    
+    public static void menuVendedor(){
+        int numOpcao;
+        
+        do{
+            menuVendedor.executa();
+            numOpcao = menuVendedor.getOpcao();
+            switch(numOpcao){
+                case 0:
+                case 1:
+                    fechaSessao();
+                    break;
+                case 2:
+                    listarImoveis();
+                    break;
+                case 3:
+                    listarHabitaveis();
+                    break;
+                case 4:
+                    mapImovelVend();
+                    break;
+                case 5:
+                    registarImovel();
+                    break;
+                case 6:
+                    ultimasConsultas();
+                    break;
+                case 7:
+                    alterarEstadoImovel();
+                    break;
+                case 8:
+                    topImoveis();
+                    break;
+                case 9:
+                    iniciarLeilao();
+                    break;
+                case 10:
+                    encerrarLeilao();
+                    break;
+                case 11:
+                    gravarEstado();
+                    break;
+        } while(numOpcao > 1); // numOpcao != 0 && numOpcao != 1
+    }
+    
+    public static void gravarEstado(){
+        try{
+            imoobiliaria.gravaObj("Imoobiliaria.ser");
+            // IMPLEMENTAR ==> imoobiliaria.log("log.txt");
+        }
+        catch(IOException e){err.println("Não foi possível gravar os dados!");}
     }
     
     /**
@@ -137,7 +248,7 @@ public class ImoobiliariaApp
      * e tipo de conta de utilizador pretendida. Se os dados introduzidos forem válidos e não
      * existir qualquer utilizador com o email introduzido, regista o novo utilizador na Imoobiliaria.
      */
-    private static void opcao1(){
+    private static void registarUtilizador(){
         int numOpcao; // número da opção do menu
         Scanner input = new Scanner(System.in);
         String email, nome, password, morada, strData;
@@ -184,8 +295,8 @@ public class ImoobiliariaApp
             out.println("Registo cancelado.");
     }
     
-    /** Inicia sessão. */
-    private static void opcao2(){
+      /** Iniciar sessão. */
+    private static void iniciarSessao(){
         Scanner input = new Scanner(System.in);
         String email, password;
         
@@ -202,13 +313,13 @@ public class ImoobiliariaApp
     }
     
     /** Fecha sessão. */
-    private static void opcao3(){
+    private static void fecharSessao(){
         imoobiliaria.fechaSessao();
         out.println("-> Sessão fechada com sucesso. <-\n");
     }
     
     /** Regista um imóvel. */
-    private static void opcao4(){
+    private static void registarImovel(){
         String id, rua;
         int precoPedido, precoMinimo, numOpcao;
         Scanner input = new Scanner(System.in);
@@ -387,7 +498,7 @@ public class ImoobiliariaApp
     }
     
     /** Apresenta as 10 últimas consultas (opção de vendedor). */
-    private static void opcao5(){
+    private static void ultimasConsultas(){
         try{
             List<Consulta> consultas = imoobiliaria.getConsultas();
             
@@ -402,7 +513,7 @@ public class ImoobiliariaApp
     }
     
     /** Altera o estado de um imóvel, de acordo com as ações feitas sobre ele. */
-    private static void opcao6(){
+    private static void alterarEstadoImovel(){
         Scanner input = new Scanner(System.in);
         String idImovel, novoEstado;
         
@@ -423,7 +534,7 @@ public class ImoobiliariaApp
      * Lê um inteiro N e, se o utilizador autenticado for um vendedor, apresenta 
      * o conjunto dos seus imóveis que têm mais do que N consultas.
      */
-    private static void opcao7(){
+    private static void topImoveis(){
         Scanner input = new Scanner(System.in);
         int N;
         Set<String> setIds;
@@ -444,7 +555,7 @@ public class ImoobiliariaApp
     }
     
     /** Lê um tipo e um preço e apresenta a lista de todos os imóveis desse tipo, até ao preço especificado. */
-    private static void opcao8(){
+    private static void obterImoveis(){
         Scanner input = new Scanner(System.in);
         String tipo;
         int precoMaximo;
@@ -469,7 +580,7 @@ public class ImoobiliariaApp
     }
     
     /** Apresenta a lista de todos os imóveis habitáveis. */
-    private static void opcao9(){
+    private static void listarHabitaveis(){
         Scanner input = new Scanner(System.in);
         int precoMaximo;
         
@@ -489,7 +600,7 @@ public class ImoobiliariaApp
     }
     
     /** Apresenta um mapeamento entre imóveis e respectivos vendedores. */
-    private static void opcao10(){
+    private static void mapImovelVend(){
         Map<Imovel, Vendedor> mapeamentoImoveis = imoobiliaria.getMapeamentoImoveis();
         
         for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis.entrySet()){
@@ -502,7 +613,7 @@ public class ImoobiliariaApp
     }
     
     /** Marca um imóvel como favorito (opção de comprador). */
-    private static void opcao11(){
+    private static void registarFavorito(){
         Scanner input = new Scanner(System.in);
         String id;
         
@@ -516,7 +627,7 @@ public class ImoobiliariaApp
     }
     
     /** Apresentar os imóveis favoritos de um comprador, ordenados por preço. */
-    private static void opcao12(){
+    private static void apresentarFavoritos(){
         TreeSet<Imovel> favoritos;
         
         try{
@@ -532,9 +643,11 @@ public class ImoobiliariaApp
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
     
-    private static void opcao13(){}
+    private static void iniciarLeilao(){
+        
+    }
     
-    private static void opcao14(){}
+    private static void adicionarComprador(){}
     
-    private static void opcao15(){}
+    private static void encerrarLeilao(){}
 }
