@@ -34,10 +34,13 @@ public class Imoobiliaria implements Serializable
         this.imoveis = new HashMap<String, Imovel>();
         Collection<Imovel> imoveisAdicionar = original.imoveis.values();
         Collection<Utilizador> utilizadoresAdicionar = original.utilizadores.values();
+        
         for(Imovel imv : imoveisAdicionar)
             this.imoveis.put(imv.getId(), imv.clone());
+        
         for(Utilizador utilizador: utilizadoresAdicionar)
             this.utilizadores.put(utilizador.getEmail(), utilizador.clone());
+        
         if(original.utilizadorAutenticado != null){
             this.utilizadorAutenticado = this.utilizadores.get(original.utilizadorAutenticado.getEmail());
         }
@@ -169,12 +172,14 @@ public class Imoobiliaria implements Serializable
 
     public void setEstado(String idImovel, String estado) 
     throws ImovelInexistenteException, SemAutorizacaoException, EstadoInvalidoException {
+        confirmaVendedorAutenticado();
         Imovel imv = imoveis.get(idImovel);
+        
         if(imv == null){
             throw new ImovelInexistenteException("O imóvel " + idImovel + " não está registado.");
         }
-        confirmaVendedorAutenticado();
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
+
         if(!vendedor.registouImovel(idImovel))
             throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o estado do imóvel " + idImovel);
         EstadoImovel estadoImovel = EstadoImovel.fromString(estado);
@@ -182,10 +187,9 @@ public class Imoobiliaria implements Serializable
         imv.setEstado(estadoImovel);     
     } 
 
-    public Set<String> getTopImoveis(int n){
+    public Set<String> getTopImoveis(int n) throws SemAutorizacaoException{
+        confirmaVendedorAutenticado();
         Set<String> resultados = new TreeSet<String>();
-        if(!(utilizadorAutenticado instanceof Vendedor))
-            return resultados;
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
 
         Set<String> idsImoveis = vendedor.todosImoveisVendedor();
@@ -202,9 +206,8 @@ public class Imoobiliaria implements Serializable
         Class tipoImovel;
         try{
             tipoImovel = Class.forName(classe);
-        } catch(ClassNotFoundException e){
-            return resultados;
         }
+        catch(ClassNotFoundException e){return resultados;}
 
         Collection<Imovel> todosImoveis = imoveis.values();
         for(Imovel imv : todosImoveis){
@@ -219,6 +222,7 @@ public class Imoobiliaria implements Serializable
     public List <Habitavel> getHabitaveis (int preco){
         Collection<Imovel> todosImoveis = imoveis.values();
         List<Habitavel> resultados = new ArrayList<Habitavel>();
+        
         for(Imovel imv : todosImoveis){
             if(imv instanceof Habitavel && imv.getPrecoPedido() <= preco){
                 imv.registaConsulta(new Consulta(utilizadorAutenticado));
@@ -247,6 +251,7 @@ public class Imoobiliaria implements Serializable
     public void setFavorito(String idImovel) throws ImovelInexistenteException, SemAutorizacaoException{
         confirmaCompradorAutenticado();
         Comprador comprador = (Comprador) utilizadorAutenticado;
+        
         if(!imoveis.containsKey(idImovel))
             throw new ImovelInexistenteException("O imóvel em questão não existe.");
         comprador.setFavorito(idImovel);        

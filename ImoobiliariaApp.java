@@ -124,7 +124,9 @@ public class ImoobiliariaApp
                         registarUtilizador();
                         break;
                     case 2:
-                        iniciarSessao();
+                        // iniciarSessao() devolve -1 se a autenticação falhar. Se a autenticação tiver sucesso e o utilizador
+                        // pretender sair é devolvido 0. Se o utilizador fechar a sessão mas não quiser sair, é devolvido 1.
+                        numOpcao = iniciarSessao();
                         break;
                     case 3:
                         listarImoveisTipo();
@@ -139,7 +141,8 @@ public class ImoobiliariaApp
                         gravarEstado();
                         break;
                 }
-                enterParaContinuar();
+                if(numOpcao != 0)
+                    enterParaContinuar();
             }
         } while(numOpcao != 0);
         
@@ -147,14 +150,14 @@ public class ImoobiliariaApp
         out.println("Volte sempre!");
     }
     
-    private static void menuComprador(){
+    private static int menuComprador(){
         int numOpcao;
         
         do{
             menuComprador.executa();
             numOpcao = menuComprador.getOpcao();
             switch(numOpcao){
-                case 0:
+                case 0: // se o comprador pretender sair, primeiro terminamos a sessão
                 case 1:
                     fecharSessao();
                     break;
@@ -180,18 +183,21 @@ public class ImoobiliariaApp
                     gravarEstado();
                     break;
             }
-            enterParaContinuar();
-        } while(numOpcao > 1); // numOpcao != 0 && numOpcao != 1
+            if(numOpcao > 1)
+                enterParaContinuar();
+        } while(numOpcao > 1); // enquanto o comprador não pretender sair ou terminar a sessão
+        
+        return numOpcao;
     }
     
-    public static void menuVendedor(){
+    private static int menuVendedor(){
         int numOpcao;
         
         do{
             menuVendedor.executa();
             numOpcao = menuVendedor.getOpcao();
             switch(numOpcao){
-                case 0:
+                case 0: // se o vendedor quiser sair, primeiro fechamos a sessão
                 case 1:
                     fecharSessao();
                     break;
@@ -226,15 +232,18 @@ public class ImoobiliariaApp
                     gravarEstado();
                     break;
             }
-            enterParaContinuar();
-        } while(numOpcao > 1); // numOpcao != 0 && numOpcao != 1
+            if(numOpcao > 1)
+                enterParaContinuar();
+        } while(numOpcao > 1); // enquanto o vendedor não pretender fechar a sessão ou sair
+        
+        return numOpcao;
     }
     
     public static void gravarEstado(){
         try{
             imoobiliaria.gravaObj("Imoobiliaria.ser");
             // IMPLEMENTAR ==> imoobiliaria.log("log.txt");
-            out.println("-> Estado gravado com sucesso! <-");
+            out.println("-> Estado gravado com sucesso!");
         }
         catch(IOException e){err.println("Não foi possível gravar os dados!");}
     }
@@ -247,7 +256,7 @@ public class ImoobiliariaApp
     private static void registarUtilizador(){
         int numOpcao; // número da opção do menu
         Scanner input = new Scanner(System.in);
-        String email, nome, password, morada, strData;
+        String email, nome, password, morada, strData; // strData - String que irá guardar a representação textual da data.
         DateTimeFormatter formatador = DateTimeFormatter.ISO_LOCAL_DATE; // data na forma aaaa-mm-dd
         LocalDate dataNascimento = null;
         Utilizador novoUtilizador = null;
@@ -278,7 +287,7 @@ public class ImoobiliariaApp
                             break;
                     }  
                     imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
-                    out.println("\n-> Utilizador registado com sucesso. <-\n");
+                    out.println("-> Utilizador registado com sucesso!");
                 }
                 else // o email introduzido é inválido
                     err.print("O email: '" + email + "' é inválido.\n");  
@@ -291,10 +300,15 @@ public class ImoobiliariaApp
             out.println("Registo cancelado.");
     }
     
-      /** Iniciar sessão. */
-    private static void iniciarSessao(){
+      /** 
+       * Inicia a sessão e em caso de sucesso invoca o menu de comprador ou de vendedor, consoante o tipo de utilizador autenticado.
+       * @return -1 se a autenticação falhar; 0 se a autenticação for bem sucedida e o utilizador quiser sair no fim da sessão;
+       *         1 se o utilizador pretender apenas fechar a sessão e voltar ao menu principal.
+       */
+    private static int iniciarSessao(){
         Scanner input = new Scanner(System.in);
         String email, password;
+        int r = -1;
         
         try{
             out.print("Email: ");
@@ -302,26 +316,28 @@ public class ImoobiliariaApp
             out.print("Password: ");
             password = input.nextLine();
             imoobiliaria.iniciaSessao(email, password);
-            out.println("\n-> Sessão iniciada com sucesso! E-mail do utilizador autenticado: " + email + " <-\n");
+            out.println("-> Sessão iniciada iniciada com sucesso!");
             enterParaContinuar();
             // só chegamos a este switch, se o utilizador conseguiu autenticar-se
             switch(imoobiliaria.classUtilizadorAutenticado()){
                 case "Comprador":
-                    menuComprador();
+                    r = menuComprador();
                     break;
                 case "Vendedor":
-                    menuVendedor();
+                    r = menuVendedor();
                     break;
             }
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
+
+        return r;
     }
     
     /** Fecha sessão. */
     private static void fecharSessao(){
         imoobiliaria.fechaSessao();
-        out.println("-> Sessão fechada com sucesso. <-\n");
+        out.println("-> Sessão fechada com sucesso!");
     }
     
     /** Regista um imóvel. */
@@ -365,7 +381,7 @@ public class ImoobiliariaApp
                     out.println("Registo cancelado.");
                 else{
                     imoobiliaria.registaImovel(im);
-                    out.println("\n-> Registo do imóvel '" + id + "' efetuado com sucesso. <-\n");
+                    out.println("-> Registo do imóvel '" + id + "' efetuado com sucesso!");
                 }
             }
             catch(ImovelExisteException e){err.println(e.getMessage());}
@@ -511,8 +527,11 @@ public class ImoobiliariaApp
             if(consultas == null || consultas.isEmpty())
                 out.println("Não existem consultas para apresentar.");
             else{
-                for(Consulta c : consultas) // se consultas puder ser null, temos que mudar este ciclo.
-                    out.println(c.toString());
+                for(Consulta c : consultas){
+                    out.println("--------------------------------------------------------------------------------------------------");
+                    out.print(c.toString());
+                    out.println("--------------------------------------------------------------------------------------------------");
+                }
             }
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
@@ -529,7 +548,7 @@ public class ImoobiliariaApp
             out.print("Novo estado do imóvel: ");
             novoEstado = input.nextLine();
             imoobiliaria.setEstado(idImovel, novoEstado);
-            out.println("\n-> Estado do imóvel " + idImovel + " alterado com sucesso para: " + novoEstado + "\n");
+            out.println("-> Estado do imóvel " + idImovel + " alterado com sucesso para: " + novoEstado);
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
         catch(ImovelInexistenteException e){err.println(e.getMessage());}
@@ -545,7 +564,7 @@ public class ImoobiliariaApp
         int N;
         Set<String> setIds;
         
-        //try{
+        try{
             out.print("Limite inferior do número consultas dos imóveis a apresentar: ");
             N = input.nextInt();
             setIds = imoobiliaria.getTopImoveis(N);
@@ -554,10 +573,10 @@ public class ImoobiliariaApp
             else{
                 out.println("-> IDs dos imóveis com mais do que " + N + " consultas\n");
                 for(String id : setIds) // ! se este setIds puder ser null, temos que alterar este ciclo
-                    out.println(id);
+                    out.print(id);
             }
-        //}
-        // NOTA: Este método devia atirar a SemAutorizacaoException!!! catch(SemAutorizacaoException e){err.println(e.getMessage());}
+        }
+        catch(SemAutorizacaoException e){err.print(e.getMessage());}
     }
     
     /** Lê um tipo e um preço e apresenta a lista de todos os imóveis desse tipo, até ao preço especificado. */
@@ -577,8 +596,11 @@ public class ImoobiliariaApp
             if(l == null || l.isEmpty())
                 out.println("Não existem imóveis do tipo '" + tipo + "', com preço não superior a " + precoMaximo + "€");
             else{
-                for(Imovel im : l)
-                    out.println(im.toString());
+                for(Imovel im : l){
+                    out.println("--------------------------------------------------------------------------------------------------");
+                    out.print(im.toString());
+                    out.println("--------------------------------------------------------------------------------------------------");
+                }
             }
         }
         catch(InputMismatchException e){err.println("Input inválido.");}
@@ -598,8 +620,11 @@ public class ImoobiliariaApp
             if(l == null || l.isEmpty())
                 out.println("Não existem imóveis habitáveis com preço abaixo de " + precoMaximo + "€");
             else{
-                for(Habitavel hab : l)
-                    out.println(hab.toString());
+                for(Habitavel hab : l){
+                    out.println("--------------------------------------------------------------------------------------------------");
+                    out.print(hab.toString());
+                    out.println("--------------------------------------------------------------------------------------------------");
+                }
             }
         }
         catch(InputMismatchException e){err.println("Input inválido.");}
@@ -613,6 +638,7 @@ public class ImoobiliariaApp
             out.println("A imobiliária ainda não tem imóveis nem vendedores.");
         else{
             for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis.entrySet()){
+                out.println("--------------------------------------------------------------------------------------------------");
                 Imovel im = entrada.getKey();
                 Vendedor vendedor = entrada.getValue();
                 out.println(im.toString());
@@ -646,8 +672,11 @@ public class ImoobiliariaApp
             if(favoritos == null || favoritos.isEmpty())
                 out.println("Ainda não tem nenhum imóvel favorito.");
             else{
-                for(Imovel fav : favoritos)
+                for(Imovel fav : favoritos){
+                    out.println("--------------------------------------------------------------------------------------------------");
                     out.print(fav.toString());
+                    out.println("--------------------------------------------------------------------------------------------------");
+                }
             }
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
