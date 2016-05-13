@@ -701,26 +701,29 @@ public class ImoobiliariaApp
     private static void iniciarLeilao(){
         Scanner input = new Scanner(System.in);
         String id;
+        int horas;
         
         try{
             out.print("Id do imóvel que pretende leiloar: ");
             id = input.nextLine();
-            imoobiliaria.iniciaLeilao(id);
+            out.print("Duração do leilão (em horas): ");
+            horas = input.nextInt(); input.nextLine();
+            imoobiliaria.iniciaLeilao(id, horas);
         }
         catch(SemAutorizacaoException e){err.print(e.getMessage());}
     }
     
     private static void adicionarComprador(){
         Scanner input = new Scanner(System.in);
-        String idComprador = imoobiliaria.getEmailUtilizadorAutenticado();
+        String idComprador = imoobiliaria.emailUtilizadorAutenticado();
         int limite, incrementos, minutos;
         
         out.print("Valor máximo que está disposto a dar pelo imóvel: ");
-        limite = input.nextInt(); input.nexLine();
+        limite = input.nextInt(); input.nextLine();
         out.print("Incrementos a efetuar: ");
-        incrementos = input.nextInt(); input.nexLine();
+        incrementos = input.nextInt(); input.nextLine();
         out.print("Número de minutos entre incrementos: ");
-        minutos = input.nextInt(); input.nexLine();
+        minutos = input.nextInt(); input.nextLine();
         try{
             imoobiliaria.adicionaComprador(idComprador, limite, incrementos, minutos);
         }
@@ -731,10 +734,14 @@ public class ImoobiliariaApp
     private static void encerrarLeilao(){
         Comprador vencedor;
         
-        vencedor = imoobiliaria.encerraLeilao();
-        if(vencedor != null)
-            out.println("Vencedor do leilão: " + vencedor.toString());
-        else
-            out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
+        try{
+            vencedor = imoobiliaria.encerraLeilao();
+        
+            if(vencedor != null)
+                out.println("Vencedor do leilão: " + vencedor.toString());
+            else
+                out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
+        }
+        catch(SemAutorizacaoException e){err.print(e.getMessage());}
     }
 }

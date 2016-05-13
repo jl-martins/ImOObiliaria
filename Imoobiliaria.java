@@ -114,10 +114,15 @@ public class Imoobiliaria implements Serializable
         else // autenticação bem sucedida
             utilizadorAutenticado = utilizador;
     }
-
+    
     /** Se existir um utilizador autenticado, termina a sessão do mesmo, se não, não faz nada. */
     public void fechaSessao(){
         utilizadorAutenticado = null;
+    }
+    
+    /** @return String com o email do utilizador autenticado, se existir um; null c.c. */
+    public String emailUtilizadorAutenticado(){
+        return (utilizadorAutenticado != null) ? utilizadorAutenticado.getEmail() : null;
     }
     
     /** @return String com o nome da classe do utilizador autenticado, se existir um; null c.c. */
@@ -273,10 +278,10 @@ public class Imoobiliaria implements Serializable
     }    
 
     /* API de Leiloes */
-    public void iniciaLeilao(Imovel im, int horas) throws SemAutorizacaoException{
-        if(!(utilizadorAutenticado instanceof Vendedor) || !((Vendedor) utilizadorAutenticado).vendeImovel(im.getId()))
+    public void iniciaLeilao(String idImovel, int horas) throws SemAutorizacaoException{
+        if(!(utilizadorAutenticado instanceof Vendedor) || !((Vendedor) utilizadorAutenticado).vendeImovel(idImovel))
             throw new SemAutorizacaoException("O Utilizador atual não tem autorização para iniciar o Leilão deste imóvel.");
-        leilao = new Leilao(im.getId(), utilizadorAutenticado.getEmail(), horas);
+        leilao = new Leilao(idImovel, utilizadorAutenticado.getEmail(), horas);
     }
 
     public void adicionaComprador(String idComprador, int limite, int incrementos, int minutos) throws LeilaoTerminadoException {
