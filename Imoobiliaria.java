@@ -285,6 +285,8 @@ public class Imoobiliaria implements Serializable
     }
 
     public void adicionaComprador(String idComprador, int limite, int incrementos, int minutos) throws LeilaoTerminadoException {
+        if(leilao == null) 
+            throw new LeilaoTerminadoException("Não há nenhum leilão ativo neste momento.");
         if(leilao.terminouLeilao())
             throw new LeilaoTerminadoException("O leilão terminou, não pode inserir mais compradores");
         leilao.registaCompradorLeilao(idComprador, limite, incrementos, minutos);
