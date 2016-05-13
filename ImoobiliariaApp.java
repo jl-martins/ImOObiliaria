@@ -28,9 +28,8 @@ import static java.lang.System.err;
 public class ImoobiliariaApp
 {
     private static Imoobiliaria imoobiliaria;
-    private static Menu menuMain; // menu principal
-    private static Menu menuTipoUtilizador, menuTipoImovel; // menus para selecionar o tipo de utilizador e o tipo de imóvel, respetivamente
-    private static Menu menuSimNao; // menu para ler respostas do tipo sim/nao
+    private static Menu menuMain, menuComprador, menuVendedor;
+    private static Menu menuTipoUtilizador, menuTipoImovel, menuSimNao;
     
     public static void splashScreen(){
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
@@ -62,10 +61,9 @@ public class ImoobiliariaApp
     }
     
     private static void carregarMenus(){
-
         String[] opcoesMain = {
-            "Registar utilizador"
-            "Iniciar sessão"
+            "Registar utilizador",
+            "Iniciar sessão",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Correspondência entre imóveis e vendedores",
@@ -73,7 +71,7 @@ public class ImoobiliariaApp
         };
         
         String[] opcoesComprador = {
-            "Fechar sessão"
+            "Fechar sessão",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Correspondência entre imóveis e vendedores",
@@ -83,7 +81,7 @@ public class ImoobiliariaApp
         };
         
         String[] opcoesVendedor = {
-            "Fechar sessão"
+            "Fechar sessão",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Correspondência entre imóveis e vendedores",
@@ -92,20 +90,13 @@ public class ImoobiliariaApp
             "Alterar o estado de um imóvel",
             "Obter imóveis com mais de N consultas",
             "Iniciar leilão",
-            "Encerrar leilão"
-        };
-        String[] opcoesTipoUtilizador = {
-            "Comprador",
-            "Vendedor"
-        };
-        String[] opcoesTipoImovel = {
-            "Moradia",
-            "Apartamento",
-            "Loja não habitável",
-            "Loja habitável",
-            "Terreno"
+            "Encerrar leilão",
+            "Gravar estado"
         };
         String[] opcoesSimNao = {"Sim", "Não"};
+        String[] opcoesTipoUtilizador = {"Comprador", "Vendedor"};
+        String[] opcoesTipoImovel = {"Moradia", "Apartamento", "Loja não habitável", "Loja habitável", "Terreno"};
+        
         // o espaço inicial dos títulos é intencional
         menuMain = new Menu(" Menu Principal", opcoesMain);
         menuComprador = new Menu(" Menu Comprador", opcoesComprador);
@@ -115,9 +106,7 @@ public class ImoobiliariaApp
         menuSimNao = new Menu(" Resposta Sim/Não", opcoesSimNao);
     }
     
-    private static void carregarDados(){
-        imoobiliaria = Imoobiliaria.initApp();
-    }
+    private static void carregarDados(){imoobiliaria = Imoobiliaria.initApp();}
     
     public static void main(String[] args){
         int numOpcao;
@@ -149,6 +138,8 @@ public class ImoobiliariaApp
                     case 6:
                         gravarEstado();
                         break;
+                }
+                enterParaContinuar();
             }
         } while(numOpcao != 0);
         
@@ -165,10 +156,10 @@ public class ImoobiliariaApp
             switch(numOpcao){
                 case 0:
                 case 1:
-                    fechaSessao();
+                    fecharSessao();
                     break;
                 case 2:
-                    listarImoveis();
+                    listarImoveisTipo();
                     break;
                 case 3:
                     listarHabitaveis();
@@ -188,6 +179,8 @@ public class ImoobiliariaApp
                 case 8:
                     gravarEstado();
                     break;
+            }
+            enterParaContinuar();
         } while(numOpcao > 1); // numOpcao != 0 && numOpcao != 1
     }
     
@@ -200,10 +193,10 @@ public class ImoobiliariaApp
             switch(numOpcao){
                 case 0:
                 case 1:
-                    fechaSessao();
+                    fecharSessao();
                     break;
                 case 2:
-                    listarImoveis();
+                    listarImoveisTipo();
                     break;
                 case 3:
                     listarHabitaveis();
@@ -232,6 +225,8 @@ public class ImoobiliariaApp
                 case 11:
                     gravarEstado();
                     break;
+            }
+            enterParaContinuar();
         } while(numOpcao > 1); // numOpcao != 0 && numOpcao != 1
     }
     
@@ -239,6 +234,7 @@ public class ImoobiliariaApp
         try{
             imoobiliaria.gravaObj("Imoobiliaria.ser");
             // IMPLEMENTAR ==> imoobiliaria.log("log.txt");
+            out.println("-> Estado gravado com sucesso! <-");
         }
         catch(IOException e){err.println("Não foi possível gravar os dados!");}
     }
@@ -307,6 +303,16 @@ public class ImoobiliariaApp
             password = input.nextLine();
             imoobiliaria.iniciaSessao(email, password);
             out.println("\n-> Sessão iniciada com sucesso! E-mail do utilizador autenticado: " + email + " <-\n");
+            enterParaContinuar();
+            // só chegamos a este switch, se o utilizador conseguiu autenticar-se
+            switch(imoobiliaria.classUtilizadorAutenticado()){
+                case "Comprador":
+                    menuComprador();
+                    break;
+                case "Vendedor":
+                    menuVendedor();
+                    break;
+            }
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
@@ -359,7 +365,7 @@ public class ImoobiliariaApp
                     out.println("Registo cancelado.");
                 else{
                     imoobiliaria.registaImovel(im);
-                    out.println("\n-> Registo do imóvel " + id + " efetuado com sucesso. <-\n");
+                    out.println("\n-> Registo do imóvel '" + id + "' efetuado com sucesso. <-\n");
                 }
             }
             catch(ImovelExisteException e){err.println(e.getMessage());}
@@ -555,7 +561,7 @@ public class ImoobiliariaApp
     }
     
     /** Lê um tipo e um preço e apresenta a lista de todos os imóveis desse tipo, até ao preço especificado. */
-    private static void obterImoveis(){
+    private static void listarImoveisTipo(){
         Scanner input = new Scanner(System.in);
         String tipo;
         int precoMaximo;
@@ -603,12 +609,16 @@ public class ImoobiliariaApp
     private static void mapImovelVend(){
         Map<Imovel, Vendedor> mapeamentoImoveis = imoobiliaria.getMapeamentoImoveis();
         
-        for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis.entrySet()){
-            Imovel im = entrada.getKey();
-            Vendedor vendedor = entrada.getValue();
-            out.println(im.toString());
-            out.println("-> Vendedor:\nNome: " + vendedor.getNome() + "\nEmail: " + vendedor.getEmail());
-            out.println("--------------------------------------------------------------------------------------------------");
+        if(mapeamentoImoveis == null || mapeamentoImoveis.isEmpty())
+            out.println("A imobiliária ainda não tem imóveis nem vendedores.");
+        else{
+            for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis.entrySet()){
+                Imovel im = entrada.getKey();
+                Vendedor vendedor = entrada.getValue();
+                out.println(im.toString());
+                out.println("-> Vendedor:\nNome: " + vendedor.getNome() + "\nEmail: " + vendedor.getEmail());
+                out.println("--------------------------------------------------------------------------------------------------");
+            }
         }
     }
     

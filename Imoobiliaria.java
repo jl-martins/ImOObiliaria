@@ -116,7 +116,12 @@ public class Imoobiliaria implements Serializable
     public void fechaSessao(){
         utilizadorAutenticado = null;
     }
-
+    
+    /** @return String com o nome da classe do utilizador autenticado, se existir um; null c.c. */
+    public String classUtilizadorAutenticado(){
+        return (utilizadorAutenticado != null) ? utilizadorAutenticado.getClass().getSimpleName() : null;
+    }
+    
     public void confirmaVendedorAutenticado() throws SemAutorizacaoException{
         if(!(utilizadorAutenticado instanceof Vendedor))
             throw new SemAutorizacaoException("O utilizador atual não é um Vendedor Autenticado.");
