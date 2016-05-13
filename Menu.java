@@ -12,11 +12,11 @@ import static java.lang.System.out;
 
 final public class Menu
 {   
-    private final String titulo;
+    private String titulo;
+    private String separador; // separa o título das opções e a última opção da prompt
     private final String[] opcoes;
-    private final int numOpcoes;
-    private final String separador; // separa a última opção da prompt
     private int op;
+    private boolean temOpcaoSair;
     
     /**
      * Construtor por omissão
@@ -25,20 +25,20 @@ final public class Menu
     private Menu(){
         titulo = separador = null;
         opcoes = null;
-        numOpcoes = 0;
         op = -1;
+        temOpcaoSair = false;
     }   
     
     /**
      * Construtor parametrizado.
      * @param opcoes Opções do menu a criar.
      */
-    public Menu(String titulo, String[] opcoes){
+    public Menu(String titulo, String[] opcoes, boolean temOpcaoSair){
         this.titulo = titulo;
-        this.numOpcoes = opcoes.length;
-        this.opcoes = new String[numOpcoes];
+        this.opcoes = new String[opcoes.length];
+        System.arraycopy(opcoes, 0, this.opcoes, 0, opcoes.length);
         this.separador = geraSeparador(titulo, opcoes); // gera um separador adequado a este menu.
-        System.arraycopy(opcoes, 0, this.opcoes, 0, numOpcoes);
+        this.temOpcaoSair = temOpcaoSair;
     }
     
     /**
@@ -46,7 +46,7 @@ final public class Menu
      * @param menu Menu a copiar.
      */
     public Menu(Menu menu){
-        this(menu.getTitulo(), menu.getOpcoes());
+        this(menu.getTitulo(), menu.getOpcoes(), menu.getTemOpcaoSair());
     }
     
     /** @return Título deste menu. */
@@ -56,14 +56,27 @@ final public class Menu
     
     /** @return Array de String com as opções deste menu. */
     public String[] getOpcoes(){
-        String[] copia = new String[numOpcoes];
-        System.arraycopy(opcoes, 0, copia, 0, numOpcoes);
+        String[] copia = new String[opcoes.length];
+        System.arraycopy(opcoes, 0, copia, 0, opcoes.length);
         return copia;
     }
     
-    /** @return Número de opções deste menu. */
+    /** @return true se o menu tiver opção de sair. */
+    public boolean getTemOpcaoSair(){
+        return temOpcaoSair;
+    }
+    
+    /** @return Número da opção atual deste menu. */
     public int getOpcao(){
         return op;
+    }
+    
+    /** Altera o titulo deste menu, se a String passada como parâmetro for diferente de null. */
+    public void setTitulo(String titulo){
+        if(titulo != null){
+            this.titulo = titulo;
+            separador = geraSeparador(titulo, opcoes); // recalcula o separador
+        }
     }
     
     /** Imprime as opções deste menu. */
@@ -78,18 +91,19 @@ final public class Menu
         out.println(separador);
         out.println(titulo);
         out.println(separador);
-        for(int i = 0; i < numOpcoes; ++i)
+        for(int i = 0; i < opcoes.length; ++i)
             out.printf("%2d. %s\n", i+1, opcoes[i]);
-        out.println(" 0. Sair");
+        
+        if(temOpcaoSair)
+            out.println(" 0. Sair");
         out.println(separador);
     }
     
     /* Gera o separador a colocar entre a última opção e a prompt. */
     private static String geraSeparador(String titulo, String[] opcoes){
         int maxLen = titulo.length();
-        int numOpcoes = opcoes.length;
         
-        for(int i = 0; i < numOpcoes; ++i)
+        for(int i = 0; i < opcoes.length; ++i)
             if((opcoes[i].length() + 4) > maxLen) // o número da opção seguido do carater '.' e de um espaço correspondem a 4 caratéres
                 maxLen = opcoes[i].length() + 4;
 
@@ -102,14 +116,14 @@ final public class Menu
         
         out.print(">>> ");
         try {
-            op = input.nextInt();
+            op = input.nextInt(); input.nextLine(); // lê um inteiro e consome o \n que ficou no buffer do stdin. 
         }
         catch(InputMismatchException e){
             op = -1;
             input.nextLine(); // consome a linha que ficou no buffer do stdin 
         }
         
-        if(op < 0 || op > opcoes.length){
+        if(op > opcoes.length || (temOpcaoSair && op < 0) || (!temOpcaoSair && op < 1)){
             out.println("Opção inválida!");
             op = -1;
         }
@@ -133,7 +147,7 @@ final public class Menu
             return false;
         Menu menu = (Menu) o;
         
-        return titulo.equals(menu.getTitulo()) && Arrays.equals(opcoes, menu.getOpcoes()); // se os arrays forem iguais, têm o mesmo número de opções.
+        return titulo.equals(menu.getTitulo()) && Arrays.equals(opcoes, menu.getOpcoes()) && temOpcaoSair == menu.getTemOpcaoSair();
     }
     
     /** @return Representação textual dos campos deste menu. */
@@ -142,10 +156,12 @@ final public class Menu
         
         sb.append("Título: " + titulo);
         sb.append("\nOpções:\n");
-        for(int i = 0; i < numOpcoes; ++i)
+        for(int i = 0; i < opcoes.length; ++i)
             sb.append(opcoes[i]).append("\n");
-        sb.append("Sair\n");
-        sb.append("Número de opções: " + numOpcoes);
+        
+        if(temOpcaoSair)
+            sb.append("Sair\n");
+        sb.append("Número de opções: " + opcoes.length);
         sb.append("Opção atual: " + op);
         return sb.toString();
     }
@@ -154,9 +170,10 @@ final public class Menu
     public int hashCode(){
         int hash = 7;
         
-        for(int i = 0; i < numOpcoes; ++i)
+        for(int i = 0; i < opcoes.length; ++i)
             hash = 31*hash + opcoes[i].hashCode();
         hash = 31*hash + op;
+        hash = 31*hash + (temOpcaoSair ? 1 : 0);
         return hash;
     } 
 }

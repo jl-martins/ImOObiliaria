@@ -97,13 +97,13 @@ public class ImoobiliariaApp
         String[] opcoesTipoUtilizador = {"Comprador", "Vendedor"};
         String[] opcoesTipoImovel = {"Moradia", "Apartamento", "Loja não habitável", "Loja habitável", "Terreno"};
         
-        // o espaço inicial dos títulos é intencional
-        menuMain = new Menu(" Menu Principal", opcoesMain);
-        menuComprador = new Menu(" Menu Comprador", opcoesComprador);
-        menuVendedor = new Menu(" Menu Vendedor", opcoesVendedor);
-        menuTipoUtilizador = new Menu(" Selecionar tipo de utilizador", opcoesTipoUtilizador);
-        menuTipoImovel = new Menu(" Selecionar tipo de imóvel", opcoesTipoImovel);
-        menuSimNao = new Menu(" Resposta Sim/Não", opcoesSimNao);
+        // o espaço inicial dos títulos é intencional (se o 3º parâmetro for true, então o menu tem opção para sair)
+        menuMain = new Menu(" Menu Principal", opcoesMain, true);
+        menuComprador = new Menu(" Menu Comprador", opcoesComprador, true);
+        menuVendedor = new Menu(" Menu Vendedor", opcoesVendedor, true);
+        menuTipoUtilizador = new Menu(" Selecionar tipo de utilizador", opcoesTipoUtilizador, false);
+        menuTipoImovel = new Menu(" Selecionar tipo de imóvel", opcoesTipoImovel, false);
+        menuSimNao = new Menu(" Resposta Sim/Não", opcoesSimNao, false);
     }
     
     private static void carregarDados(){imoobiliaria = Imoobiliaria.initApp();}
@@ -183,9 +183,9 @@ public class ImoobiliariaApp
                     gravarEstado();
                     break;
             }
-            if(numOpcao > 1)
+            if(numOpcao > 1) // se a opção não é "sair" ou "fechar a sessão"
                 enterParaContinuar();
-        } while(numOpcao > 1); // enquanto o comprador não pretender sair ou terminar a sessão
+        } while(numOpcao > 1); // enquanto o comprador não pretender sair ou fechar a sessão
         
         return numOpcao;
     }
@@ -232,7 +232,7 @@ public class ImoobiliariaApp
                     gravarEstado();
                     break;
             }
-            if(numOpcao > 1)
+            if(numOpcao > 1) // se a opção não é "sair" ou "fechar a sessão"
                 enterParaContinuar();
         } while(numOpcao > 1); // enquanto o vendedor não pretender fechar a sessão ou sair
         
@@ -263,41 +263,37 @@ public class ImoobiliariaApp
         
         menuTipoUtilizador.executa();
         numOpcao = menuTipoUtilizador.getOpcao();
-        if(numOpcao != 0){
-            try{
-                out.print("Email: ");
-                email = input.nextLine();
-                if(ValidadorEmail.validar(email) == true){ // ver se vale a pena criar uma EmailInvalidoException
-                    out.print("Nome: ");
-                    nome = input.nextLine();
-                    out.print("Password: ");
-                    password = input.nextLine();
-                    out.print("Morada: ");
-                    morada = input.nextLine();
-                    out.print("Data de nascimento (aaaa-mm-dd): ");
-                    strData = input.nextLine();
-                    dataNascimento = LocalDate.parse(strData, formatador);
+        try{
+            out.print("Email: ");
+            email = input.nextLine();
+            if(ValidadorEmail.validar(email) == true){ // ver se vale a pena criar uma EmailInvalidoException
+                out.print("Nome: ");
+                nome = input.nextLine();
+                out.print("Password: ");
+                password = input.nextLine();
+                out.print("Morada: ");
+                morada = input.nextLine();
+                out.print("Data de nascimento (aaaa-mm-dd): ");
+                strData = input.nextLine();
+                dataNascimento = LocalDate.parse(strData, formatador);
                     
-                    switch(numOpcao){
-                        case 1: // registar comprador
-                            novoUtilizador = new Comprador(email, nome, password, morada, dataNascimento);
-                            break;
-                        case 2: // registar vendedor
-                            novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
-                            break;
-                    }  
-                    imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
-                    out.println("-> Utilizador registado com sucesso!");
-                }
-                else // o email introduzido é inválido
-                    err.print("O email: '" + email + "' é inválido.\n");  
+                switch(numOpcao){
+                    case 1: // registar comprador
+                        novoUtilizador = new Comprador(email, nome, password, morada, dataNascimento);
+                        break;
+                    case 2: // registar vendedor
+                        novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
+                        break;
+                }  
+                imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
+                out.println("-> Utilizador registado com sucesso!");
             }
-            catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
-            catch(DateTimeParseException e){err.println("Erro: A data de nascimento '" + dataNascimento + "' é inválida.\nFormato esperado: aaaa-mm-dd.");}
-            catch(UtilizadorExistenteException e){err.println(e.getMessage());}
+            else // o email introduzido é inválido
+                err.print("O email: '" + email + "' é inválido.\n");  
         }
-        else // o utilizador optou por sair
-            out.println("Registo cancelado.");
+        catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
+        catch(DateTimeParseException e){err.println("Erro: A data de nascimento '" + dataNascimento + "' é inválida.\nFormato esperado: aaaa-mm-dd.");}
+        catch(UtilizadorExistenteException e){err.println(e.getMessage());}
     }
     
       /** 
@@ -349,48 +345,40 @@ public class ImoobiliariaApp
         
         menuTipoImovel.executa();
         numOpcao = menuTipoImovel.getOpcao();
-        if(numOpcao != 0){
-            try{
-                out.print("ID do imóvel: ");
-                id = input.nextLine();
-                out.print("Rua: ");
-                rua = input.nextLine();
-                out.print("Preço pedido: ");
-                precoPedido = input.nextInt();
-                out.print("Preço mínimo: ");
-                precoMinimo = input.nextInt();
+        try{
+            out.print("ID do imóvel: ");
+            id = input.nextLine();
+            out.print("Rua: ");
+            rua = input.nextLine();
+            out.print("Preço pedido: ");
+            precoPedido = input.nextInt(); input.nextLine(); // lê um int e consome o newline que ficou no buffer do stdin
+            out.print("Preço mínimo: ");
+            precoMinimo = input.nextInt(); input.nextLine();
                 
-                switch(numOpcao){
-                    case 1:
-                        im = leDadosMoradia(id, rua, precoPedido, precoMinimo);
-                        break;
-                    case 2:
-                        im = leDadosApartamento(id, rua, precoPedido, precoMinimo);
-                        break;
-                    case 3:
-                        im = leDadosLoja(id, rua, precoPedido, precoMinimo);
-                        break;
-                    case 4:
-                        im = leDadosLojaHabitavel(id, rua, precoPedido, precoMinimo);
-                        break;
-                    case 5:
-                        im = leDadosTerreno(id, rua, precoPedido, precoMinimo);
-                        break;
-                }
-                if(im == null) // o utilizador optou por cancelar o registo
-                    out.println("Registo cancelado.");
-                else{
-                    imoobiliaria.registaImovel(im);
-                    out.println("-> Registo do imóvel '" + id + "' efetuado com sucesso!");
-                }
+            switch(numOpcao){
+                case 1:
+                    im = leDadosMoradia(id, rua, precoPedido, precoMinimo);
+                    break;
+                case 2:
+                    im = leDadosApartamento(id, rua, precoPedido, precoMinimo);
+                    break;
+                case 3:
+                    im = leDadosLoja(id, rua, precoPedido, precoMinimo);
+                    break;
+                case 4:
+                    im = leDadosLojaHabitavel(id, rua, precoPedido, precoMinimo);
+                    break;
+                case 5:
+                    im = leDadosTerreno(id, rua, precoPedido, precoMinimo);
+                    break;
             }
-            catch(ImovelExisteException e){err.println(e.getMessage());}
-            catch(SemAutorizacaoException e){err.println(e.getMessage());}
-            catch(InputMismatchException e){err.println("Input inválido.");}
-            // FALTA APANHAR EXCEÇÕES GERADAS QUANDO UMA STRING NAO PODE SER CONVERTIDA PRA ENUM
+            imoobiliaria.registaImovel(im);
+            out.println("-> Registo do imóvel '" + id + "' efetuado com sucesso!");
         }
-        else // o utilizador optou por sair
-            out.println("Registo cancelado.");
+        catch(ImovelExisteException e){err.println(e.getMessage());}
+        catch(SemAutorizacaoException e){err.println(e.getMessage());}
+        catch(InputMismatchException e){err.println("Input inválido.");}
+        // FALTA APANHAR EXCEÇÕES GERADAS QUANDO UMA STRING NAO PODE SER CONVERTIDA PRA ENUM
     }
     
     /** Pede ao utilizador para introduzir os dados relativos a uma moradia e, em caso de sucesso, devolve a Moradia criada. */
@@ -403,17 +391,18 @@ public class ImoobiliariaApp
         out.print("Tipo de moradia [Isolada/Geminada/Banda/Gaveto]: ");
         tipo = TipoMoradia.fromString(input.nextLine());
         out.print("Área de implantação: ");
-        areaImplantacao = input.nextInt();
+        areaImplantacao = input.nextInt(); input.nextLine();
         out.print("Área total coberta: ");
-        areaTotal = input.nextInt();
+        areaTotal = input.nextInt(); input.nextLine();
         out.print("Área do terreno envolvente: ");
-        areaEnv = input.nextInt();
+        areaEnv = input.nextInt(); input.nextLine();
         out.print("Número de quartos: ");
-        numQuartos = input.nextInt();
+        numQuartos = input.nextInt(); input.nextLine();
         out.print("Número de WCs: ");
-        numWCs = input.nextInt();
+        numWCs = input.nextInt(); input.nextLine();
         out.print("Número da porta: ");
-        numDaPorta = input.nextInt();
+        numDaPorta = input.nextInt(); input.nextLine();
+        
         return new Moradia(id, rua, precoPedido, precoMinimo, tipo, areaImplantacao,
                              areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
     }
@@ -429,22 +418,21 @@ public class ImoobiliariaApp
         out.print("Tipo de apartamento [Simples/Duplex/Triplex]: ");
         tipo = TipoApartamento.fromString(input.nextLine());
         out.print("Área total: ");
-        areaTotal = input.nextInt();
+        areaTotal = input.nextInt(); input.nextLine();
         out.print("Número de quartos: ");
-        numQuartos = input.nextInt();
+        numQuartos = input.nextInt(); input.nextLine();
         out.print("Número de WCs: ");
-        numWCs = input.nextInt();
+        numWCs = input.nextInt(); input.nextLine();
         out.print("Número da porta: ");
-        numDaPorta = input.nextInt();
+        numDaPorta = input.nextInt(); input.nextLine();
         out.print("Andar: ");
-        andar = input.nextInt();
+        andar = input.nextInt(); input.nextLine();
         
-        out.println("O apartamento tem garagem?\n");
+        menuSimNao.setTitulo("O apartamento tem garagem?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
-        if(numOpcao == 0)
-            return null;
         temGaragem = (numOpcao == 1);
+        
         return new Apartamento(id, rua, precoPedido, precoMinimo, tipo, areaTotal,
                                numQuartos, numWCs, numDaPorta, andar, temGaragem);
     }
@@ -457,19 +445,17 @@ public class ImoobiliariaApp
         boolean temWC;
         
         out.print("Área da loja: ");
-        area = input.nextInt();
+        area = input.nextInt(); input.nextLine();
         
-        out.println("A loja tem WC?\n");
+        menuSimNao.setTitulo("A loja tem WC?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
-        if(numOpcao == 0)
-            return null; // permite indicar que o registo foi cancelado
         temWC = (numOpcao == 1);
         
         out.print("Tipo de negócio: ");
         tipoNegocio = input.nextLine();
         out.print("Número da porta: ");
-        numDaPorta = input.nextInt();
+        numDaPorta = input.nextInt(); input.nextLine();
         return new Loja(id, rua, precoPedido, precoMinimo, area, temWC, tipoNegocio, numDaPorta);
     }
     
@@ -481,32 +467,28 @@ public class ImoobiliariaApp
         boolean terrenoHab, terrenoArm, temRedeEsgotos;
         
         out.print("Área do terreno: ");
-        area = input.nextInt();
+        area = input.nextInt(); input.nextLine();
         
-        out.println("O terreno é apropriado para construção de habitação?\n");
+        menuSimNao.setTitulo("O terreno é apropriado para construção de habitação?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
-        if(numOpcao == 0)
-            return null;
         terrenoHab = (numOpcao == 1);
         
-        out.println("O terreno é apropriado para construção de armazéns?\n");
+        menuSimNao.setTitulo("O terreno é apropriado para construção de armazéns?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
-        if(numOpcao == 0)
-            return null;
         terrenoArm = (numOpcao == 1);
-        out.print("Diâmetro das canalizações (em mm): ");
-        diamCanalizacoes = input.nextDouble();
-        out.print("kWh máximos: ");
-        maxKWh = input.nextDouble();
         
-        out.println("O terreno tem rede de esgotos?\n");
+        out.print("Diâmetro das canalizações (em mm): "); 
+        diamCanalizacoes = input.nextDouble(); input.nextLine();
+        out.print("kWh máximos: ");
+        maxKWh = input.nextDouble(); input.nextLine();
+        
+        menuSimNao.setTitulo("O terreno tem rede de esgotos?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
-        if(numOpcao == 0)
-            return null;
         temRedeEsgotos = (numOpcao == 1);
+        
         return new Terreno(id, rua, precoPedido, precoMinimo, area, terrenoHab, 
                            terrenoArm, diamCanalizacoes, maxKWh, temRedeEsgotos);
     }
@@ -566,7 +548,7 @@ public class ImoobiliariaApp
         
         try{
             out.print("Limite inferior do número consultas dos imóveis a apresentar: ");
-            N = input.nextInt();
+            N = input.nextInt(); input.nextLine();
             setIds = imoobiliaria.getTopImoveis(N);
             if(setIds == null || setIds.isEmpty())
                 out.println("Não existem imóveis com mais do que " + N + " consultas.");
@@ -590,7 +572,7 @@ public class ImoobiliariaApp
             out.print("Tipo de imóvel: ");
             tipo = input.nextLine();
             out.print("Preço máximo dos imóveis a consultar: ");
-            precoMaximo = input.nextInt();
+            precoMaximo = input.nextInt(); input.nextLine();
             l = imoobiliaria.getImovel(tipo, precoMaximo);
             
             if(l == null || l.isEmpty())
@@ -614,7 +596,7 @@ public class ImoobiliariaApp
         
         try{
             out.print("Preço máximo dos imóveis habitáveis: ");
-            precoMaximo = input.nextInt();
+            precoMaximo = input.nextInt(); input.nextLine();
             List<Habitavel> l = imoobiliaria.getHabitaveis(precoMaximo);
             
             if(l == null || l.isEmpty())
