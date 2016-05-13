@@ -49,9 +49,9 @@ public class LojaHabitavel extends Loja implements Serializable, Habitavel
     }
     
     public String toString(){
-        StringBuilder sb = new StringBuilder(super.toString());
-        
-        sb.append(apartamento.toString());
+        StringBuilder sb = new StringBuilder("-> Loja Habitável\n");
+        sb.append(super.toStringParcial());
+        sb.append(apartamento.toStringParcial());
         return sb.toString();
     }
     

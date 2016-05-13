@@ -132,6 +132,19 @@ public class Apartamento extends Imovel
         return sb.toString();
     }
     
+        public String toStringParcial(){
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name() : "n/a") + "\n");
+        sb.append("Área total: " + areaTotal + "m^2\n");
+        sb.append("Número de quartos: " + numQuartos + "\n");
+        sb.append("Número de WCs: " + numWCs + "\n");
+        sb.append("Número da porta: " + numDaPorta + "\n");
+        sb.append("Andar: " + andar + "\n");
+        sb.append("Tem garagem: " + (temGaragem ? "sim\n" : "não\n"));
+        return sb.toString();
+    }
+    
     public int hashCode(){
         int hash = super.hashCode();
         
