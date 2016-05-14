@@ -9,7 +9,6 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
     private EstadoImovel estado;
     private int precoPedido;
     private int precoMinimo;
-    private int quantasConsultas;
     private ArrayList<Consulta> consultas;
     
     /**
@@ -28,7 +27,6 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         this.estado = EstadoImovel.EM_VENDA; // o estado inicial de um Imovel criado é sempre EM_VENDA.
         this.precoPedido = precoPedido;
         this.precoMinimo = precoMinimo;
-        this.quantasConsultas = 0; // o Imovel começa sempre por ter 0 consultas.
         this.consultas = new ArrayList<Consulta>();
     }
     
@@ -38,8 +36,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
     public Imovel(Imovel imv){
         this(imv.getId(), imv.getRua(), imv.getPrecoPedido(), imv.precoMinimo);
         this.estado = imv.getEstado();
-        this.quantasConsultas = 0;
-        this.consultas = new ArrayList<Consulta>();
+        this.consultas = imv.getConsultas();
     }
     
     /** @return id deste imóvel. */
@@ -68,7 +65,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
     }
     
     public int getQuantasConsultas(){
-        return quantasConsultas;
+        return consultas.size();
     }
     
     public ArrayList<Consulta> getConsultas(){
@@ -96,17 +93,20 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
     }
     
     public void registaConsulta(Consulta c){
-        this.consultas.add(c); /* Consulta e um tipo imutavel. Nao e preciso fazer copia*/
-        this.quantasConsultas++;
+        this.consultas.add(c); /* Consulta é um tipo imutável. Nao e preciso fazer cópia */
     }
     
     /* Comparação baseada no número de consultas */
     public int compareTo(Imovel imv){
-        if (this.quantasConsultas == imv.quantasConsultas)
+        int quantasConsultas1 = this.consultas.size();
+        int quantasConsultas2 = imv.getQuantasConsultas();
+        
+        if (quantasConsultas1 == quantasConsultas2)
             return 0;
-        else if(this.quantasConsultas > imv.quantasConsultas)
+        else if(quantasConsultas1 > quantasConsultas2)
             return 1;
-        else return -1;
+        else
+            return -1;
     }
     
     public abstract Imovel clone();
@@ -119,7 +119,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         
         Imovel imv = (Imovel) o;
         return id.equals(imv.getId()) && rua.equals(imv.getRua()) && estado == imv.getEstado() && precoPedido == imv.getPrecoPedido() &&
-               precoMinimo == imv.precoMinimo && quantasConsultas == imv.quantasConsultas && consultas.equals(imv.getConsultas());
+               precoMinimo == imv.precoMinimo && consultas.equals(imv.getConsultas());
     }
     
     public String toString(){
@@ -128,7 +128,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         sb.append("id: " + id + "\n");
         sb.append("Rua: " + rua + "\n");
         sb.append("Preço pedido pelo imóvel: " + precoPedido + "\n");
-        sb.append("Número de consultas: " + quantasConsultas + "\n");
+        sb.append("Número de consultas: " + consultas.size() + "\n");
         // O preço mínimo não deverá ser apresentado aos compradores, logo não o incluimos na String retornada
         return sb.toString();
     }
@@ -140,6 +140,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         hash = 31*hash + rua.hashCode();
         hash = 31*hash + precoPedido;
         hash = 31*hash + precoMinimo;
+        hash = 31*hash + (consultas == null ? 0 : consultas.hashCode());
         return hash;
     }
 }

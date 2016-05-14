@@ -325,7 +325,7 @@ public class Imoobiliaria implements Serializable
         Collection<Imovel> todosImoveis = imoveis.values();
         for(Imovel imv : todosImoveis){
             if(tipoImovel.isInstance(imv) && imv.getPrecoPedido() <= preco){
-                imv.registaConsulta(new Consulta(utilizadorAutenticado));
+                imv.registaConsulta(new Consulta(utilizadorAutenticado, imv.getId()));
                 resultados.add(imv.clone());
             }
         }
@@ -339,7 +339,7 @@ public class Imoobiliaria implements Serializable
         
         for(Imovel imv : todosImoveis){
             if(imv instanceof Habitavel && imv.getPrecoPedido() <= preco){
-                imv.registaConsulta(new Consulta(utilizadorAutenticado));
+                imv.registaConsulta(new Consulta(utilizadorAutenticado, imv.getId()));
                 resultados.add((Habitavel) imv.clone());
             }
         }
@@ -388,7 +388,7 @@ public class Imoobiliaria implements Serializable
         for(String id : idsFavoritos){
             imv = imoveis.get(id);
             if(imv != null){ // se o Imovel não foi removido
-                imv.registaConsulta(new Consulta(utilizadorAutenticado));
+                imv.registaConsulta(new Consulta(utilizadorAutenticado, imv.getId()));
                 favoritos.add(imv.clone());
             }
         }

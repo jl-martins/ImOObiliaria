@@ -5,27 +5,30 @@ public final class Consulta implements Comparable<Consulta>, Serializable
 {   
     // Variaveis de instancia
     private final LocalDate data; // data da consulta
-    private final String email; // email do utilizador que fez a consulta (valor opcional) 
+    private final String email; // email do utilizador que fez a consulta (valor opcional)
+    private final String idImovel; // id do imóvel consultado
     
     /**
      * Construtor por omissao
      */
     public Consulta(){
         data = LocalDate.now(); // data atual
-        email = "n/a"; // e-mail desconhecido
+        email = idImovel = "n/a";
     }
     
     /**
      * Construtor parametrizado
      */
-    public Consulta(String email){
+    public Consulta(String email, String idImovel){
         this.data = LocalDate.now();
         this.email = email;
+        this.idImovel = idImovel;
     }
     
-    public Consulta(Utilizador usr){
+    public Consulta(Utilizador usr, String idImovel){
         this.data = LocalDate.now();
-        this.email = usr == null? "n/a" : usr.getEmail();
+        this.email = (usr == null)? "n/a" : usr.getEmail();
+        this.idImovel = (idImovel == null)? "n/a" : idImovel;
     }
       
     /**
@@ -34,6 +37,7 @@ public final class Consulta implements Comparable<Consulta>, Serializable
     public Consulta(Consulta c){
         this.email = c.getEmail();
         this.data = c.getData();
+        this.idImovel = c.getIdImovel();
     }
     
     // Getters
@@ -43,6 +47,10 @@ public final class Consulta implements Comparable<Consulta>, Serializable
     
     public String getEmail(){
         return email;
+    }
+    
+    public String getIdImovel(){
+        return idImovel;
     }
 
     /* Este tipo é Imutável, depois de feita uma consulta, esta não pode ser alterada */
@@ -67,7 +75,7 @@ public final class Consulta implements Comparable<Consulta>, Serializable
             eIgual = false;
         if(email == null && c.getEmail() != null) 
             eIgual = false;
-        return eIgual && data.equals(c.getData()) && email.equals(c.getEmail());
+        return eIgual && data.equals(c.getData()) && email.equals(c.getEmail()) && idImovel.equals(c.getIdImovel()); 
     }
     
     @Override
@@ -76,17 +84,15 @@ public final class Consulta implements Comparable<Consulta>, Serializable
     }
     
     public String toString(){
-        return "E-mail: " + email + "\nData: " + data.toString() + "\n";
+        return "E-mail: " + email + "\nData: " + data.toString() + "\nID do imóvel consultado: " + idImovel + "\n";
     }
     
     public int hashCode(){
-        int hash, hashEmail, hashData;
-        hash = 7;
-        hashEmail = email == null ? 0 : email.hashCode();
-        hashData = data == null ? 0 : data.hashCode();
+        int hash = 7;
         
-        hash = 31 * hash + hashEmail;
-        hash = 31 * hash + hashData;
+        hash = 31 * hash + (email == null ? 0 : email.hashCode());
+        hash = 31 * hash + (data == null ? 0 : data.hashCode());
+        hash = 31 * hash + (idImovel == null ? 0 : idImovel.hashCode());
         return hash;
     }
 }
