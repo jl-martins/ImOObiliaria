@@ -14,6 +14,7 @@ final public class Menu
 {   
     private String titulo;
     private String separador; // separa o título das opções e a última opção da prompt
+    private String idUtilizador;
     private final String[] opcoes;
     private boolean temOpcaoSair;
     private int op;
@@ -23,10 +24,10 @@ final public class Menu
      * (declarado como privado para não ser possível construir menus vazios)
      */
     private Menu(){
-        titulo = separador = null;
+        titulo = separador = idUtilizador = null;
         opcoes = null;
-        op = -1;
         temOpcaoSair = false;
+        op = -1;
     }   
     
     /**
@@ -39,6 +40,7 @@ final public class Menu
         System.arraycopy(opcoes, 0, this.opcoes, 0, opcoes.length);
         this.separador = geraSeparador(titulo, opcoes); // gera um separador adequado a este menu.
         this.temOpcaoSair = temOpcaoSair;
+        this.idUtilizador = null;
     }
     
     /**
@@ -47,6 +49,7 @@ final public class Menu
      */
     public Menu(Menu menu){
         this(menu.getTitulo(), menu.getOpcoes(), menu.getTemOpcaoSair());
+        setIdUtilizador(menu.getIdUtilizador());
     }
     
     /** @return Título deste menu. */
@@ -66,6 +69,11 @@ final public class Menu
         return temOpcaoSair;
     }
     
+    /** @return id do utilizador do menu se este tiver sido definido; null caso contrário. */
+    public String getIdUtilizador(){
+        return idUtilizador;
+    }
+    
     /** @return Número da opção atual deste menu. */
     public int getOpcao(){
         return op;
@@ -77,6 +85,11 @@ final public class Menu
             this.titulo = titulo;
             separador = geraSeparador(titulo, opcoes); // recalcula o separador
         }
+    }
+    
+    /** Altera o id do utilizador que está a usar o menu. */
+    public void setIdUtilizador(String id){
+        this.idUtilizador = id;
     }
     
     /** Imprime as opções deste menu. */
@@ -114,7 +127,9 @@ final public class Menu
         int op;
         Scanner input = new Scanner(System.in);
         
-        out.print(">>> ");
+        if(idUtilizador != null)
+            out.print("(" + idUtilizador + ") ");
+        out.print("$ ");
         try {
             op = input.nextInt(); input.nextLine(); // lê um inteiro e consome o \n que ficou no buffer do stdin. 
         }
@@ -162,6 +177,9 @@ final public class Menu
         if(temOpcaoSair)
             sb.append("Sair\n");
         sb.append("Número de opções: " + opcoes.length);
+        
+        if(idUtilizador != null)
+            sb.append("ID do utilizador atual: " + idUtilizador);
         sb.append("Opção atual: " + op);
         return sb.toString();
     }
@@ -174,6 +192,7 @@ final public class Menu
             hash = 31*hash + opcoes[i].hashCode();
         hash = 31*hash + op;
         hash = 31*hash + (temOpcaoSair ? 1 : 0);
+        hash = 31*hash + (idUtilizador == null ? 0 : idUtilizador.hashCode());
         return hash;
     } 
 }

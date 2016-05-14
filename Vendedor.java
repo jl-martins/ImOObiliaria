@@ -48,6 +48,11 @@ public class Vendedor extends Utilizador implements Serializable
         }
     }
     
+    public void removeImovel(String idImovel){
+        if(emVenda.remove(idImovel) == false)
+            vendidos.remove(idImovel);
+    }
+    
     public void setEmVenda(Set<String> emVenda){
         this.emVenda = new TreeSet<String>(emVenda);
     }

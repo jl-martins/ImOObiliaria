@@ -100,7 +100,7 @@ public abstract class Utilizador implements Serializable
         sb.append("Nome: " + nome + "\n");
         sb.append("Morada: " + morada + "\n");
         // a password não é adicionada à String devolvida para que não a revelemos.
-        sb.append("Data de nascimento: " + dataNascimento.toString());
+        sb.append("Data de nascimento: " + dataNascimento.toString() + "\n");
         return sb.toString();
     }
     

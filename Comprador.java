@@ -55,7 +55,7 @@ public class Comprador extends Utilizador implements Serializable
         StringBuilder sb = new StringBuilder("-> Comprador\n");
         
         sb.append(super.toString());
-        sb.append("Ids dos imóveis favoritos: ");
+        sb.append("Ids dos imóveis favoritos:\n");
         for(String str : favoritos)
             sb.append(str + "\n");
         return sb.toString();
