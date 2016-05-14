@@ -14,8 +14,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 import static java.lang.System.out;
 import static java.lang.System.err;
 
@@ -65,7 +63,7 @@ public class ImoobiliariaApp
             "Registar utilizador",
             "Remover utilizador",
             "Iniciar sessão",
-            "Obter imóvel correspondente a um ID",
+            "Obter um imóvel a partir de um ID",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Obter correspondência entre imóveis e vendedores",
@@ -74,7 +72,7 @@ public class ImoobiliariaApp
         
         String[] opcoesComprador = {
             "Fechar sessão",
-            "Obter imóvel correspondente a um ID",
+            "Obter um imóvel a partir de um ID",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Obter correspondência entre imóveis e vendedores",
@@ -85,7 +83,7 @@ public class ImoobiliariaApp
         
         String[] opcoesVendedor = {
             "Fechar sessão",
-            "Obter imóvel correspondente a um ID",
+            "Obter um imóvel a partir de um ID",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Obter correspondência entre imóveis e vendedores",
@@ -104,10 +102,10 @@ public class ImoobiliariaApp
         
         // o espaço inicial dos títulos é intencional (se o 3º parâmetro for true, então o menu tem opção para sair)
         menuMain = new Menu(" Menu Principal", opcoesMain, true);
-        menuComprador = new Menu(" Menu Comprador", opcoesComprador, true);
-        menuVendedor = new Menu(" Menu Vendedor", opcoesVendedor, true);
-        menuTipoUtilizador = new Menu(" Selecionar tipo de utilizador", opcoesTipoUtilizador, false);
-        menuTipoImovel = new Menu(" Selecionar tipo de imóvel", opcoesTipoImovel, false);
+        menuComprador = new Menu(" Menu de Comprador", opcoesComprador, true);
+        menuVendedor = new Menu(" Menu de Vendedor", opcoesVendedor, true);
+        menuTipoUtilizador = new Menu(" Selecione o tipo de utilizador", opcoesTipoUtilizador, false);
+        menuTipoImovel = new Menu(" Selecione o tipo de imóvel", opcoesTipoImovel, false);
         menuSimNao = new Menu(" Resposta Sim/Não", opcoesSimNao, false);
     }
     
@@ -161,7 +159,7 @@ public class ImoobiliariaApp
             }
         } while(numOpcao != 0);
         
-        menuSimNao.setTitulo("Deseja guardar o estado do programa?");
+        menuSimNao.setTitulo(" Deseja guardar o estado do programa?");
         menuSimNao.executa();
         if(menuSimNao.getOpcao() == 1)
             gravarEstado();
@@ -269,7 +267,7 @@ public class ImoobiliariaApp
         return numOpcao;
     }
     
-    public static void gravarEstado(){
+    private static void gravarEstado(){
         try{
             imoobiliaria.gravaObj("Imoobiliaria.ser");
             imoobiliaria.log("log.txt", true);
@@ -475,7 +473,7 @@ public class ImoobiliariaApp
         out.print("Andar: ");
         andar = input.nextInt(); input.nextLine();
             
-        menuSimNao.setTitulo("O apartamento tem garagem?");
+        menuSimNao.setTitulo(" O apartamento tem garagem?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         temGaragem = (numOpcao == 1);
@@ -494,7 +492,7 @@ public class ImoobiliariaApp
         out.print("Área da loja: ");
         area = input.nextInt(); input.nextLine();
         
-        menuSimNao.setTitulo("A loja tem WC?");
+        menuSimNao.setTitulo(" A loja tem WC?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         temWC = (numOpcao == 1);
@@ -517,12 +515,12 @@ public class ImoobiliariaApp
         out.print("Área do terreno: ");
         area = input.nextInt(); input.nextLine();
         
-        menuSimNao.setTitulo("O terreno é apropriado para construção de habitação?");
+        menuSimNao.setTitulo(" O terreno é apropriado para construção de habitação?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         terrenoHab = (numOpcao == 1);
         
-        menuSimNao.setTitulo("O terreno é apropriado para construção de armazéns?");
+        menuSimNao.setTitulo(" O terreno é apropriado para construção de armazéns?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         terrenoArm = (numOpcao == 1);
@@ -532,7 +530,7 @@ public class ImoobiliariaApp
         out.print("kWh máximos: ");
         maxKWh = input.nextDouble(); input.nextLine();
         
-        menuSimNao.setTitulo("O terreno tem rede de esgotos?");
+        menuSimNao.setTitulo(" O terreno tem rede de esgotos?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         temRedeEsgotos = (numOpcao == 1);
@@ -563,7 +561,7 @@ public class ImoobiliariaApp
         out.print("Andar: ");
         andar = input.nextInt(); input.nextLine();
         
-        menuSimNao.setTitulo("O apartamento tem garagem?");
+        menuSimNao.setTitulo(" O apartamento tem garagem?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         temGaragem = (numOpcao == 1);
@@ -717,7 +715,7 @@ public class ImoobiliariaApp
         Map<Imovel, Vendedor> mapeamentoImoveis = imoobiliaria.getMapeamentoImoveis();
         
         if(mapeamentoImoveis == null || mapeamentoImoveis.isEmpty())
-            out.println("A imobiliária ainda não tem imóveis nem vendedores.");
+            out.println("A imobiliária ainda não tem imóveis.");
         else{
             out.println("--------------------------------------------------------------------------------------------------");
             for(Map.Entry<Imovel, Vendedor> entrada : mapeamentoImoveis.entrySet()){
