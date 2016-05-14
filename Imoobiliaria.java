@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.Collection;
 import java.util.TreeSet;
 import java.util.HashMap;
-import java.util.Random; // <<< VER SE ESTE IMPORT É NECESSÁRIO
 
 import java.time.LocalDate;
 
@@ -17,8 +16,8 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
-import static java.lang.System.err;
 
+import static java.lang.System.err;
 
 public class Imoobiliaria implements Serializable
 {
