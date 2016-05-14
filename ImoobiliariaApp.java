@@ -589,7 +589,7 @@ public class ImoobiliariaApp
             else{
                 out.println("-> IDs dos imóveis com mais do que " + N + " consultas\n");
                 for(String id : setIds) // ! se este setIds puder ser null, temos que alterar este ciclo
-                    out.print(id);
+                    out.println(id);
             }
         }
         catch(SemAutorizacaoException e){err.print(e.getMessage());}

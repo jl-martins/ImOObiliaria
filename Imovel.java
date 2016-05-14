@@ -128,6 +128,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         sb.append("id: " + id + "\n");
         sb.append("Rua: " + rua + "\n");
         sb.append("Preço pedido pelo imóvel: " + precoPedido + "\n");
+        sb.append("Número de consultas: " + quantasConsultas + "\n");
         // O preço mínimo não deverá ser apresentado aos compradores, logo não o incluimos na String retornada
         return sb.toString();
     }
