@@ -9,11 +9,15 @@ public enum TipoMoradia
 {
     ISOLADA, GEMINADA, BANDA, GAVETO;
     
-    public static TipoMoradia fromString(String str) throws IllegalArgumentException{
+    public static TipoMoradia fromString(String str) throws TipoInvalidoException{
         TipoMoradia tipo = null;
         
-        if(str != null)
-            tipo = valueOf(str.trim().toUpperCase());
+        try{
+            if(str != null)
+                tipo = valueOf(str.trim().toUpperCase());
+        }
+        catch(IllegalArgumentException e){throw new TipoInvalidoException("O tipo '" + str + "' é inválido.");}
+        
         return tipo;
     }
 }

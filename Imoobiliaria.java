@@ -120,7 +120,7 @@ public class Imoobiliaria implements Serializable
         String email = utilizador.getEmail();
 
         if(utilizadores.containsKey(email))
-            throw new UtilizadorExistenteException("Já existe um utilizador com o e-mail: " + email);
+            throw new UtilizadorExistenteException("Já existe um utilizador com o e-mail '" + email + "'");
         else
             utilizadores.put(email, utilizador);
     }
@@ -200,7 +200,7 @@ public class Imoobiliaria implements Serializable
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
 
         if(imoveis.containsKey(idImovel))
-            throw new ImovelExisteException("Já existe um imóvel com o id: " + idImovel);
+            throw new ImovelExisteException("Já existe um imóvel com o id '" + idImovel + "'");
         else{
             imoveis.put(idImovel, im);
             vendedor.poeAVenda(idImovel);                
@@ -218,9 +218,9 @@ public class Imoobiliaria implements Serializable
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
         
         if(!vendedor.registouImovel(id))
-            throw new SemAutorizacaoException("Não tem autorização para remover o imóvel que escolheu!\n");
+            throw new SemAutorizacaoException("Não tem autorização para remover o imóvel que escolheu!");
         else if(imoveis.get(id) == null)
-            throw new ImovelInexistenteException("Não existe nenhum imóvel com o id '" + id + "'\n");
+            throw new ImovelInexistenteException("Não existe nenhum imóvel com o id '" + id + "'");
         
         imoveis.remove(id);
         vendedor.removeImovel(id); // vai ao Vendedor e remove a referência ao Imovel removido da Imoobiliaria
@@ -234,7 +234,7 @@ public class Imoobiliaria implements Serializable
     public Imovel getImovel(String id) throws ImovelInexistenteException{
         Imovel imv = imoveis.get(id);
         if(imv == null)
-            throw new ImovelInexistenteException("Não existe nenhum imóvel com o id '" + id + "'\n");
+            throw new ImovelInexistenteException("Não existe nenhum imóvel com o id '" + id + "'");
         
         return imv.clone();
     }
@@ -272,17 +272,18 @@ public class Imoobiliaria implements Serializable
      * @throws EstadoInvalidoException se @code estado for inválido.
      */
     public void setEstado(String idImovel, String estado) 
-    throws ImovelInexistenteException, SemAutorizacaoException, EstadoInvalidoException {
+        throws ImovelInexistenteException, SemAutorizacaoException, EstadoInvalidoException
+    {
         confirmaVendedorAutenticado();
         Imovel imv = imoveis.get(idImovel);
         
         if(imv == null){
-            throw new ImovelInexistenteException("O imóvel " + idImovel + " não está registado.");
+            throw new ImovelInexistenteException("O imóvel '" + idImovel + "' não está registado.");
         }
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
 
         if(!vendedor.registouImovel(idImovel))
-            throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o estado do imóvel " + idImovel);
+            throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o estado do imóvel '" + idImovel + "'");
         EstadoImovel estadoImovel = EstadoImovel.fromString(estado);
         vendedor.alteraEstadoImovel(idImovel, estadoImovel);
         imv.setEstado(estadoImovel);     
@@ -402,7 +403,11 @@ public class Imoobiliaria implements Serializable
         leilao = new Leilao(idImovel, utilizadorAutenticado.getEmail(), horas);
     }
 
-    public void adicionaComprador(String idComprador, int limite, int incrementos, int minutos) throws LeilaoTerminadoException {
+    public void adicionaComprador(String idComprador, int limite, int incrementos, int minutos)
+        throws SemAutorizacaoException, LeilaoTerminadoException
+    {
+        confirmaCompradorAutenticado();
+        
         if(leilao == null) 
             throw new LeilaoTerminadoException("Não há nenhum leilão ativo neste momento.");
         if(leilao.terminouLeilao())

@@ -72,7 +72,7 @@ public class Apartamento extends Imovel
         return temGaragem;
     }
     
-    private void setTipo(String tipo){
+    private void setTipo(String tipo) throws TipoInvalidoException{
         this.tipo = TipoApartamento.fromString(tipo);
     }
     

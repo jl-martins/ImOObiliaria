@@ -65,7 +65,7 @@ public class ImoobiliariaApp
             "Registar utilizador",
             "Remover utilizador",
             "Iniciar sessão",
-            "Obter imóvel correspondente a um id",
+            "Obter imóvel correspondente a um ID",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Obter correspondência entre imóveis e vendedores",
@@ -74,7 +74,7 @@ public class ImoobiliariaApp
         
         String[] opcoesComprador = {
             "Fechar sessão",
-            "Obter imóvel correspondente a um id",
+            "Obter imóvel correspondente a um ID",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Obter correspondência entre imóveis e vendedores",
@@ -85,7 +85,7 @@ public class ImoobiliariaApp
         
         String[] opcoesVendedor = {
             "Fechar sessão",
-            "Obter imóvel correspondente a um id",
+            "Obter imóvel correspondente a um ID",
             "Listar imóveis de um certo tipo",
             "Listar imóveis habitáveis",
             "Obter correspondência entre imóveis e vendedores",
@@ -319,7 +319,7 @@ public class ImoobiliariaApp
                 out.println("-> Utilizador registado com sucesso!");
             }
             else // o email introduzido é inválido
-                err.print("O email: '" + email + "' é inválido.\n");  
+                err.println("O email: '" + email + "' é inválido.");  
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
         catch(DateTimeParseException e){err.println("Erro: Data de nascimento inválida.\nFormato esperado: aaaa-mm-dd.");}
@@ -338,7 +338,7 @@ public class ImoobiliariaApp
             imoobiliaria.removerUtilizador(email, password);
             out.println("-> Utilizador '" + email + "' removido com sucesso!");
         }
-        catch(SemAutorizacaoException e){err.print(e.getMessage());}
+        catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
         
     /** 
@@ -425,11 +425,11 @@ public class ImoobiliariaApp
         catch(ImovelExisteException e){err.println(e.getMessage());}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
         catch(InputMismatchException e){err.println("Input inválido.");}
-        // FALTA APANHAR EXCEÇÕES GERADAS QUANDO UMA STRING NAO PODE SER CONVERTIDA PRA ENUM
+        catch(TipoInvalidoException e){err.println(e.getMessage());}
     }
     
     /** Pede ao utilizador para introduzir os dados relativos a uma moradia e, em caso de sucesso, devolve a Moradia criada. */
-    private static Moradia leDadosMoradia(String id, String rua, int precoPedido, int precoMinimo){
+    private static Moradia leDadosMoradia(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Scanner input = new Scanner(System.in);
         TipoMoradia tipo;
         int areaImplantacao, areaTotal, areaEnv;
@@ -449,13 +449,13 @@ public class ImoobiliariaApp
         numWCs = input.nextInt(); input.nextLine();
         out.print("Número da porta: ");
         numDaPorta = input.nextInt(); input.nextLine();
-        
+            
         return new Moradia(id, rua, precoPedido, precoMinimo, tipo, areaImplantacao,
-                                   areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
+                                areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
     }
     
     /** Pede ao utilizador para introduzir os dados relativos a um apartamento e, em caso de sucesso, devolve o Apartamento criado. */
-    private static Apartamento leDadosApartamento(String id, String rua, int precoPedido, int precoMinimo){
+    private static Apartamento leDadosApartamento(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Scanner input = new Scanner(System.in);
         TipoApartamento tipo;
         int areaTotal, numQuartos, numWCs;
@@ -474,12 +474,12 @@ public class ImoobiliariaApp
         numDaPorta = input.nextInt(); input.nextLine();
         out.print("Andar: ");
         andar = input.nextInt(); input.nextLine();
-        
+            
         menuSimNao.setTitulo("O apartamento tem garagem?");
         menuSimNao.executa();
         numOpcao = menuSimNao.getOpcao();
         temGaragem = (numOpcao == 1);
-        
+ 
         return new Apartamento(id, rua, precoPedido, precoMinimo, tipo, areaTotal,
                                 numQuartos, numWCs, numDaPorta, andar, temGaragem);
     }
@@ -542,7 +542,7 @@ public class ImoobiliariaApp
     }
     
     /** Pede ao utilizador para introduzir os dados relativos a uma loja habitável e, em caso de sucesso, devolve o LojaHabitavel criada. */
-    private static LojaHabitavel leDadosLojaHabitavel(String id, String rua, int precoPedido, int precoMinimo){
+    private static LojaHabitavel leDadosLojaHabitavel(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Loja loja = leDadosLoja(id, rua, precoPedido, precoMinimo);
         Scanner input = new Scanner(System.in);
         TipoApartamento tipo;
@@ -577,7 +577,7 @@ public class ImoobiliariaApp
         String id;
         
         try{
-            out.print("id do imóvel a remover: ");
+            out.print("ID do imóvel a remover: ");
             id = input.nextLine();
             imoobiliaria.removeImovel(id);
             out.println("-> Imóvel '" + id + "' removido com sucesso!");
@@ -598,7 +598,7 @@ public class ImoobiliariaApp
             im = imoobiliaria.getImovel(id);
             out.println(im.toString());
         }
-        catch(ImovelInexistenteException e){err.print(e.getMessage());}
+        catch(ImovelInexistenteException e){err.println(e.getMessage());}
     }
     
     /** Apresenta as 10 últimas consultas (opção de vendedor). */
@@ -625,7 +625,7 @@ public class ImoobiliariaApp
         String idImovel, novoEstado;
         
         try{
-            out.print("Id do imóvel cujo estado pretende alterar: ");
+            out.print("ID do imóvel cujo estado pretende alterar: ");
             idImovel = input.nextLine();
             out.print("Novo estado do imóvel: ");
             novoEstado = input.nextLine();
@@ -658,7 +658,7 @@ public class ImoobiliariaApp
                     out.println(id);
             }
         }
-        catch(SemAutorizacaoException e){err.print(e.getMessage());}
+        catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
     
     /** Lê um tipo e um preço e apresenta a lista de todos os imóveis desse tipo, até ao preço especificado. */
@@ -770,13 +770,13 @@ public class ImoobiliariaApp
         int horas;
         
         try{
-            out.print("Id do imóvel que pretende leiloar: ");
+            out.print("ID do imóvel que pretende leiloar: ");
             id = input.nextLine();
             out.print("Duração do leilão (em horas): ");
             horas = input.nextInt(); input.nextLine();
             imoobiliaria.iniciaLeilao(id, horas);
         }
-        catch(SemAutorizacaoException e){err.print(e.getMessage());}
+        catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
     
     private static void adicionarComprador(){
@@ -793,8 +793,8 @@ public class ImoobiliariaApp
         try{
             imoobiliaria.adicionaComprador(idComprador, limite, incrementos, minutos);
         }
+        catch(SemAutorizacaoException e){err.println(e.getMessage());}
         catch(LeilaoTerminadoException e){err.println(e.getMessage());}
-        // catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
     
     private static void encerrarLeilao(){
@@ -808,6 +808,6 @@ public class ImoobiliariaApp
             else
                 out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
         }
-        catch(SemAutorizacaoException e){err.print(e.getMessage());}
+        catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
 }

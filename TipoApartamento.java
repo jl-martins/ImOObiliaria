@@ -9,11 +9,15 @@ public enum TipoApartamento implements Serializable
 {
     SIMPLES, DUPLEX, TRIPLEX;
     
-    public static TipoApartamento fromString(String str) throws IllegalArgumentException{
+    public static TipoApartamento fromString(String str) throws TipoInvalidoException{
         TipoApartamento tipo = null;
         
-        if(str != null)
-            tipo = valueOf(str.trim().toUpperCase());
+        try{
+            if(str != null)
+                tipo = valueOf(str.trim().toUpperCase());
+        }
+        catch(IllegalArgumentException e){throw new TipoInvalidoException("O tipo de apartamento '" + str + "' é inválido!");}    
+        
         return tipo;
     }
 }

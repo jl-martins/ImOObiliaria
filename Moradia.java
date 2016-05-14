@@ -76,7 +76,7 @@ public class Moradia extends Imovel
     // Setters
     
     // Declarado como privado para não ser possível mudar o tipo de uma moradia fora desta classe
-    private void setTipo(String tipo){
+    private void setTipo(String tipo) throws TipoInvalidoException{
         this.tipo = TipoMoradia.fromString(tipo);
     }
     

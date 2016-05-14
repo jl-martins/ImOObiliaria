@@ -14,9 +14,9 @@ public enum EstadoImovel implements Serializable
         try {
             if(str != null)
                 estado = valueOf(str.trim().toUpperCase());
-            } catch (IllegalArgumentException e) {
-                throw new EstadoInvalidoException(str + " não é um estado válido.");
-            }
+        }
+        catch (IllegalArgumentException e) {throw new EstadoInvalidoException("O estado '" + str + "' é inválido.");}
+        
         return estado;
     }
 }
