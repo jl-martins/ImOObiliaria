@@ -1,11 +1,13 @@
+/**
+ * Classe de licitadores (compradores que participam num leilão).
+ * 
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.io.Serializable;
 import java.lang.Comparable;
-/**
- * Write a description of class Licitador here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
+
 public class Licitador implements Serializable
 {
     private String idComprador;

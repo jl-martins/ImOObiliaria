@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class ImovelInexistenteException here.
+ * Exceção atirada quando um utilizador seleciona um Imovel inexistente.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12
+ * @version 15/05/2016
  */
 public class ImovelInexistenteException extends Exception
 {

@@ -1,10 +1,12 @@
-import java.io.Serializable;
 /**
- * Enumeration class TipoApartamento - write a description of the enum class here
+ * Enumeração dos tipos de apartamento.
  * 
- * @author (your name here)
- * @version (version number or date here)
+ * @author Grupo12
+ * @version 15/05/2016
  */
+
+import java.io.Serializable;
+
 public enum TipoApartamento implements Serializable
 {
     SIMPLES, DUPLEX, TRIPLEX;

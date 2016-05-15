@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class EstadoInvalidoException here.
+ * Exceção atirada quando um vendedor pretende alterar o estado de um Imovel para um estado inválido.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12
+ * @version 15/05/2016
  */
 public class EstadoInvalidoException extends Exception
 {

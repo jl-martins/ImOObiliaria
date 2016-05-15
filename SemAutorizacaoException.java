@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class SemAutorizacaoException here.
+ * Exceção atirada quando um utilizador escolhe uma opção que não tem autorização para executar.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12 
+ * @version 15/05/2016
  */
 public class SemAutorizacaoException extends Exception
 {

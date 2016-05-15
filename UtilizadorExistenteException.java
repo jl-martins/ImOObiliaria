@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class UtilizadorExistenteException here.
+ * Exceção atirada quando os dados de um utilizador não correspondem a um utilizador registado.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12
+ * @version 15/05/2016
  */
 public class UtilizadorExistenteException extends Exception
 {

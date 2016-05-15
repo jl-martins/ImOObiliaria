@@ -1,3 +1,9 @@
+/**
+ * Classe que representa uma loja com parte habitacional.
+ * A parte habitacional corresponde a um objeto da classe Apartamento.
+ * @author Grupo12 
+ * @version 15/05/2016
+ */
 import java.io.Serializable;
 
 public class LojaHabitavel extends Loja implements Serializable, Habitavel
@@ -18,7 +24,7 @@ public class LojaHabitavel extends Loja implements Serializable, Habitavel
     
     public LojaHabitavel(Loja l, Apartamento a){
         super(l);
-        apartamento = new Apartamento(a);
+        apartamento = a.clone();
     }
     
     public LojaHabitavel(LojaHabitavel lh){

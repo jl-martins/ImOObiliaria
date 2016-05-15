@@ -1,8 +1,8 @@
 /**
- * Write a description of class ValidadorEmail here.
+ * Classe utilizada para validar sintaticamente emails.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12 
+ * @version 15/05/2016
  */
 
 import java.util.regex.Pattern;

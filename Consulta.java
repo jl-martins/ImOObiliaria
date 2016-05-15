@@ -1,3 +1,10 @@
+/**
+ * Classe de objetos imutáveis que guardam informação sobre os vários dados relativos à consulta de um Imovel, 
+ * nomeadamente a data, o id do Imovel e o email do utilizador que o consultou (quando disponível).
+ * @author Grupo12 
+ * @version 15/05/2016
+ */
+
 import java.time.LocalDate;
 import java.io.Serializable;
 

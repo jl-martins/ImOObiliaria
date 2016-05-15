@@ -1,11 +1,12 @@
+/**
+ * Comparador de 2 imóveis com base no preço pedido pelos mesmos.
+ * 
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.util.Comparator;
 
-/**
- * Write a description of class ComparadorPorPreço here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class ComparadorPorPreco implements Comparator<Imovel> {
     public int compare(Imovel imv1, Imovel imv2) {
         if (imv1.getPrecoPedido() == imv2.getPrecoPedido())

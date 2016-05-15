@@ -1,3 +1,10 @@
+/**
+ * Classe principal do projeto Imoobiliaria.
+ * 
+ * @author Grupo 12
+ * @version 15/05/2016
+ */
+
 import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
@@ -17,12 +24,6 @@ import java.time.format.DateTimeParseException;
 import static java.lang.System.out;
 import static java.lang.System.err;
 
-/**
- * Classe principal do projeto Imoobiliaria.
- * 
- * @author Grupo 12
- * @version 07/05/2016
- */
 public class ImoobiliariaApp
 {
     private static Imoobiliaria imoobiliaria;
@@ -131,31 +132,31 @@ public class ImoobiliariaApp
             if(numOpcao > 0){ // o resto das validações do número da opção são feitas na classe Menu
                 switch(numOpcao){
                     case 1:
-                    registarUtilizador();
-                    break;
+                        registarUtilizador();
+                        break;
                     case 2:
-                    removerUtilizador();
-                    break;
+                        removerUtilizador();
+                        break;
                     case 3:
-                    // iniciarSessao() devolve -1 se a autenticação falhar. Se a autenticação tiver sucesso e o utilizador
-                    // pretender sair é devolvido 0. Se o utilizador fechar a sessão mas não quiser sair, é devolvido 1.
-                    numOpcao = iniciarSessao();
-                    break;
+                        // iniciarSessao() devolve -1 se a autenticação falhar. Se a autenticação tiver sucesso e o utilizador
+                        // pretender sair é devolvido 0. Se o utilizador fechar a sessão mas não quiser sair, é devolvido 1.
+                        numOpcao = iniciarSessao();
+                        break;
                     case 4:
-                    obterImovelComID();
-                    break;
+                        obterImovelComID();
+                        break;
                     case 5:
-                    listarImoveisTipo();
-                    break;
+                        listarImoveisTipo();
+                        break;
                     case 6:
-                    listarHabitaveis();
-                    break;
+                        listarHabitaveis();
+                        break;
                     case 7:
-                    mapImovelVend();
-                    break;
+                        mapImovelVend();
+                        break;
                     case 8:
-                    gravarEstado();
-                    break;
+                        gravarEstado();
+                        break;
                 }
                 if(numOpcao != 0)
                     enterParaContinuar();
@@ -180,32 +181,32 @@ public class ImoobiliariaApp
             switch(numOpcao){
                 case 0: // se o comprador pretender sair, primeiro terminamos a sessão
                 case 1:
-                fecharSessao();
-                break;
+                    fecharSessao();
+                    break;
                 case 2:
-                obterImovelComID();
-                break;
+                    obterImovelComID();
+                    break;
                 case 3:
-                listarImoveisTipo();
-                break;
+                    listarImoveisTipo();
+                    break;
                 case 4:
-                listarHabitaveis();
-                break;
+                    listarHabitaveis();
+                    break;
                 case 5:
-                mapImovelVend();
-                break;
+                    mapImovelVend();
+                    break;
                 case 6:
-                registarFavorito();
-                break;
+                    registarFavorito();
+                    break;
                 case 7:
-                apresentarFavoritos();
-                break;
+                    apresentarFavoritos();
+                    break;
                 case 8:
-                adicionarComprador();
-                break;
+                    adicionarComprador();
+                    break;
                 case 9:
-                gravarEstado();
-                break;
+                    gravarEstado();
+                    break;
             }
             if(numOpcao > 1) // se a opção não é "sair" ou "fechar a sessão"
                 enterParaContinuar();
@@ -224,44 +225,44 @@ public class ImoobiliariaApp
             switch(numOpcao){
                 case 0: // se o vendedor quiser sair, primeiro fechamos a sessão
                 case 1:
-                fecharSessao();
-                break;
+                    fecharSessao();
+                    break;
                 case 2:
-                obterImovelComID();
-                break;
+                    obterImovelComID();
+                    break;
                 case 3:
-                listarImoveisTipo();
-                break;
+                    listarImoveisTipo();
+                    break;
                 case 4:
-                listarHabitaveis();
-                break;
+                    listarHabitaveis();
+                    break;
                 case 5:
-                mapImovelVend();
-                break;
+                    mapImovelVend();
+                    break;
                 case 6:
-                registarImovel();
-                break;
+                    registarImovel();
+                    break;
                 case 7:
-                removerImovel();
-                break;
+                    removerImovel();
+                    break;
                 case 8:
-                ultimasConsultas();
-                break;
+                    ultimasConsultas();
+                    break;
                 case 9:
-                alterarEstadoImovel();
-                break;
+                    alterarEstadoImovel();
+                    break;
                 case 10:
-                topImoveis();
-                break;
+                    topImoveis();
+                    break;
                 case 11:
-                iniciarLeilao();
-                break;
+                    iniciarLeilao();
+                    break;
                 case 12:
-                encerrarLeilao();
-                break;
+                    encerrarLeilao();
+                    break;
                 case 13:
-                gravarEstado();
-                break;
+                    gravarEstado();
+                    break;
             }
             if(numOpcao > 1) // se a opção não é "sair" ou "fechar a sessão"
                 enterParaContinuar();
@@ -310,11 +311,11 @@ public class ImoobiliariaApp
 
                 switch(numOpcao){
                     case 1: // registar comprador
-                    novoUtilizador = new Comprador(email, nome, password, morada, dataNascimento);
-                    break;
+                        novoUtilizador = new Comprador(email, nome, password, morada, dataNascimento);
+                        break;
                     case 2: // registar vendedor
-                    novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
-                    break;
+                        novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
+                        break;
                 }  
                 imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
                 out.println("-> Utilizador registado com sucesso!");
@@ -363,13 +364,13 @@ public class ImoobiliariaApp
             // só chegamos a este switch, se o utilizador conseguiu autenticar-se
             switch(imoobiliaria.classUtilizadorAutenticado()){
                 case "Comprador":
-                menuComprador.setIdUtilizador(email);
-                r = menuComprador();
-                break;
+                    menuComprador.setIdUtilizador(email);
+                    r = menuComprador();
+                    break;
                 case "Vendedor":
-                menuVendedor.setIdUtilizador(email);
-                r = menuVendedor();
-                break;
+                    menuVendedor.setIdUtilizador(email);
+                    r = menuVendedor();
+                    break;
             }
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
@@ -405,20 +406,20 @@ public class ImoobiliariaApp
 
             switch(numOpcao){
                 case 1:
-                im = leDadosMoradia(id, rua, precoPedido, precoMinimo);
-                break;
+                    im = leDadosMoradia(id, rua, precoPedido, precoMinimo);
+                    break;
                 case 2:
-                im = leDadosApartamento(id, rua, precoPedido, precoMinimo);
-                break;
+                    im = leDadosApartamento(id, rua, precoPedido, precoMinimo);
+                    break;
                 case 3:
-                im = leDadosLoja(id, rua, precoPedido, precoMinimo);
-                break;
+                    im = leDadosLoja(id, rua, precoPedido, precoMinimo);
+                    break;
                 case 4:
-                im = leDadosLojaHabitavel(id, rua, precoPedido, precoMinimo);
-                break;
+                    im = leDadosLojaHabitavel(id, rua, precoPedido, precoMinimo);
+                    break;
                 case 5:
-                im = leDadosTerreno(id, rua, precoPedido, precoMinimo);
-                break;
+                    im = leDadosTerreno(id, rua, precoPedido, precoMinimo);
+                    break;
             }
             imoobiliaria.registaImovel(im);
             out.println("-> Registo do imóvel '" + id + "' efetuado com sucesso!");
@@ -452,7 +453,7 @@ public class ImoobiliariaApp
         numDaPorta = input.nextInt(); input.nextLine();
 
         return new Moradia(id, rua, precoPedido, precoMinimo, tipo, areaImplantacao,
-            areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
+                            areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
     }
 
     /** Pede ao utilizador para introduzir os dados relativos a um apartamento e, em caso de sucesso, devolve o Apartamento criado. */
@@ -482,7 +483,7 @@ public class ImoobiliariaApp
         temGaragem = (numOpcao == 1);
 
         return new Apartamento(id, rua, precoPedido, precoMinimo, tipo, areaTotal,
-            numQuartos, numWCs, numDaPorta, andar, temGaragem);
+                                numQuartos, numWCs, numDaPorta, andar, temGaragem);
     }
 
     /** Pede ao utilizador para introduzir os dados relativos a uma loja e, em caso de sucesso, devolve a Loja criada. */
@@ -539,7 +540,7 @@ public class ImoobiliariaApp
         temRedeEsgotos = (numOpcao == 1);
 
         return new Terreno(id, rua, precoPedido, precoMinimo, area, terrenoHab, 
-            terrenoArm, diamCanalizacoes, maxKWh, temRedeEsgotos);
+                            terrenoArm, diamCanalizacoes, maxKWh, temRedeEsgotos);
     }
 
     /** Pede ao utilizador para introduzir os dados relativos a uma loja habitável e, em caso de sucesso, devolve o LojaHabitavel criada. */
@@ -776,6 +777,7 @@ public class ImoobiliariaApp
             out.print("Duração do leilão (em horas): ");
             horas = input.nextInt(); input.nextLine();
             imoobiliaria.iniciaLeilao(id, horas);
+            out.println("-> Leilão iniciado com sucesso!");
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
@@ -805,7 +807,7 @@ public class ImoobiliariaApp
             vencedor = imoobiliaria.encerraLeilao();
 
             if(vencedor != null)
-                out.println("Vencedor do leilão: " + vencedor.toString());
+                out.println("Vencedor do leilão:\n\n" + vencedor.toString());
             else
                 out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
         }

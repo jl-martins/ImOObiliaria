@@ -1,3 +1,9 @@
+/**
+ * Classe que representa um terreno.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.io.Serializable;
 
 public class Terreno extends Imovel implements Serializable

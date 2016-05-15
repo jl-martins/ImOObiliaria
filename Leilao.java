@@ -1,13 +1,14 @@
+/**
+ * Classe que representa um leilão.
+ * 
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Write a description of class Leilao here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class Leilao implements Serializable /* implementar Comparable se for para fazer varios leiloes */
 {
     private String responsavel;
@@ -54,7 +55,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         List<Licitador> copiaLicitadores = new ArrayList<>(licitadores);
 
         for(int i = 0; i <= duracaoMinutos; i = proxI){
-            proxI = duracaoMinutos + 1;
+            proxI = i + 1;
             for(Licitador l : copiaLicitadores){
                 int minutoProxLicitacao = l.getQuandoProximaLicitacao();
 

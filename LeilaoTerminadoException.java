@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class LeilaoTerminadoException here.
+ * Exceção atirada quando um comprador tenta entrar num leilão que já terminou.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12
+ * @version 15/05/2016
  */
 public class LeilaoTerminadoException extends Exception
 {

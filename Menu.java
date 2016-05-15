@@ -1,8 +1,8 @@
 /**
- * Write a description of class Menu here.
+ * Classe de objetos do tipo menu.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12
+ * @version 15/05/2016
  */
 
 import java.util.Arrays;
@@ -129,6 +129,7 @@ final public class Menu
         
         if(idUtilizador != null)
             out.print("(" + idUtilizador + ") ");
+        
         out.print("$ ");
         try {
             op = input.nextInt(); input.nextLine(); // lê um inteiro e consome o \n que ficou no buffer do stdin. 

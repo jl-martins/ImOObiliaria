@@ -1,3 +1,9 @@
+/**
+ * Classe que representa a Imoobiliaria.
+ * @author Grupo12
+ * @version 
+ */
+
 import java.util.Map;
 import java.util.Set;
 import java.util.List;

@@ -1,3 +1,9 @@
+/**
+ * Classe abstrata que representa um utilizador.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.time.LocalDate;
 import java.io.Serializable;
 

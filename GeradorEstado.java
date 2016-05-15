@@ -1,3 +1,10 @@
+/**
+ * Classe de geradores do estado inicial da ImoobiliariaApp.
+ * 
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.TreeSet;
@@ -5,12 +12,6 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * Write a description of class EstadoInicialApresentação here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
- */
 public class GeradorEstado
 {
     private final int N_VENDEDORES = 15;
@@ -51,8 +52,8 @@ public class GeradorEstado
         StringBuilder sb = new StringBuilder();
         Set<String> nomesSemReps = new TreeSet<String>();
 
-        String nomesHomem[] = {"João", "Carlos", "Luís", "José", "Esteves", "Miguel", "Rui", "Rafael", "Tiago", "André", "Ricardo", "Álvaro", "Ângelo",
-                "Fernando", "Alexandre", "Manuel", "Gil", "António", "Fábio", "Pedro", "Francisco"};
+        String nomesHomem[] = {"João", "Carlos", "Luís", "José", "Esteves", "Miguel", "Rui", "Rafael", "Tiago", "André", 
+                "Ricardo", "Álvaro", "Ângelo", "Fernando", "Alexandre", "Manuel", "Gil", "António", "Fábio", "Pedro", "Francisco"};
         String nomesMulher[] = {"Sara", "Cláudia", "Elsa", "Ana", "Margarida", "Raquel", "Matilde", "Cátia", "Bárbara", "Filipa", "Andreia", "Carla", 
                 "Catarina", "Joaquina", "Beatriz", "Alexandra", "Fernanda", "Francisca", "Luísa", "Cátia", "Alexandrine", "Rita"};
         String apelidos[] = {"Passos", "Dias", "Aguiar", "Mota", "Mendes", "Pereira", "Martins", "Silva", "Sousa", "Cardoso", "Roriz", "Machado", 
@@ -98,27 +99,28 @@ public class GeradorEstado
         Imovel imv = null;
         switch(tipo){
             case 0:
-            imv = (Imovel) new Moradia(idImovel, geraMorada(), randInt(100000, 400000), 100000, geraTipoMoradia(), randInt(400, 1000),
-                randInt(600, 1200), randInt(400, 1000), randInt(2, 6), randInt(2, 6), randInt(1, 500));
-            break;
+                imv = (Imovel) new Moradia(idImovel, geraMorada(), randInt(100000, 400000), 100000, geraTipoMoradia(), randInt(400, 1000),
+                                            randInt(600, 1200), randInt(400, 1000), randInt(2, 6), randInt(2, 6), randInt(1, 500));
+                break;
             case 1:
-            imv = (Imovel) new Apartamento(idImovel, geraMorada(), randInt(65000, 400000), 65000 , geraTipoApartamento(), randInt(100, 500),
-                randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true);
-            break;
+                imv = (Imovel) new Apartamento(idImovel, geraMorada(), randInt(65000, 400000), 65000 , geraTipoApartamento(), randInt(100, 500),
+                                                randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true);
+                break;
             case 2:
-            imv = (Imovel) new Loja(idImovel, geraMorada(), randInt(65000, 400000), 65000, randInt(70, 500), true, "N.A.", randInt(1, 500));
-            break;
+                imv = (Imovel) new Loja(idImovel, geraMorada(), randInt(65000, 400000), 65000, randInt(70, 500), true, "N.A.", randInt(1, 500));
+                break;
             case 3:
-            imv = (Imovel) new Terreno(idImovel, geraMorada(), randInt(65000, 400000), 65000, randInt(1000, 10000), true,
-                true, 50, 35000, true);
-            break;
+                imv = (Imovel) new Terreno(idImovel, geraMorada(), randInt(65000, 400000), 65000, 
+                                            randInt(1000, 10000), true, true, 50, 35000, true);
+                break;
             case 4:
-            int preco = randInt(125000, 400000);
-            String morada = geraMorada();
-            imv = (Imovel) new LojaHabitavel(idImovel, morada, preco, 100000, randInt(500, 1000), true, "N.A.", randInt(1, 500), 
-                new Apartamento(idImovel, morada, preco, 65000 , geraTipoApartamento(), randInt(100, 500),
-                    randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true)); 
-            break;
+                int preco = randInt(125000, 400000);
+                String morada = geraMorada();
+                Apartamento apartamento = new Apartamento(idImovel, morada, preco, 65000 , geraTipoApartamento(), randInt(100, 500),
+                                                          randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true); 
+                
+                imv = (Imovel) new LojaHabitavel(idImovel, morada, preco, 100000, randInt(500, 1000), true, "N.A.", randInt(1, 500), apartamento);                             
+                break;
         }
         return imv;
     }
@@ -182,15 +184,15 @@ public class GeradorEstado
     public Imoobiliaria geraEstadoAleatorio(){
 
         // Utilizadores comuns para ser facil testar estados 
-        Vendedor vendedorPadrao = new Vendedor("a75273@uminho.pt", "João Pereira", passwordPadrao, "Rua da Imoobiliaria", LocalDate.of(1996, 12, 19));
-        Comprador compradorPadrao = new Comprador("a68646@uminho.pt", "João Martins", passwordPadrao, "Rua da Imoobiliaria", LocalDate.of(1994, 8, 8)); 
+        Vendedor vendedorPadrao = new Vendedor("a75273@alunos.uminho.pt", "João Pereira", passwordPadrao, "Rua da Imoobiliaria", LocalDate.of(1996, 12, 19));
+        Comprador compradorPadrao = new Comprador("a68646@alunos.uminho.pt", "João Martins", passwordPadrao, "Rua da Imoobiliaria", LocalDate.of(1994, 8, 8)); 
 
         /* Utilizadores comuns a todas as sessoes aleatorias */
-        imb.utilizadores.put("a75273@uminho.pt", vendedorPadrao);
-        imb.utilizadores.put("a68646@uminho.pt", compradorPadrao);
+        imb.utilizadores.put("a75273@alunos.uminho.pt", vendedorPadrao);
+        imb.utilizadores.put("a68646@alunos.uminho.pt", compradorPadrao);
       
         /* gera vendedores aleatorios e os seus imoveis */   
-        registaImoveisVendedor("a75273@uminho.pt", passwordPadrao);
+        registaImoveisVendedor("a75273@alunos.uminho.pt", passwordPadrao);
         for(int i=1; i < N_VENDEDORES; i++){
             String randomEmail = geraEmail();
             if(emails.add(randomEmail)){
@@ -201,7 +203,7 @@ public class GeradorEstado
         }
 
         /* gera compradores e os seus favoritos */
-        registaFavoritosComprador("a68646@uminho.pt", passwordPadrao);   
+        registaFavoritosComprador("a68646@alunos.uminho.pt", passwordPadrao);   
         for(int i=1; i < N_COMPRADORES; i++){
             String randomEmail = geraEmail();
             if(emails.add(randomEmail)){

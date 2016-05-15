@@ -1,3 +1,9 @@
+/**
+ * Classe que representa um vendedor da Imoobiliaria.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.util.Set;
 import java.util.TreeSet;
 import java.time.LocalDate;

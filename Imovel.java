@@ -1,3 +1,9 @@
+/**
+ * Classe abstrata que representa um imóvel.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.util.ArrayList;
 import java.io.Serializable;
 

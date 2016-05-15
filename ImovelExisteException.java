@@ -1,9 +1,9 @@
 
 /**
- * Write a description of class ImovelExisteException here.
+ * Exceção atirada quando um vendedor tenta registar um Imovel que já existe.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Grupo12
+ * @version 15/05/2016
  */
 public class ImovelExisteException extends Exception
 {
