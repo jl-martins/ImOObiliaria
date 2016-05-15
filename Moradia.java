@@ -126,7 +126,7 @@ public class Moradia extends Imovel
         StringBuilder sb = new StringBuilder("-> Moradia\n");
         
         sb.append(super.toString());
-        sb.append("Tipo: " + ((tipo != null) ? tipo.name() : "n/a") + "\n");
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name().toLowerCase() : "n/a") + "\n");
         sb.append("Área de implantação: " + areaImplantacao + "m^2\n");
         sb.append("Área total: " + areaTotal + "m^2\n");
         sb.append("Área envolvente: " + areaEnv + "m^2\n");

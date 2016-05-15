@@ -122,7 +122,7 @@ public class Apartamento extends Imovel
         StringBuilder sb = new StringBuilder("-> Apartamento\n");
         
         sb.append(super.toString());
-        sb.append("Tipo: " + ((tipo != null) ? tipo.name() : "n/a") + "\n");
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name().toLowerCase() : "n/a") + "\n");
         sb.append("Área total: " + areaTotal + "m^2\n");
         sb.append("Número de quartos: " + numQuartos + "\n");
         sb.append("Número de WCs: " + numWCs + "\n");

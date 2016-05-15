@@ -109,7 +109,7 @@ public class ImoobiliariaApp
         menuSimNao = new Menu(" Resposta Sim/Não", opcoesSimNao, false);
     }
     
-    private static void carregarDados(){imoobiliaria = Imoobiliaria.initApp();}
+    private static void carregarDados(){imoobiliaria = EstadoInicialApresentacao.geraEstadoAleatorio();}
     
     /** 
      * Apresenta um splash screen, carrega dados e menus e em seguida lê e executa as opções do menu principal.

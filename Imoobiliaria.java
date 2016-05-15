@@ -235,6 +235,7 @@ public class Imoobiliaria implements Serializable
         if(imv == null)
             throw new ImovelInexistenteException("Não existe nenhum imóvel com o id '" + id + "'");
         
+        imv.registaConsulta(new Consulta(utilizadorAutenticado, imv.getId()));
         return imv.clone();
     }
     
