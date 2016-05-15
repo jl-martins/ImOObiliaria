@@ -28,6 +28,7 @@ public class Vendedor extends Utilizador implements Serializable
         setVendidos(v.getVendidos());
     }
     
+    // Getters
     public Set<String> getEmVenda(){
         return new TreeSet<String>(emVenda); // Strings são imutáveis, logo não quebramos o encapsulamento
     }
@@ -36,14 +37,34 @@ public class Vendedor extends Utilizador implements Serializable
         return new TreeSet<String>(vendidos); // Strings são imutáveis, logo não quebramos o encapsulamento
     }
     
+    // Setters
+    public void setEmVenda(Set<String> emVenda){
+        this.emVenda = new TreeSet<String>(emVenda);
+    }
+    
+    public void setVendidos(Set<String> vendidos){
+        this.vendidos = new TreeSet<String>(vendidos);
+    }
+    
+    /** Testa se este vendedor registou um imóvel com id igual ao valor passado como parâmetro. */
     public boolean registouImovel(String idImovel){
         return emVenda.contains(idImovel) || vendidos.contains(idImovel);
     }
     
+    /**
+     * Verifica se este vendedor vende o imóvel com o id passado como parâmetro.
+     * @param idImovel id de imóvel a procurar nos ids dos imóveis que estão à venda neste Vendedor.
+     * @return true se este vendedor vender um imóvel com o id @code idImovel.
+     */
     public boolean vendeImovel(String idImovel){
         return emVenda.contains(idImovel);
     }
     
+    /**
+     * Altera o estado de um imóvel.
+     * @param idImovel id do imóvel cujo estado se pretende alterar.
+     * @param estado Novo estado do imóvel.
+     */
     public void alteraEstadoImovel(String idImovel, EstadoImovel estado) {
         if(estado == EstadoImovel.VENDIDO){
             emVenda.remove(idImovel);
@@ -54,23 +75,21 @@ public class Vendedor extends Utilizador implements Serializable
         }
     }
     
+    /** 
+     * Se este Vendedor vender ou tiver vendido um imóvel com id igual à String
+     * passada como parâmetro, remove esse imóvel dos registos do vendedor.
+     */
     public void removeImovel(String idImovel){
         if(emVenda.remove(idImovel) == false)
             vendidos.remove(idImovel);
     }
     
-    public void setEmVenda(Set<String> emVenda){
-        this.emVenda = new TreeSet<String>(emVenda);
-    }
-    
-    public void setVendidos(Set<String> vendidos){
-        this.vendidos = new TreeSet<String>(vendidos);
-    }
-    
+    /** Acrescenta o id passado como parâmetro ao conjunto dos ids dos imóveis que estão à venda. */
     public void poeAVenda(String idImovel){
         emVenda.add(idImovel);
     }
     
+    /** @return Conjunto de ids de todos os imóveis do vendedor. */
     public Set<String> todosImoveisVendedor(){
         Set<String> todosImoveis = new TreeSet<String>(emVenda);
         todosImoveis.addAll(vendidos);

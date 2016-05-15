@@ -16,6 +16,7 @@ public class Terreno extends Imovel implements Serializable
     private double maxKWh;
     private boolean temRedeEsgotos;
     
+    /** Construtor por omissão. */
     public Terreno(){
         super();
         area = 0;
@@ -25,6 +26,7 @@ public class Terreno extends Imovel implements Serializable
         temRedeEsgotos = false;
     }
     
+    /** Construtor parametrizado. */
     public Terreno(String id, String rua, int precoPedido, int precoMinimo, int area, boolean terrenoHab,
                    boolean terrenoArm, double diamCanalizacoes, double maxKWh, boolean temRedeEsgotos){
         
@@ -37,6 +39,7 @@ public class Terreno extends Imovel implements Serializable
         this.temRedeEsgotos = temRedeEsgotos;
     }
     
+    /** Construtor de cópia. */
     public Terreno(Terreno terr){
         super(terr);
         area = terr.getArea();
@@ -47,6 +50,7 @@ public class Terreno extends Imovel implements Serializable
         temRedeEsgotos = terr.getTemRedeEsgotos();
     }
     
+    // Getters.
     public int getArea(){
         return area;
     }
@@ -71,6 +75,7 @@ public class Terreno extends Imovel implements Serializable
         return temRedeEsgotos;
     }
     
+    // Setters.
     public void setArea(int area){
         this.area = area;
     }

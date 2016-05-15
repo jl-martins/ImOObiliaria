@@ -30,7 +30,7 @@ public class Imoobiliaria implements Serializable
     Map<String, Utilizador> utilizadores; // Map que a cada email faz corresponder o respetivo Utilizador
     Map<String, Imovel> imoveis; // Map que a cada id (valido) de imóvel faz corresponder o respetivo objeto da classe Imovel
     Utilizador utilizadorAutenticado;
-    Leilao leilao;
+    Leilao leilao = null;
 
     /** Construtor por omissão. */
     public Imoobiliaria(){
@@ -286,10 +286,11 @@ public class Imoobiliaria implements Serializable
         if(imv == null){
             throw new ImovelInexistenteException("O imóvel '" + idImovel + "' não está registado.");
         }
+        
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
-
         if(!vendedor.registouImovel(idImovel))
             throw new SemAutorizacaoException("O utilizador atual não tem permissões para alterar o estado do imóvel '" + idImovel + "'");
+        
         EstadoImovel estadoImovel = EstadoImovel.fromString(estado);
         vendedor.alteraEstadoImovel(idImovel, estadoImovel);
         imv.setEstado(estadoImovel);     
@@ -384,7 +385,12 @@ public class Imoobiliaria implements Serializable
             throw new ImovelInexistenteException("O imóvel em questão não existe.");
         comprador.setFavorito(idImovel);        
     }
-
+    
+    /**
+     * Se o utilizador atual for um comprador autenticado, é devolvido um TreeSet com os seus imóveis favoritos.
+     * @return TreeSet dos imóveis favoritos do comprador autenticado.
+     * @throws SemAutorizacaoException se o utilizador atual não for um comprador autenticado.
+     */
     public TreeSet<Imovel> getFavoritos() throws SemAutorizacaoException{
         confirmaCompradorAutenticado();
         Comprador comprador = (Comprador) utilizadorAutenticado;
@@ -402,13 +408,28 @@ public class Imoobiliaria implements Serializable
         return favoritos;
     }    
 
-    /* API de Leiloes */
+    /**
+     * Inicia um leilão, se o utilzador atual for um vendedor e este selecionar um imóvel que lhe pertence.
+     * @param idImovel ID do Imovel a leiloar.
+     * @param horas Duração do leilão.
+     * @throws SemAutorizacaoException se o utilizador autenticado não for um vendedor ou se o imóvel a leiloar não lhe pertencer.
+     */
     public void iniciaLeilao(String idImovel, int horas) throws SemAutorizacaoException{
         if(!(utilizadorAutenticado instanceof Vendedor) || !((Vendedor) utilizadorAutenticado).vendeImovel(idImovel))
             throw new SemAutorizacaoException("O Utilizador atual não tem autorização para iniciar o Leilão deste imóvel.");
+        
         leilao = new Leilao(idImovel, utilizadorAutenticado.getEmail(), horas);
     }
-
+    
+    /**
+     * Adiciona um comprador ao leilão atual.
+     * @param idComprador email do comprador a adicionar ao leilão atual.
+     * @param limite Valor máximo que o comprador está disposto a dar.
+     * @param incrementos Incrementos a efetuar.
+     * @param minutos Intervalo de tempo (em minutos) entre licitações.
+     * @throws SemAutorizacaoException se o utilizador atual não for um comprador autenticado.
+     * @throws LeilaoTerminadoException se não existir um leilão a decorrer.
+     */
     public void adicionaComprador(String idComprador, int limite, int incrementos, int minutos)
         throws SemAutorizacaoException, LeilaoTerminadoException
     {
@@ -420,20 +441,20 @@ public class Imoobiliaria implements Serializable
             throw new LeilaoTerminadoException("O leilão terminou, não pode inserir mais compradores");
         leilao.registaCompradorLeilao(idComprador, limite, incrementos, minutos);
     }
-
-    public Comprador encerraLeilao() throws SemAutorizacaoException{
+    
+    /**
+     * Encerra um leilão.
+     * @throws LeilaoTerminadoException se não estiver a decorrer um leilão.
+     * @throws SemAutorizacaoException se o utilizador atual não for o responsável pelo leilão atual.
+     */
+    public Comprador encerraLeilao() throws LeilaoTerminadoException, SemAutorizacaoException{
+        if(leilao == null)
+            throw new LeilaoTerminadoException("De momento não está a decorrer nenhum leilão.");
         if(!(utilizadorAutenticado instanceof Vendedor) || !utilizadorAutenticado.getEmail().equals(leilao.getResponsavel()))
-            throw new SemAutorizacaoException("Este utilizador não tem permissões para encerrar o leilao");
+            throw new SemAutorizacaoException("Este utilizador não tem permissões para encerrar o leilão.");
+        
         String idVencedor = leilao.simulaLeilao();
         return (Comprador) utilizadores.get(idVencedor);
-    }
-
-    public int hashCode(){
-        int hash = 7;
-        hash = 31*hash + ((utilizadores == null) ? 0 : utilizadores.hashCode());
-        hash = 31*hash + ((imoveis == null) ? 0 : imoveis.hashCode());
-        hash = 31*hash + ((utilizadorAutenticado == null) ? 0 : utilizadorAutenticado.hashCode());
-        return hash;
     }
 
     public Imoobiliaria clone(){
@@ -465,5 +486,13 @@ public class Imoobiliaria implements Serializable
         sb.append("\n----------Utilizador Atual----------\n");
         sb.append(((utilizadorAutenticado == null)? "n.a." : utilizadorAutenticado.toString()) + "\n");
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = 7;
+        hash = 31*hash + ((utilizadores == null) ? 0 : utilizadores.hashCode());
+        hash = 31*hash + ((imoveis == null) ? 0 : imoveis.hashCode());
+        hash = 31*hash + ((utilizadorAutenticado == null) ? 0 : utilizadorAutenticado.hashCode());
+        return hash;
     }
 }

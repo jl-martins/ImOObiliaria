@@ -16,9 +16,7 @@ public class Apartamento extends Imovel
     private int numDaPorta, andar;
     private boolean temGaragem;
 
-    /**
-     * Constructor for objects of class Apartamento
-     */
+    /** Construtor por omissão. */
     public Apartamento(){
         super();
         tipo = null;
@@ -26,9 +24,10 @@ public class Apartamento extends Imovel
         areaTotal = numQuartos = numWCs = numDaPorta = andar = 0;
     }
     
+    /** Construtor parametrizado. */
     public Apartamento(String id, String rua, int precoPedido, int precoMinimo, TipoApartamento tipo, int areaTotal,
-                       int numQuartos, int numWCs, int numDaPorta, int andar, boolean temGaragem){
-        
+                       int numQuartos, int numWCs, int numDaPorta, int andar, boolean temGaragem)
+    {
         super(id, rua, precoPedido, precoMinimo);
         this.tipo = tipo;
         this.areaTotal = areaTotal;
@@ -39,6 +38,7 @@ public class Apartamento extends Imovel
         this.temGaragem = temGaragem;
     }
     
+    /** Construtor de cópia. */
     public Apartamento(Apartamento a){
         super(a);
         tipo = a.getTipo();
@@ -50,6 +50,7 @@ public class Apartamento extends Imovel
         temGaragem = a.getTemGaragem();
     }
     
+    // Getters
     public TipoApartamento getTipo(){
         return tipo;
     }
@@ -78,6 +79,7 @@ public class Apartamento extends Imovel
         return temGaragem;
     }
     
+    // Setters
     private void setTipo(String tipo) throws TipoInvalidoException{
         this.tipo = TipoApartamento.fromString(tipo);
     }
@@ -102,7 +104,7 @@ public class Apartamento extends Imovel
         this.andar = andar;
     }
     
-    public void getTemGaragem(boolean temGaragem){
+    public void setTemGaragem(boolean temGaragem){
         this.temGaragem = temGaragem;
     }
     
@@ -138,10 +140,11 @@ public class Apartamento extends Imovel
         return sb.toString();
     }
     
-        public String toStringParcial(){
+    // Método toString() parcial, usado no toString() de LojaHabitavel.
+    public String toStringParcial(){
         StringBuilder sb = new StringBuilder();
         
-        sb.append("Tipo: " + ((tipo != null) ? tipo.name() : "n/a") + "\n");
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name().toLowerCase() : "n/a") + "\n");
         sb.append("Área total: " + areaTotal + "m^2\n");
         sb.append("Número de quartos: " + numQuartos + "\n");
         sb.append("Número de WCs: " + numWCs + "\n");

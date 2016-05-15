@@ -12,7 +12,8 @@ public class Loja extends Imovel implements Serializable
     private boolean temWC;
     private String tipoNegocio; // tipo de negócio viável na loja
     private int numDaPorta;
-
+    
+    /** Construtor por omissão. */
     public Loja(){
         super();
         area = 0;
@@ -20,10 +21,11 @@ public class Loja extends Imovel implements Serializable
         tipoNegocio = "n/a";
         numDaPorta = 0;
     }
-
+    
+    /** Construtor parametrizado. */
     public Loja(String id, String rua, int precoPedido, int precoMinimo,
-    int area, boolean temWC, String tipoNegocio, int numDaPorta){
-
+                int area, boolean temWC, String tipoNegocio, int numDaPorta)
+    {
         super(id, rua, precoPedido, precoMinimo);
         this.area = area;
         this.temWC = temWC;
@@ -38,7 +40,8 @@ public class Loja extends Imovel implements Serializable
         tipoNegocio = loja.getTipoNegocio();
         numDaPorta = loja.getNumDaPorta();
     }
-
+    
+    // Getters
     public int getArea(){
         return area;
     }
@@ -54,7 +57,8 @@ public class Loja extends Imovel implements Serializable
     public int getNumDaPorta(){
         return numDaPorta;
     }
-
+    
+    // Setters
     public void setArea(int area){
         this.area = area;
     }
@@ -98,7 +102,8 @@ public class Loja extends Imovel implements Serializable
         sb.append("Número da porta: " + numDaPorta + "\n");
         return sb.toString();
     }
-
+    
+    // método toString parcial que, usado no toString() de LojaHabitavel 
     public String toStringParcial(){
         StringBuilder sb = new StringBuilder();
         sb.append(super.toString());

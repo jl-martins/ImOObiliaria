@@ -25,22 +25,26 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         this.duracao = duracao;
         this.licitadores = new ArrayList<>();
         this.inicioLeilao = System.currentTimeMillis();
-    };
-
+    }
+    
+    /** @return id do vendedor responsável pelo leilão. */
     public String getResponsavel(){
         return responsavel;
     }
 
     /* o id do comprador corresponde ao seu mail*/
     public void registaCompradorLeilao(String idComprador, int limite, int incrementos, int minutos) 
-    throws LeilaoTerminadoException{
+        throws LeilaoTerminadoException
+    {
         if(this.terminouLeilao())
             throw new LeilaoTerminadoException("Não pode adicionar mais vendedores, o leilão terminou.");
+        
         int minutosDesdeInicioLeilao = (int) ((System.currentTimeMillis() - inicioLeilao)/60000);
         Licitador novoLicitador = new Licitador(idComprador, limite, incrementos, minutos, minutosDesdeInicioLeilao);
         licitadores.add(novoLicitador);
     }
-
+    
+    /** @return true se este leilão terminou. */
     public boolean terminouLeilao(){
         long fimDoLeilao = inicioLeilao + duracao * 60 * 60 * 1000;
         return System.currentTimeMillis() >= fimDoLeilao;

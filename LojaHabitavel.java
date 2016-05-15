@@ -10,11 +10,13 @@ public class LojaHabitavel extends Loja implements Serializable, Habitavel
 {   
     private Apartamento apartamento;
     
+    /** Construtor por omissão. */
     public LojaHabitavel(){
         super();
         apartamento = new Apartamento();
     }
     
+    /** Construtor parametrizado. */
     public LojaHabitavel(String id, String rua, int precoPedido, int precoMinimo, int area,
                          boolean temWC, String tipoNegocio, int numDaPorta, Apartamento apartamento)
     {
@@ -22,20 +24,24 @@ public class LojaHabitavel extends Loja implements Serializable, Habitavel
         setApartamento(apartamento);
     }
     
+    /** Constrói uma loja habitável a partir da loja e do apartamento passados como parâmetro. */
     public LojaHabitavel(Loja l, Apartamento a){
         super(l);
         apartamento = a.clone();
     }
     
+    /** Construtor de cópia. */
     public LojaHabitavel(LojaHabitavel lh){
         super(lh);
         apartamento = lh.getApartamento();
     }
-        
+    
+    // Getters
     public Apartamento getApartamento(){
         return (apartamento == null) ? null : apartamento.clone();
     }
     
+    // Setters
     public void setApartamento(Apartamento apartamento){
         this.apartamento = (apartamento == null) ? null : apartamento.clone();
     }

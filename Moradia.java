@@ -17,9 +17,7 @@ public class Moradia extends Imovel
     private int numQuartos, numWCs;
     private int numDaPorta;
     
-    /**
-     * Construtor por omissão
-     */
+    /** Construtor por omissão. */
     public Moradia(){
         super();
         tipo = null;
@@ -27,6 +25,7 @@ public class Moradia extends Imovel
         numQuartos = numWCs = numDaPorta = 0;
     }
     
+    /** Construtor parametrizado. */
     public Moradia(String id, String rua, int precoPedido, int precoMinimo, TipoMoradia tipo, int areaImplantacao,
                    int areaTotal, int areaEnv, int numQuartos, int numWCs, int numDaPorta){
         super(id, rua, precoPedido, precoMinimo);
@@ -39,6 +38,7 @@ public class Moradia extends Imovel
         this.numDaPorta = numDaPorta;
     }
     
+    /** Construtor de cópia. */
     public Moradia(Moradia m){
         super(m);
         tipo = m.getTipo();

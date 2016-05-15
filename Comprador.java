@@ -13,30 +13,32 @@ public class Comprador extends Utilizador implements Serializable
 {
     private Set<String> favoritos = null; // conjunto de ids dos imoveis favoritos do Comprador
     
-     /**
-      * Construtor parametrizado.
-      */
+    /** Construtor por omissão. */
+    public Comprador(){super();}
+       
+    /** Construtor parametrizado. */
     public Comprador(String email, String nome, String password, String morada, LocalDate dataNascimento){
         super(email, nome, password, morada, dataNascimento);
         favoritos = new TreeSet<String>();
     }
     
-    /**
-     * Construtor de copia.
-     */
+    /** Construtor de cópia. */
     public Comprador(Comprador comprador){
         super(comprador);
         setFavoritos(comprador.getFavoritos());
     }
     
+    // Getters
     public TreeSet<String> getFavoritos(){
         return new TreeSet<String>(favoritos); // Strings são imutáveis, logo não quebramos o encapsulamento. 
     }
     
+    // Setters
     private void setFavoritos(Set<String> favoritos){
         this.favoritos = new TreeSet<String>(favoritos); // Strings são imutáveis, logo não quebramos o encapsulamento. 
     }
     
+    /** Adiciona o id de um imóvel aos favoritos. */
     public void setFavorito(String idImovel){
         favoritos.add(idImovel);
     }

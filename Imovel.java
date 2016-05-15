@@ -17,16 +17,12 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
     private int precoMinimo;
     private ArrayList<Consulta> consultas;
     
-    /**
-     * Construtor por omissão.
-     */
+    /** Construtor por omissão. */
     public Imovel(){
         this("n/a", "n/a", 0, 0);
     }
     
-    /**
-     * Construtor parametrizado.
-     */
+    /** Construtor parametrizado. */
     public Imovel(String id, String rua, int precoPedido, int precoMinimo){
         this.id = id;
         this.rua = rua;
@@ -36,36 +32,30 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         this.consultas = new ArrayList<Consulta>();
     }
     
-    /**
-     * Construtor de cópia.
-     */
+    /** Construtor de cópia. */
     public Imovel(Imovel imv){
         this(imv.getId(), imv.getRua(), imv.getPrecoPedido(), imv.precoMinimo);
         this.estado = imv.getEstado();
         this.consultas = imv.getConsultas();
     }
     
-    /** @return id deste imóvel. */
+    // Getters
     public String getId(){
         return id;
     }
-    
-    /** @return Rua em que este imóvel se situa */
+
     public String getRua(){
         return rua;
     }
-    
-    /** @return Estado deste Imovel. */
+
     public EstadoImovel getEstado(){
         return estado;
     }
     
-    /** @return O preço pedido por este imóvel. */
     public int getPrecoPedido(){
         return precoPedido;
     }
-    
-    /** @return O preço mínimo deste imóvel. */
+
     private int getPrecoMinimo(){
         return precoMinimo;
     }
@@ -78,6 +68,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         return new ArrayList<Consulta>(consultas); // as instâncias de Consulta são imutáveis, logo não quebramos o encapsulamento.
     }
     
+    // Setters
     public void setId(String id){
         this.id = id;
     }
@@ -99,10 +90,10 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
     }
     
     public void registaConsulta(Consulta c){
-        this.consultas.add(c); /* Consulta é um tipo imutável. Nao e preciso fazer cópia */
+        this.consultas.add(c); /* Consulta é um tipo imutável. Nao é preciso fazer cópia */
     }
     
-    /* Comparação baseada no número de consultas */
+    /** Comparação baseada no número de consultas */
     public int compareTo(Imovel imv){
         int quantasConsultas1 = this.consultas.size();
         int quantasConsultas2 = imv.getQuantasConsultas();
@@ -136,7 +127,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         sb.append("Estado: " + (estado != null ? estado.name().toLowerCase() : "n/a") + "\n");
         sb.append("Preço pedido pelo imóvel: " + precoPedido + "€\n");
         sb.append("Número de consultas: " + consultas.size() + "\n");
-        // O preço mínimo não deverá ser apresentado aos compradores, logo não o incluimos na String retornada
+        // O preço mínimo não deve ser apresentado aos compradores, logo não o incluimos na String retornada.
         return sb.toString();
     }
     

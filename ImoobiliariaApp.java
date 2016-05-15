@@ -29,7 +29,8 @@ public class ImoobiliariaApp
     private static Imoobiliaria imoobiliaria;
     private static Menu menuMain, menuComprador, menuVendedor;
     private static Menu menuTipoUtilizador, menuTipoImovel, menuSimNao;
-
+    
+    /* Splash screen apresentado ao entrar no programa. */
     public static void splashScreen(){
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
@@ -49,8 +50,8 @@ public class ImoobiliariaApp
         }
         catch(IOException e){err.println("Erro de IO: Não foi possível apresentar o ecrã inicial.");}
     }
-
-    private static void limparEcra(){System.out.print("\f");}
+    
+    private static void limparEcra(){System.out.print("\f");} // funciona no bluej (pode não funcionar noutros terminais)
 
     private static void enterParaContinuar(){
         Scanner input = new Scanner(System.in);
@@ -58,7 +59,8 @@ public class ImoobiliariaApp
         input.nextLine();
         limparEcra();
     }
-
+    
+    /* Carrega cada um dos menus da aplicação */
     private static void carregarMenus(){
         String[] opcoesMain = {
                 "Registar utilizador",
@@ -270,7 +272,8 @@ public class ImoobiliariaApp
 
         return numOpcao;
     }
-
+    
+    /** Grava o estado da Imoobiliaria no ficheiro Imoobiliaria.ser e escreve um log com os conteúdos da mesma em log.txt. */
     private static void gravarEstado(){
         try{
             imoobiliaria.gravaObj("Imoobiliaria.ser");
@@ -282,8 +285,8 @@ public class ImoobiliariaApp
 
     /**
      * Pede ao utilizador para introduzir o seu email, nome, password, morada, data de nascimento
-     * e tipo de conta de utilizador pretendida. Se os dados introduzidos forem válidos e não
-     * existir qualquer utilizador com o email introduzido, regista o novo utilizador na Imoobiliaria.
+     * e tipo de conta de utilizador pretendida. Se os dados introduzidos forem válidos e ainda não
+     * existir um utilizador com o email introduzido, regista o novo utilizador na Imoobiliaria.
      */
     private static void registarUtilizador(){
         int numOpcao; // número da opção do menu
@@ -327,7 +330,11 @@ public class ImoobiliariaApp
         catch(DateTimeParseException e){err.println("Erro: Data de nascimento inválida.\nFormato esperado: aaaa-mm-dd.");}
         catch(UtilizadorExistenteException e){err.println(e.getMessage());}
     }
-
+    
+    /** 
+     * Pergunta o email e a password ao utilizador que pretende remover a sua conta da Imoobiliaria
+     * e se os dados introduzidos forem válidos, remove apaga a conta desse utilizador.
+     */
     private static void removerUtilizador(){
         Scanner input = new Scanner(System.in);
         String email, password;
@@ -346,7 +353,7 @@ public class ImoobiliariaApp
     /** 
      * Inicia a sessão e em caso de sucesso invoca o menu de comprador ou de vendedor, consoante o tipo de utilizador autenticado.
      * @return -1 se a autenticação falhar; 0 se a autenticação for bem sucedida e o utilizador quiser sair no fim da sessão;
-     *         1 se o utilizador pretender apenas fechar a sessão e voltar ao menu principal.
+     *          1 se o utilizador pretender apenas fechar a sessão e voltar ao menu principal.
      */
     private static int iniciarSessao(){
         Scanner input = new Scanner(System.in);
@@ -361,7 +368,7 @@ public class ImoobiliariaApp
             imoobiliaria.iniciaSessao(email, password);
             out.println("-> Sessão iniciada iniciada com sucesso!");
             enterParaContinuar();
-            // só chegamos a este switch, se o utilizador conseguiu autenticar-se
+            // só chegamos a este switch, se o utilizador tiver conseguido autenticar-se
             switch(imoobiliaria.classUtilizadorAutenticado()){
                 case "Comprador":
                     menuComprador.setIdUtilizador(email);
@@ -379,13 +386,13 @@ public class ImoobiliariaApp
         return r;
     }
 
-    /** Fecha sessão. */
+    /** Fecha a sessão do utilizador atual. */
     private static void fecharSessao(){
         imoobiliaria.fechaSessao();
         out.println("-> Sessão fechada com sucesso!");
     }
 
-    /** Regista um imóvel. */
+    /** Lê os dados de um imóvel e se estes forem válidos, regista-o na Imoobiliaria (opção de vendedor). */
     private static void registarImovel(){
         String id, rua;
         int precoPedido, precoMinimo, numOpcao;
@@ -430,7 +437,7 @@ public class ImoobiliariaApp
         catch(TipoInvalidoException e){err.println(e.getMessage());}
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a uma moradia e, em caso de sucesso, devolve a Moradia criada. */
+    /** Pede ao utilizador para introduzir os dados relativos a uma moradia e em caso de sucesso devolve a Moradia criada. */
     private static Moradia leDadosMoradia(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Scanner input = new Scanner(System.in);
         TipoMoradia tipo;
@@ -456,7 +463,7 @@ public class ImoobiliariaApp
                             areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a um apartamento e, em caso de sucesso, devolve o Apartamento criado. */
+    /** Pede ao utilizador para introduzir os dados relativos a um apartamento e em caso de sucesso devolve o Apartamento criado. */
     private static Apartamento leDadosApartamento(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Scanner input = new Scanner(System.in);
         TipoApartamento tipo;
@@ -486,7 +493,7 @@ public class ImoobiliariaApp
                                 numQuartos, numWCs, numDaPorta, andar, temGaragem);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a uma loja e, em caso de sucesso, devolve a Loja criada. */
+    /** Pede ao utilizador para introduzir os dados relativos a uma loja e em caso de sucesso devolve a Loja criada. */
     private static Loja leDadosLoja(String id, String rua, int precoPedido, int precoMinimo){
         Scanner input = new Scanner(System.in);
         int area, numDaPorta, numOpcao;
@@ -509,7 +516,7 @@ public class ImoobiliariaApp
         return new Loja(id, rua, precoPedido, precoMinimo, area, temWC, tipoNegocio, numDaPorta);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a um terreno e, em caso de sucesso, devolve o Terreno criado. */
+    /** Pede ao utilizador para introduzir os dados relativos a um terreno e em caso de sucesso devolve o Terreno criado. */
     private static Terreno leDadosTerreno(String id, String rua, int precoPedido, int precoMinimo){
         Scanner input = new Scanner(System.in);
         int area, numOpcao;
@@ -543,7 +550,7 @@ public class ImoobiliariaApp
                             terrenoArm, diamCanalizacoes, maxKWh, temRedeEsgotos);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a uma loja habitável e, em caso de sucesso, devolve o LojaHabitavel criada. */
+    /** Pede ao utilizador para introduzir os dados relativos a uma loja habitável e em caso de sucesso devolve a LojaHabitavel criada. */
     private static LojaHabitavel leDadosLojaHabitavel(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Loja loja = leDadosLoja(id, rua, precoPedido, precoMinimo);
         Scanner input = new Scanner(System.in);
@@ -573,7 +580,11 @@ public class ImoobiliariaApp
 
         return new LojaHabitavel(loja, apartamento);
     }
-
+    
+    /** 
+     * Verifica se o utilizador atual é um vendedor autenticado e se for, pergunta-lhe o id do imóvel pretende remover.
+     * Se o id introduzido corresponder a um Imovel do vendedor autenticado, esse imóvel é removido.
+     */
     private static void removerImovel(){
         Scanner input = new Scanner(System.in);
         String id;
@@ -588,7 +599,7 @@ public class ImoobiliariaApp
         catch(ImovelInexistenteException e){err.println(e.getMessage());}
     }
 
-    /** Lê um id e se a Imoobiliaria tiver um Imovel que lhe corresponda, imprime os dados desse Imovel. */
+    /** Lê um id e caso a Imoobiliaria tenha um Imovel que lhe corresponda, imprime os dados desse Imovel. */
     private static void obterImovelComID(){
         String id;
         Imovel im;
@@ -621,7 +632,7 @@ public class ImoobiliariaApp
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
 
-    /** Altera o estado de um imóvel, de acordo com as ações feitas sobre ele. */
+    /** Altera o estado de um imóvel, de acordo com as ações feitas sobre ele (opção de vendedor). */
     private static void alterarEstadoImovel(){
         Scanner input = new Scanner(System.in);
         String idImovel, novoEstado;
@@ -765,7 +776,11 @@ public class ImoobiliariaApp
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
-
+    
+    /** 
+     * Lê o id de um imóvel a leiloar. Se o utilizador autenticado for um vendedor e o id do 
+     * imóvel introduzido corresponder a um imóvel que lhe pertence, incia um leilão desse imóvel.
+     */
     private static void iniciarLeilao(){
         Scanner input = new Scanner(System.in);
         String id;
@@ -781,7 +796,11 @@ public class ImoobiliariaApp
         }
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
-
+    
+    /** 
+     * Se estiver a decorrer um leilão e o utilizador autenticado for um comprador, lê os dados que este 
+     * deve introduzir para participar no leilão e se estes forem válidos, adiciona-o ao leilão. 
+     */
     private static void adicionarComprador(){
         Scanner input = new Scanner(System.in);
         String idComprador = imoobiliaria.emailUtilizadorAutenticado();
@@ -799,7 +818,8 @@ public class ImoobiliariaApp
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
         catch(LeilaoTerminadoException e){err.println(e.getMessage());}
     }
-
+     
+    /** Se estiver a decorrer um leilão e o utilizador autenticado for o vendedor responsável pelo mesmo, encerra o leilão. */
     private static void encerrarLeilao(){
         Comprador vencedor;
 
@@ -811,6 +831,7 @@ public class ImoobiliariaApp
             else
                 out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
         }
+        catch(LeilaoTerminadoException e){err.println(e.getMessage());}
         catch(SemAutorizacaoException e){err.println(e.getMessage());}
     }
 }

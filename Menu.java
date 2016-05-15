@@ -100,6 +100,7 @@ final public class Menu
         } while(op == -1);
     }
     
+    /** Apresenta este menu no stdout. */
     private void apresentaMenu(){
         out.println(separador);
         out.println(titulo);
@@ -123,6 +124,11 @@ final public class Menu
         return new String(new char[maxLen+5]).replace("\0", "*"); // string com '-' repetido (maxLen+5) vezes
     }
     
+    /** 
+     * Lê uma opção do stdin. Se a opção introduzida for inválida, apresenta
+     * uma mensagem de erro e lê outra opção se não devolve a opção lida.
+     * @return A opção lida.
+     */
     private int lerOpcao(){
         int op;
         Scanner input = new Scanner(System.in);

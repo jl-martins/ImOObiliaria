@@ -15,32 +15,27 @@ public final class Consulta implements Comparable<Consulta>, Serializable
     private final String email; // email do utilizador que fez a consulta (valor opcional)
     private final String idImovel; // id do imóvel consultado
     
-    /**
-     * Construtor por omissao
-     */
+    /** Construtor por omissão. */
     public Consulta(){
         data = LocalDate.now(); // data atual
         email = idImovel = "n/a";
     }
     
-    /**
-     * Construtor parametrizado
-     */
+    /** Construtor parametrizado. */
     public Consulta(String email, String idImovel){
         this.data = LocalDate.now();
         this.email = email;
         this.idImovel = idImovel;
     }
     
+    /** Constrói uma consulta a partir do Utilizador que a realizou e do id do imóvel consultado. */
     public Consulta(Utilizador usr, String idImovel){
         this.data = LocalDate.now();
         this.email = (usr == null)? "n/a" : usr.getEmail();
         this.idImovel = (idImovel == null)? "n/a" : idImovel;
     }
       
-    /**
-     * Construtor de copia
-     */
+    /** Construtor de cópia */
     public Consulta(Consulta c){
         this.email = c.getEmail();
         this.data = c.getData();
@@ -60,7 +55,7 @@ public final class Consulta implements Comparable<Consulta>, Serializable
         return idImovel;
     }
 
-    /* Este tipo é Imutável, depois de feita uma consulta, esta não pode ser alterada */
+    /* Este tipo não tem setters de forma a ser imutável. Depois de feita uma consulta, esta não pode ser alterada */
     
     public boolean feitaPorUtilizadorRegistado(){
         return email != null;
