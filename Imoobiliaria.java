@@ -418,7 +418,9 @@ public class Imoobiliaria implements Serializable
         if(!(utilizadorAutenticado instanceof Vendedor) || !((Vendedor) utilizadorAutenticado).vendeImovel(idImovel))
             throw new SemAutorizacaoException("O Utilizador atual não tem autorização para iniciar o Leilão deste imóvel.");
         
-        leilao = new Leilao(idImovel, utilizadorAutenticado.getEmail(), horas);
+        int precoMinimo = imoveis.get(idImovel).getPrecoMinimo();
+            
+        leilao = new Leilao(idImovel, utilizadorAutenticado.getEmail(), horas, precoMinimo);
     }
     
     /**

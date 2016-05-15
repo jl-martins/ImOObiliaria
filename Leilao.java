@@ -16,15 +16,17 @@ public class Leilao implements Serializable /* implementar Comparable se for par
     private List<Licitador> licitadores; /* vai ter a lista de todos os licitadores por ordem de registo no leilao */
     private int duracao;
     private long inicioLeilao;
+    private int precoMinimo;
 
     private Leilao(){}
 
-    public Leilao(String imovelEmLeilao, String responsavel, int duracao){
+    public Leilao(String imovelEmLeilao, String responsavel, int duracao, int precoMinimo){
         this.responsavel = responsavel;
         this.imovelEmLeilao = imovelEmLeilao;
         this.duracao = duracao;
         this.licitadores = new ArrayList<>();
         this.inicioLeilao = System.currentTimeMillis();
+        this.precoMinimo = precoMinimo;
     }
     
     /** @return id do vendedor responsável pelo leilão. */
@@ -84,6 +86,6 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         /* fazer reset a todos os licitadores */
         for(Licitador l : licitadores)
             l.reset();
-        return (aGanhar == null)? null : aGanhar.getIdComprador();
+        return (aGanhar == null || precoAtual < precoMinimo)? null : aGanhar.getIdComprador();
     }
 }

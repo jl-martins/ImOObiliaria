@@ -56,7 +56,7 @@ public abstract class Imovel implements Comparable<Imovel>, Serializable
         return precoPedido;
     }
 
-    private int getPrecoMinimo(){
+    public int getPrecoMinimo(){
         return precoMinimo;
     }
     
