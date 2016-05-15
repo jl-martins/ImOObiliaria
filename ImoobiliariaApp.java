@@ -124,6 +124,8 @@ public class ImoobiliariaApp
         while(opcao == -1){
             out.println("Opção Inválida.");
             enterParaContinuar();
+            limparEcra();
+            menuDados.executa();
             opcao = menuDados.getOpcao();
         }
 
