@@ -55,7 +55,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         return System.currentTimeMillis() >= fimDoLeilao;
     }
 
-    /* simula o leilao e faz log das licitaçoes para um ficheiro "leilao.txt" */
+    /* simula o leilao e faz log das licitaçoes para um ficheiro "leilao.txt". Esta simulação nao é destrutiva, isto é, depois de simular o vencedor é possivel acrescenttar mais Licitadores e fazer simulaçoes novas*/
     public String simulaLeilao() throws java.io.IOException{
         int duracaoMinutos = 60 * duracao;
         int precoAtual = 0;
@@ -86,7 +86,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
                         l.atualizaQuandoProxIncremento();
                     }
                     else if(l.getLimite() <= precoAtual){ 
-                        //copiaLicitadores.remove(l);                        
+                        iter.remove();                     
                     }    
                     else{
                         precoAtual = l.setMenorLicitacaoQuePasse(precoAtual);
