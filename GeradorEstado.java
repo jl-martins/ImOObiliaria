@@ -130,7 +130,7 @@ public class GeradorEstado
 
     private String geraMorada(){
         String moradas[] = {"Jardim Zoológico da Maia", "Somewhere Over the rainbow, Way up high", "Rua dos Mancos", "Rua da Imoobiliaria", "Rua de Barros", "Rua 25 de Abril"};
-        return moradas[randInt(0, moradas.length - 1)];
+        return moradas[random.nextInt(moradas.length)];
     }
 
     /* Neste caso, é impossivel lançar a excepçao */
@@ -142,7 +142,7 @@ public class GeradorEstado
     /* Neste caso, é impossivel lançar a excepçao */
     private TipoApartamento geraTipoApartamento() throws TipoInvalidoException{
         String[] tipoApartamento = {"SIMPLES", "DUPLEX", "TRIPLEX"};
-        return TipoApartamento.fromString(tipoApartamento[random.nextInt(4)]);
+        return TipoApartamento.fromString(tipoApartamento[random.nextInt(3)]);
     }
 
     private void registaImoveisVendedor(String email, String password){
@@ -185,7 +185,8 @@ public class GeradorEstado
     }
 
     public Imoobiliaria geraEstadoAleatorio(){    
-
+        List<String> emailsParticipantesLeilao = new ArrayList<>();        
+        
         // Utilizadores comuns para ser facil testar estados 
         Vendedor vendedorPadrao = new Vendedor("a75273@alunos.uminho.pt", "João Pereira", passwordPadrao, "Rua da Imoobiliaria", LocalDate.of(1996, 12, 19));
         Comprador compradorPadrao = new Comprador("a68646@alunos.uminho.pt", "João Martins", passwordPadrao, "Rua da Imoobiliaria", LocalDate.of(1994, 8, 8)); 
@@ -214,27 +215,46 @@ public class GeradorEstado
                 Comprador comprador = new Comprador(randomEmail, geraNome(), passwordPadrao, geraMorada(), geraDataNascimento()); // usamos valores sem sentido para o nome, a morada e o ano?
                 imb.utilizadores.put(randomEmail, comprador);
                 registaFavoritosComprador(randomEmail, passwordPadrao);
+                emailsParticipantesLeilao.add(randomEmail);
             }       
         }
 
         /* gera um leilao aleatorio */
+
+        /* Regista imovel para ser leiloado */
+        String idImovelLeilao = "Imovel Leilao";
+        Imovel imovelLeilao = null;
         try{
-            /* Regista imovel para ser leiloado */
-            String idImovelLeilao = "Imovel Leilao";
-            Imovel imovelLeilao = geraImovel(idImovelLeilao);
+            imovelLeilao = geraImovel(idImovelLeilao);
+        } catch(Exception e){System.out.println("1:" + e.toString());}
 
+        try{
             imb.iniciaSessao("a75273@alunos.uminho.pt", passwordPadrao);
-            imb.registaImovel(imovelLeilao); 
-            imb.iniciaLeilao(idImovelLeilao, 2);
-            imb.fechaSessao(); 
+        } catch(Exception e){System.out.println("2:" + e.toString());}
 
-            List<String> participantes = new ArrayList<String>(emails).subList(0, N_PARTICIPANTES_LEILAO - 1);
-            for(String p : participantes){
+        try{
+            imb.registaImovel(imovelLeilao); 
+        }catch(Exception e){System.out.println("3:" + e.toString());}
+
+        try{
+            imb.iniciaLeilao(idImovelLeilao, 2); 
+        }catch(Exception e){System.out.println("4:" + e.toString());}
+
+        imb.fechaSessao(); 
+
+        List<String> participantes = null;
+        try{
+            participantes = emailsParticipantesLeilao.subList(0, N_PARTICIPANTES_LEILAO - 1);
+        }catch(Exception e){System.out.println("5:" + e.toString());}
+
+        for(String p : participantes){
+            try{
                 imb.iniciaSessao(p, passwordPadrao);
                 imb.adicionaComprador(p, randInt(imovelLeilao.getPrecoMinimo() - 10000, imovelLeilao.getPrecoMinimo() + 100000), randInt(1, 20) * 1000 , randInt(1,60));
-                imb.fechaSessao();
-            } 
-        }catch(Exception e){}    
+            }catch(Exception e){System.out.println("6:" + e.toString());}
+            imb.fechaSessao();
+        } 
+
         return imb;
     }
 }

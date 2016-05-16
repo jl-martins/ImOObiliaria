@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.FileWriter;
+import java.util.Iterator;
 
 public class Leilao implements Serializable /* implementar Comparable se for para fazer varios leiloes */
 {
@@ -61,6 +62,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         int proxI;
         Licitador aGanhar = null;
         FileWriter fw = new FileWriter("leilao.txt", false);
+
         /*copiar estado antes de executar para ser possivel fazer simulaçoes nao-destrutivas dos leiloes*/
         List<Licitador> copiaLicitadores = new ArrayList<>(licitadores);
 
@@ -71,10 +73,12 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         fw.write("\n---------------- Imovel ------------------\n");
         fw.write(imovelEmLeilao + " precoMin:" + precoMinimo +"\n"); 
         fw.write("\n----------------- Log --------------------\n");
-        
+
         for(int i = 0; i <= duracaoMinutos; i = proxI){
             proxI = i + 1;
-            for(Licitador l : copiaLicitadores){
+            Iterator<Licitador> iter = copiaLicitadores.iterator();
+            while(iter.hasNext()){  
+                Licitador l = iter.next();
                 int minutoProxLicitacao = l.getQuandoProximaLicitacao();
 
                 if(minutoProxLicitacao == i){
@@ -82,7 +86,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
                         l.atualizaQuandoProxIncremento();
                     }
                     else if(l.getLimite() <= precoAtual){ 
-                        copiaLicitadores.remove(l);                        
+                        //copiaLicitadores.remove(l);                        
                     }    
                     else{
                         precoAtual = l.setMenorLicitacaoQuePasse(precoAtual);
@@ -98,7 +102,7 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         }
 
         fw.write("\n----------------- Log --------------------\n");
-        
+
         /* fazer reset a todos os licitadores */
         for(Licitador l : licitadores)
             l.reset();
