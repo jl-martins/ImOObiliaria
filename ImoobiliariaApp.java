@@ -130,7 +130,7 @@ public class ImoobiliariaApp
             case 2: imoobiliaria = Imoobiliaria.initApp();
             break;
         }
-
+        limparEcra();
     }
 
     /** 
@@ -698,7 +698,7 @@ public class ImoobiliariaApp
         List<Imovel> l;
 
         try{
-            out.print("Tipo de imóvel: ");
+            out.print("Tipo de imóvel [Moradia/Apartamento/Loja/LojaHabitavel/Terreno]: ");
             tipo = input.nextLine();
             out.print("Preço máximo dos imóveis a consultar: ");
             precoMaximo = input.nextInt(); input.nextLine();
