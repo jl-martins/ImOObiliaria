@@ -5,6 +5,8 @@
  * @version 15/05/2016
  */
 
+/* FAZER OPCAO PARA LIMPAR LEILAO E POR NA ENCERRA LEILAO*/
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
@@ -129,6 +131,10 @@ public class Leilao implements Serializable /* implementar Comparable se for par
         inicioLeilao == l.inicioLeilao && leilaoBloqueado == l.leilaoBloqueado;
     }
 
+    public String getImovelEmLeilao(){
+        return imovelEmLeilao;
+    }
+    
     public String toString(){
         StringBuilder sb = new StringBuilder("-> Leilão:\n");
 

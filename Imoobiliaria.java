@@ -472,7 +472,11 @@ public class Imoobiliaria implements Serializable
         }
         leilao.bloqueiaLeilao();
 
-        return idVencedor == null? null : (Comprador) utilizadores.get(idVencedor);
+        if(idVencedor == null)
+            return null;
+        
+        imoveis.get(leilao.getImovelEmLeilao());
+        return (Comprador) utilizadores.get(idVencedor);
     }
 
     public Imoobiliaria clone(){

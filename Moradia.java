@@ -134,7 +134,7 @@ public class Moradia extends Imovel
         sb.append(super.toString());
         sb.append("Tipo: " + ((tipo != null) ? tipo.name().toLowerCase() : "n/a") + "\n");
         sb.append("Área de implantação: " + areaImplantacao + "m^2\n");
-        sb.append("Área total: " + areaTotal + "m^2\n");
+        sb.append("Área total coberta: " + areaTotal + "m^2\n");
         sb.append("Área envolvente: " + areaEnv + "m^2\n");
         sb.append("Número de quartos: " + numQuartos + "\n");
         sb.append("Número de WCs: " + numWCs + "\n");

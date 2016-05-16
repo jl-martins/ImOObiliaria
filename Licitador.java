@@ -66,7 +66,7 @@ public class Licitador implements Serializable
     }
 
     public String entradaLog(){
-        return idComprador + " lim:" + limite + " interval:" + intervaloIncrementos + " inc:" + incrementos + " entradaLeilao" + minutosDesdeInicio + "\n";
+        return idComprador + " lim:" + limite + " interval:" + intervaloIncrementos + " inc:" + incrementos + " entradaLeilao: " + minutosDesdeInicio + "\n";
     }
 
     public boolean equals(Object o){
