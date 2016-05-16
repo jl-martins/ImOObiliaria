@@ -68,4 +68,44 @@ public class Licitador implements Serializable
     public String entradaLog(){
         return idComprador + " lim:" + limite + " interval:" + intervaloIncrementos + " inc:" + incrementos + " entradaLeilao" + minutosDesdeInicio + "\n";
     }
+
+    public boolean equals(Object o){
+        if(this == o)
+            return true;
+        else if(o == null || this.getClass() != o.getClass())
+            return false;
+
+        Licitador l = (Licitador) o;
+        return idComprador.equals(l.idComprador) && limite == l.limite &&
+               intervaloIncrementos == l.intervaloIncrementos && incrementos == l.incrementos &&
+               minutosDesdeInicio == l.minutosDesdeInicio &&
+               quandoProximaLicitacao == l.quandoProximaLicitacao &&
+               valorProximaLicitacao == l.valorProximaLicitacao;
+    }
+
+    public String toString(){
+        StringBuilder sb = new StringBuilder("-> Licitador:\n");
+
+        sb.append("ID do comprador: " + idComprador + "\n");
+        sb.append("Limite: " + limite + "\n");
+        sb.append("Incrementos: " + incrementos + "\n");
+        sb.append("Intervalo entre incrementos: " + intervaloIncrementos + "\n");
+        sb.append("Minutos deste o início: " + minutosDesdeInicio + "\n");
+        sb.append("Instante da próxima licitação: " + quandoProximaLicitacao + "\n");
+        sb.append("Valor da próxima licitação: " + valorProximaLicitacao + "\n");
+        return sb.toString();
+    }
+
+    public int hashCode(){
+        int hash = 7;
+
+        hash = 31*hash + idComprador.hashCode();
+        hash = 31*hash + limite;
+        hash = 31*hash + incrementos;
+        hash = 31*hash + intervaloIncrementos;
+        hash = 31*hash + minutosDesdeInicio;
+        hash = 31*hash + quandoProximaLicitacao;
+        hash = 31*hash + valorProximaLicitacao;
+        return hash;
+    }
 }

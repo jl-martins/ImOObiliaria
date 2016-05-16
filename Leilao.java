@@ -112,4 +112,45 @@ public class Leilao implements Serializable /* implementar Comparable se for par
     public void bloqueiaLeilao(){
         this.leilaoBloqueado = true;
     }
+
+    public boolean equals(Object o){
+        if(this == o)
+            return true;
+        else if(o == null || this.getClass() != o.getClass())
+            return false;
+
+        Leilao l = (Leilao) o;
+        return responsavel.equals(l.responsavel) && imovelEmLeilao.equals(l.imovelEmLeilao) &&
+        licitadores.equals(l.licitadores) && duracao == l.duracao && precoMinimo == l.precoMinimo &&
+        inicioLeilao == l.inicioLeilao && leilaoBloqueado == l.leilaoBloqueado;
+    }
+
+    public String toString(){
+        StringBuilder sb = new StringBuilder("-> Leilão:\n");
+
+        sb.append("Responsável: " + responsavel + "\n");
+        sb.append("Imóvel em leilão: " + imovelEmLeilao + "\n");
+        sb.append("Licitadores:\n");
+        for(Licitador l : licitadores)
+            sb.append(l.toString() + "\n");
+        sb.append("Duração: " + duracao + "\n");
+        // o preço mínimo não é apresentado propositadamente
+        sb.append("Início do leilão (ms desde Epoch): " + inicioLeilao + "\n");
+        sb.append("Leilão bloqueado: " + (leilaoBloqueado ? "sim" : "não") + "\n");
+        return sb.toString();
+    }
+
+    /** @return Valor do hash code deste Leilao. */
+    public int hashCode(){
+        int hash = 7;
+
+        hash = 31*hash + responsavel.hashCode();
+        hash = 31*hash + imovelEmLeilao.hashCode();
+        hash = 31*hash + licitadores.hashCode();
+        hash = 31*hash + duracao;
+        hash = 31*hash + precoMinimo;
+        hash = 31*hash + (int) inicioLeilao;
+        hash = 31*hash + (leilaoBloqueado ? 1 : 0);
+        return hash;
+    }
 }
