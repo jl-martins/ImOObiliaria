@@ -101,8 +101,12 @@ public class Leilao implements Serializable /* implementar Comparable se for par
             }
         }
 
+        fw.write("\n----------------Vencedor------------------\n");
+        fw.write(aGanhar == null? "Ninguem" : (aGanhar.getIdComprador() + " oferta:" + precoAtual));
         fw.write("\n----------------- Log --------------------\n");
-
+        fw.flush();
+        fw.close();
+        
         /* fazer reset a todos os licitadores */
         for(Licitador l : licitadores)
             l.reset();
