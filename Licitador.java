@@ -56,12 +56,16 @@ public class Licitador implements Serializable
     }
 
     public int setMenorLicitacaoQuePasse(int n){
-        int novoValor = valorProximaLicitacao + (int) Math.ceil((n - valorProximaLicitacao)/(incrementos * 1.0));
+        int novoValor = n + incrementos;
         this.valorProximaLicitacao = (novoValor > this.limite)? this.limite : novoValor;
         return this.valorProximaLicitacao;
     }
-    
+
     public String getIdComprador(){
         return this.idComprador;
+    }
+
+    public String entradaLog(){
+        return idComprador + " lim:" + limite + " interval:" + intervaloIncrementos + " inc:" + incrementos + " entradaLeilao" + minutosDesdeInicio + "\n";
     }
 }

@@ -9,14 +9,17 @@ import java.time.LocalDate;
 import java.util.Random;
 import java.util.TreeSet;
 import java.util.Set;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class GeradorEstado
 {
-    private final int N_VENDEDORES = 15;
-    private final int N_COMPRADORES = 50;
-    private final int N_IMOVEIS_POR_VENDEDOR = 15;
+    public final int N_VENDEDORES = 15;
+    public final int N_COMPRADORES = 50;
+    public final int N_IMOVEIS_POR_VENDEDOR = 15;
+    public final int N_PARTICIPANTES_LEILAO = 5;
+
     private final String passwordPadrao = "1234";
 
     private Imoobiliaria imb = new Imoobiliaria();
@@ -99,28 +102,28 @@ public class GeradorEstado
         Imovel imv = null;
         switch(tipo){
             case 0:
-                imv = (Imovel) new Moradia(idImovel, geraMorada(), randInt(100000, 400000), 100000, geraTipoMoradia(), randInt(400, 1000),
-                                            randInt(600, 1200), randInt(400, 1000), randInt(2, 6), randInt(2, 6), randInt(1, 500));
-                break;
+            imv = (Imovel) new Moradia(idImovel, geraMorada(), randInt(100000, 400000), 100000, geraTipoMoradia(), randInt(400, 1000),
+                randInt(600, 1200), randInt(400, 1000), randInt(2, 6), randInt(2, 6), randInt(1, 500));
+            break;
             case 1:
-                imv = (Imovel) new Apartamento(idImovel, geraMorada(), randInt(65000, 400000), 65000 , geraTipoApartamento(), randInt(100, 500),
-                                                randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true);
-                break;
+            imv = (Imovel) new Apartamento(idImovel, geraMorada(), randInt(65000, 400000), 65000 , geraTipoApartamento(), randInt(100, 500),
+                randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true);
+            break;
             case 2:
-                imv = (Imovel) new Loja(idImovel, geraMorada(), randInt(65000, 400000), 65000, randInt(70, 500), true, "N.A.", randInt(1, 500));
-                break;
+            imv = (Imovel) new Loja(idImovel, geraMorada(), randInt(65000, 400000), 65000, randInt(70, 500), true, "N.A.", randInt(1, 500));
+            break;
             case 3:
-                imv = (Imovel) new Terreno(idImovel, geraMorada(), randInt(65000, 400000), 65000, 
-                                            randInt(1000, 10000), true, true, 50, 35000, true);
-                break;
+            imv = (Imovel) new Terreno(idImovel, geraMorada(), randInt(65000, 400000), 65000, 
+                randInt(1000, 10000), true, true, 50, 35000, true);
+            break;
             case 4:
-                int preco = randInt(125000, 400000);
-                String morada = geraMorada();
-                Apartamento apartamento = new Apartamento(idImovel, morada, preco, 65000 , geraTipoApartamento(), randInt(100, 500),
-                                                          randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true); 
-                
-                imv = (Imovel) new LojaHabitavel(idImovel, morada, preco, 100000, randInt(500, 1000), true, "N.A.", randInt(1, 500), apartamento);                             
-                break;
+            int preco = randInt(125000, 400000);
+            String morada = geraMorada();
+            Apartamento apartamento = new Apartamento(idImovel, morada, preco, 65000 , geraTipoApartamento(), randInt(100, 500),
+                    randInt(0, 5), randInt(0, 4), randInt(1, 500), randInt(1, 20), true); 
+
+            imv = (Imovel) new LojaHabitavel(idImovel, morada, preco, 100000, randInt(500, 1000), true, "N.A.", randInt(1, 500), apartamento);                             
+            break;
         }
         return imv;
     }
@@ -181,7 +184,7 @@ public class GeradorEstado
         }catch(SemAutorizacaoException e){}
     }
 
-    public Imoobiliaria geraEstadoAleatorio(){
+    public Imoobiliaria geraEstadoAleatorio(){    
 
         // Utilizadores comuns para ser facil testar estados 
         Vendedor vendedorPadrao = new Vendedor("a75273@alunos.uminho.pt", "João Pereira", passwordPadrao, "Rua da Imoobiliaria", LocalDate.of(1996, 12, 19));
@@ -190,9 +193,10 @@ public class GeradorEstado
         /* Utilizadores comuns a todas as sessoes aleatorias */
         imb.utilizadores.put("a75273@alunos.uminho.pt", vendedorPadrao);
         imb.utilizadores.put("a68646@alunos.uminho.pt", compradorPadrao);
-      
+
         /* gera vendedores aleatorios e os seus imoveis */   
         registaImoveisVendedor("a75273@alunos.uminho.pt", passwordPadrao);
+
         for(int i=1; i < N_VENDEDORES; i++){
             String randomEmail = geraEmail();
             if(emails.add(randomEmail)){
@@ -212,6 +216,25 @@ public class GeradorEstado
                 registaFavoritosComprador(randomEmail, passwordPadrao);
             }       
         }
+
+        /* gera um leilao aleatorio */
+        try{
+            /* Regista imovel para ser leiloado */
+            String idImovelLeilao = "Imovel Leilao";
+            Imovel imovelLeilao = geraImovel(idImovelLeilao);
+
+            imb.iniciaSessao("a75273@alunos.uminho.pt", passwordPadrao);
+            imb.registaImovel(imovelLeilao); 
+            imb.iniciaLeilao(idImovelLeilao, 2);
+            imb.fechaSessao(); 
+
+            List<String> participantes = new ArrayList<String>(emails).subList(0, N_PARTICIPANTES_LEILAO - 1);
+            for(String p : participantes){
+                imb.iniciaSessao(p, passwordPadrao);
+                imb.adicionaComprador(p, randInt(imovelLeilao.getPrecoMinimo() - 10000, imovelLeilao.getPrecoMinimo() + 100000), randInt(1, 20) * 1000 , randInt(1,60));
+                imb.fechaSessao();
+            } 
+        }catch(Exception e){}    
         return imb;
     }
 }

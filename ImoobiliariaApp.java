@@ -113,21 +113,15 @@ public class ImoobiliariaApp
     }
 
     private static void carregarDados(){
+        int opcao;
         String[] opcoesDados = {
                 "Gerar estado Aleatório",
                 "Carregar dados da sessão anterior"
             };
         Menu menuDados = new Menu(" Que dados pretende carregar?", opcoesDados, false);
-        menuDados.executa();
-        int opcao = menuDados.getOpcao();
 
-        while(opcao == -1){
-            out.println("Opção Inválida.");
-            enterParaContinuar();
-            limparEcra();
-            menuDados.executa();
-            opcao = menuDados.getOpcao();
-        }
+        menuDados.executa();
+        opcao = menuDados.getOpcao();
 
         switch(opcao){
             case 1:GeradorEstado geraEstado = new GeradorEstado();
