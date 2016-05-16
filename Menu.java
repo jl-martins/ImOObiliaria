@@ -134,9 +134,9 @@ final public class Menu
         Scanner input = new Scanner(System.in);
         
         if(idUtilizador != null)
-            out.print("(" + idUtilizador + ") ");
+            out.print("(" + idUtilizador + ")");
         
-        out.print("$ ");
+        out.print(" $ ");
         try {
             op = input.nextInt(); input.nextLine(); // lê um inteiro e consome o \n que ficou no buffer do stdin. 
         }

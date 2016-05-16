@@ -131,21 +131,6 @@ public class Imoobiliaria implements Serializable
     }
 
     /**
-     * Remove um utilzador, quer vendedor quer comprador, se o email e password fornecidos forem válidos.
-     * @param email Email do utilizador a remover.
-     * @param password Password do utilizador a remover.
-     * @throws SemAutorizacaoException se o email e/ou password fornecidos forem inválidos.
-     */
-    public void removerUtilizador(String email, String password) throws SemAutorizacaoException{
-        Utilizador utilizador = utilizadores.get(email);
-
-        if(utilizador == null || !utilizador.validaPassword(password)) // e-mail e/ou a password inválidos
-            throw new SemAutorizacaoException("E-mail e/ou palavra-passe inválido(s)");
-        else // autenticação bem sucedida
-            utilizadores.remove(email);
-    }
-
-    /**
      * Valida o acesso à aplicação, utilizando as credenciais (email e password).
      * @param email Email do utilizador.
      * @param password Password do utilizador.
