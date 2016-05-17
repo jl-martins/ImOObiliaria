@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
+import java.io.PrintStream;
 
 import static java.lang.System.err;
 
@@ -403,7 +404,7 @@ public class Imoobiliaria implements Serializable
     }    
 
     /**
-     * Inicia um leilão, se o utilzador atual for um vendedor e este selecionar um imóvel que lhe pertence.
+     * Inicia um leilão, se o utilzador atual for um vendedor e este selecionar um imóvel que lhe pertence. Apaga algum leilao que ja esteja a decorrer.
      * @param idImovel ID do Imovel a leiloar.
      * @param horas Duração do leilão.
      * @throws SemAutorizacaoException se o utilizador autenticado não for um vendedor ou se o imóvel a leiloar não lhe pertencer.
@@ -451,7 +452,7 @@ public class Imoobiliaria implements Serializable
             throw new SemAutorizacaoException("Este utilizador não tem permissões para encerrar o leilão.");
 
         try{
-            idVencedor = leilao.simulaLeilao();
+            idVencedor = leilao.simulaLeilao(System.out);
         } catch(IOException e){
             System.out.println("Erro ao simular o leilão");
         }

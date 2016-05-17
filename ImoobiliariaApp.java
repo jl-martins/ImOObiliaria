@@ -814,9 +814,9 @@ public class ImoobiliariaApp
         try{
             vencedor = imoobiliaria.encerraLeilao();
 
-            if(vencedor != null)
-                out.println("Vencedor do leilão:\n\n" + vencedor.toString());
-            else
+            if(vencedor != null){
+                out.println("Vencedor do leilão:\n\n" + vencedor.toStringParcial()); // usamos a toString do utilizador para nao imprimir a lista de favori
+            }else
                 out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
         }
         catch(LeilaoTerminadoException | SemAutorizacaoException e){err.println(e.getMessage());}

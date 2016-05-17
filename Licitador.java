@@ -65,7 +65,7 @@ public class Licitador implements Serializable
 
     /** Cria uma string com os dados do Licitador para ser registada no log do leilao. */
     public String entradaLog(){
-        return idComprador + " limimte:" + limite + " intervalo:" + intervaloIncrementos + " incrementos:" + incrementos + "\n";
+        return idComprador + " limimte:" + limite + " intervalo:" + intervaloIncrementos + " incrementos:" + incrementos;
     }
 
     public boolean equals(Object o){

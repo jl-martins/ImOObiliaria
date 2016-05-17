@@ -8,9 +8,10 @@
 import java.io.Serializable;
 import java.util.List;
 import java.util.ArrayList;
-import java.io.FileWriter;
+import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Random;
+import java.lang.Math;
 
 public class Leilao implements Serializable
 {
@@ -55,38 +56,38 @@ public class Leilao implements Serializable
     public boolean terminouLeilao(){
         return leilaoBloqueado;
     }
-    
-    /** Simula o leilão e faz log das licitações para um ficheiro 'leilao.txt'. Esta simulação não é destrutiva, i.e. depois de fazer uma simulação, podemos voltar a fazer 
+
+    /** Simula o leilão e faz log das licitações para a PrintStream passada como argumento. Esta simulação não é destrutiva, i.e. depois de fazer uma simulação, podemos voltar a fazer 
      *  uma simulação válida no mesmo objeto Leilão. O resultado não é determínistico pelo que invocações diferentes poderão ter resultados diferentes. Devolve o id do vencedor do leilão ou null se nunhuma 
-     *  oferta supera o preço minimo.
+     *  oferta supera o preço minimo. Esta simulação é feita numa escala de tempo de forma que 1 hora de leilao passa num minuto e 1 minuto num segundo.
      */    
-    public String simulaLeilao() throws java.io.IOException{
+    public String simulaLeilao(PrintStream impressora) throws java.io.IOException{
         int duracaoMinutos = 60 * duracao;
         int precoAtual = 0;
         int proxI;
         Random random = new Random();
         Licitador aGanhar = null;
-        FileWriter fw = new FileWriter("leilao.txt", false); // vai fazer log dos dados do leilao para o ficheiro
+        //FileWriter fw = new FileWriter("leilao.txt", false); // vai fazer log dos dados do leilao para o ficheiro
 
         List<Licitador> copiaLicitadores = new ArrayList<>(licitadores); // copia estado antes de executar para ser possivel fazer simulaçoes nao-destrutivas dos leiloes
 
-        fw.write("\n----------- Participantes ----------------\n");
+        impressora.println("Participantes:");
         for(Licitador l : copiaLicitadores){
-            fw.write(l.entradaLog());
+            impressora.println(l.entradaLog());
         }
-        fw.write("\n---------------- Imovel -------------------\n");
-        fw.write(imovelEmLeilao + " precoMin:" + precoMinimo +"\n"); 
-        fw.write("\n-------------- Licitacoes -----------------\n");
+        impressora.println("\nImovel:");
+        impressora.println(imovelEmLeilao + " precoMin:" + precoMinimo); 
+        impressora.println("\nLicitações:");
 
-        for(int i = 0; !copiaLicitadores.isEmpty() && i <= duracaoMinutos; i = proxI){
+        for(int i = 0; !copiaLicitadores.isEmpty() && i < duracaoMinutos; i = proxI){
             proxI = i + 1;
             Iterator<Licitador> iter = copiaLicitadores.iterator();
             ArrayList<Licitador> candidatosLicitar = new ArrayList<>(); // vai guardar a lista de candidatos a Licitar que correspondem aos licitadores com ofertas mais altas
             int melhorOferta = 0; // melhor Oferta realizada por um licitador
-            
+
             while(iter.hasNext()){  
                 Licitador l = iter.next();
-                
+
                 int ofertaAtual;
                 int minutoProxLicitacao = l.getQuandoProximaLicitacao();
 
@@ -110,19 +111,17 @@ public class Leilao implements Serializable
                     proxI = i;  
                 }
             }
-            
+
             if(!candidatosLicitar.isEmpty()){// se alguem superou a oferta anterior
                 precoAtual = melhorOferta; // atualiza o preco atual do imovel
                 aGanhar = candidatosLicitar.get(random.nextInt(candidatosLicitar.size())); // escolhe um Licitador à sorte dos candidatos a atualizar
-                fw.write(aGanhar.getIdComprador() + " oferta:" + precoAtual + " minuto: " + i + "\n"); // regista a Licitação no log
+                impressora.println(aGanhar.getIdComprador() + " Oferta:" + precoAtual + " Minuto: " + i); // regista a Licitação no log
             }
-        }
 
-        fw.write("\n----------------Vencedor------------------\n");
-        fw.write(aGanhar == null? "Ninguem" : (aGanhar.getIdComprador() + " oferta:" + precoAtual));
-        fw.write("\n----------------- Log --------------------\n");
-        fw.flush();
-        fw.close();
+            try{
+                Thread.sleep(Math.min(proxI-i, duracaoMinutos-i) * 1000);
+            }catch(Exception e){}
+        }
 
         // Faz reset para poder voltar a fazer simulacoes do leilao
         for(Licitador l : licitadores)
@@ -130,7 +129,6 @@ public class Leilao implements Serializable
         return (aGanhar == null || precoAtual < precoMinimo)? null : aGanhar.getIdComprador();
     }
 
-    
     /** Bloqueia um leilao, impedino que sejam adicionados novos participantes */
     public void bloqueiaLeilao(){
         this.leilaoBloqueado = true;

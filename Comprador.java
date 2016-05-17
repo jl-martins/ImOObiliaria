@@ -69,6 +69,10 @@ public class Comprador extends Utilizador implements Serializable
         return sb.toString();
     }
     
+    public String toStringParcial(){
+        return super.toString();
+    }
+    
     public int hashCode(){
         int hash = super.hashCode();
         
