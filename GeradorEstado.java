@@ -18,7 +18,7 @@ public class GeradorEstado
     public final int N_VENDEDORES = 15;
     public final int N_COMPRADORES = 50;
     public final int N_IMOVEIS_POR_VENDEDOR = 15;
-    public final int N_PARTICIPANTES_LEILAO = 5;
+    public final int N_PARTICIPANTES_LEILAO = 10;
 
     private final String passwordPadrao = "1234";
 
@@ -184,6 +184,7 @@ public class GeradorEstado
         }catch(SemAutorizacaoException e){}
     }
 
+    /** Gera uma Imoobiliaria aleatória preenhida com utilizadores e imóveis*/
     public Imoobiliaria geraEstadoAleatorio(){    
         List<String> emailsParticipantesLeilao = new ArrayList<>();        
         
@@ -212,7 +213,7 @@ public class GeradorEstado
         for(int i=1; i < N_COMPRADORES; i++){
             String randomEmail = geraEmail();
             if(emails.add(randomEmail)){
-                Comprador comprador = new Comprador(randomEmail, geraNome(), passwordPadrao, geraMorada(), geraDataNascimento()); // usamos valores sem sentido para o nome, a morada e o ano?
+                Comprador comprador = new Comprador(randomEmail, geraNome(), passwordPadrao, geraMorada(), geraDataNascimento()); 
                 imb.utilizadores.put(randomEmail, comprador);
                 registaFavoritosComprador(randomEmail, passwordPadrao);
                 emailsParticipantesLeilao.add(randomEmail);
@@ -244,7 +245,7 @@ public class GeradorEstado
 
         List<String> participantes = null;
         try{
-            participantes = emailsParticipantesLeilao.subList(0, N_PARTICIPANTES_LEILAO - 1);
+            participantes = emailsParticipantesLeilao.subList(0, N_PARTICIPANTES_LEILAO);
         }catch(Exception e){System.out.println("5:" + e.toString());}
 
         for(String p : participantes){

@@ -11,62 +11,61 @@ import java.lang.Comparable;
 public class Licitador implements Serializable
 {
     private String idComprador;
-    private int limite, 
-    intervaloIncrementos, /* indica de quanto em quanto tempo é que o utilizador faz incrementos */
-    incrementos,
-    minutosDesdeInicio, /* indica quantos minutos passaram entre o inicio do leilao e o registo do cliente */
-    quandoProximaLicitacao, /* indica qual o minuto (relativo ao inicio do leilao) em que o utilizador vai incrementar a sua oferta */
-    valorProximaLicitacao;
+    private int limite, // Limite que o Licitador está disposto a pagar
+    intervaloIncrementos, // Indica de quanto em quanto tempo é que o utilizador faz ofertas 
+    incrementos, // Em quanto é que o Licitador sobe a oferta
+    quandoProximaLicitacao; // Indica em que minuto é que o Licitador vai fazer a proxima oferta
 
     private Licitador() {}
-
-    public Licitador(String idComprador, int limite, int incrementos, int intervaloIncrementos, int minutosDesdeInicio){
+    
+    public Licitador(String idComprador, int limite, int incrementos, int intervaloIncrementos){
         this.idComprador = idComprador;
         this.limite = limite;
         this.incrementos = incrementos;
         this.intervaloIncrementos = intervaloIncrementos;
-        this.minutosDesdeInicio = minutosDesdeInicio;
-        this.quandoProximaLicitacao = minutosDesdeInicio;
-        this.valorProximaLicitacao = 0;
+        this.quandoProximaLicitacao = 0;
     }
 
     public Licitador(Licitador l){
-        this(l.idComprador, l.limite, l.incrementos, l.intervaloIncrementos, l.minutosDesdeInicio);
+        this(l.idComprador, l.limite, l.incrementos, l.intervaloIncrementos);
     }
 
+    /** Deve-se fazer quando nao se pretende utilizar mais o licitador no leilao. Restaura o estado do objeto para fazer licitaçoes nos tempos corretos. */
     public void reset(){
-        this.quandoProximaLicitacao = this.minutosDesdeInicio;
-        this.valorProximaLicitacao = 0;
+        this.quandoProximaLicitacao = 0;
     }
 
+    public int getIncrementos(){
+        return incrementos;
+    }
+    
+    /** Indica em que minuto do leilão vai ser feita a próxima Licitação. */
     public int getQuandoProximaLicitacao(){
         return quandoProximaLicitacao;
     }
 
-    public void atualizaQuandoProxIncremento(){
+    /** Faz com que o Licitador faça a próxima oferta depois de 'intervaloIncremento' minutos. */
+    public void atualizaQuandoProxLicitacao(){
         this.quandoProximaLicitacao += intervaloIncrementos;
-    }
-
-    public void atualizaValorProxIncremento(){
-        this.valorProximaLicitacao += incrementos;
     }
 
     public int getLimite(){
         return limite;
     }
 
-    public int setMenorLicitacaoQuePasse(int n){
+    /** Faz uma oferta de forma a superar o valor passado como argumento. */
+    public int aumentaLicitacao(int n){
         int novoValor = n + incrementos;
-        this.valorProximaLicitacao = (novoValor > this.limite)? this.limite : novoValor;
-        return this.valorProximaLicitacao;
+        return (novoValor > this.limite)? this.limite : novoValor;
     }
 
     public String getIdComprador(){
         return this.idComprador;
     }
 
+    /** Cria uma string com os dados do Licitador para ser registada no log do leilao. */
     public String entradaLog(){
-        return idComprador + " lim:" + limite + " interval:" + intervaloIncrementos + " inc:" + incrementos + " entradaLeilao: " + minutosDesdeInicio + "\n";
+        return idComprador + " limimte:" + limite + " intervalo:" + intervaloIncrementos + " incrementos:" + incrementos + "\n";
     }
 
     public boolean equals(Object o){
@@ -77,10 +76,8 @@ public class Licitador implements Serializable
 
         Licitador l = (Licitador) o;
         return idComprador.equals(l.idComprador) && limite == l.limite &&
-               intervaloIncrementos == l.intervaloIncrementos && incrementos == l.incrementos &&
-               minutosDesdeInicio == l.minutosDesdeInicio &&
-               quandoProximaLicitacao == l.quandoProximaLicitacao &&
-               valorProximaLicitacao == l.valorProximaLicitacao;
+               intervaloIncrementos == l.intervaloIncrementos && incrementos == l.incrementos &&            
+               quandoProximaLicitacao == l.quandoProximaLicitacao;
     }
 
     public String toString(){
@@ -90,9 +87,7 @@ public class Licitador implements Serializable
         sb.append("Limite: " + limite + "\n");
         sb.append("Incrementos: " + incrementos + "\n");
         sb.append("Intervalo entre incrementos: " + intervaloIncrementos + "\n");
-        sb.append("Minutos deste o início: " + minutosDesdeInicio + "\n");
         sb.append("Instante da próxima licitação: " + quandoProximaLicitacao + "\n");
-        sb.append("Valor da próxima licitação: " + valorProximaLicitacao + "\n");
         return sb.toString();
     }
 
@@ -103,9 +98,7 @@ public class Licitador implements Serializable
         hash = 31*hash + limite;
         hash = 31*hash + incrementos;
         hash = 31*hash + intervaloIncrementos;
-        hash = 31*hash + minutosDesdeInicio;
         hash = 31*hash + quandoProximaLicitacao;
-        hash = 31*hash + valorProximaLicitacao;
         return hash;
     }
 }

@@ -460,7 +460,9 @@ public class Imoobiliaria implements Serializable
         if(idVencedor == null)
             return null;
         
-        imoveis.get(leilao.getImovelEmLeilao());
+        try{
+            setEstado(leilao.getImovelEmLeilao(), "reservado");
+        }catch(Exception e){}
         return (Comprador) utilizadores.get(idVencedor);
     }
 
