@@ -15,37 +15,57 @@ import java.lang.Math;
 
 public class Leilao implements Serializable
 {
-    private String responsavel; // Vendedor responsável pelo Leilão
+    private String responsavel; // id do vendedor responsável pelo Leilão
     private String imovelEmLeilao;
     private List<Licitador> licitadores; // Todos os participantes no leilão
     private int duracao, precoMinimo;
-    private boolean leilaoBloqueado;
-
+    private boolean leilaoBloqueado; // indica se o leilão terminou
+    
+    /** Construtor parametrizado (declarado como 'private' para não ser possível construir leilões sem especificar os dados dos mesmos) */
     private Leilao(){}
-
+    
+    /** Construtor parametrizado. */
     public Leilao(String imovelEmLeilao, String responsavel, int duracao, int precoMinimo){
         this.responsavel = responsavel;
         this.imovelEmLeilao = imovelEmLeilao;
-        this.duracao = duracao;
         this.licitadores = new ArrayList<>();
+        this.duracao = duracao;
         this.precoMinimo = precoMinimo;
         this.leilaoBloqueado = false;
+    }
+    
+    /** Construtor de cópia. */
+    public Leilao(Leilao leilao){
+        this.responsavel = leilao.getResponsavel();
+        this.imovelEmLeilao = leilao.getImovelEmLeilao();
+        this.licitadores = new ArrayList<Licitador>();
+        for(Licitador licitador : leilao.licitadores)
+            this.licitadores.add(licitador.clone());
+        this.duracao = leilao.duracao;
+        this.precoMinimo = leilao.precoMinimo;
+        this.leilaoBloqueado = leilao.leilaoBloqueado;
     }
 
     /** @return id do vendedor responsável pelo leilão. */
     public String getResponsavel(){
         return responsavel;
     }
+    
+    /** @return id do Imovel que está a ser leiloado. */
+    public String getImovelEmLeilao(){
+        return imovelEmLeilao;
+    }
 
-    /** Regista um novo comprador no leilão
-     *  @param idComprador email do Comprador que se pretende registar no leilão
-     *  @param limite Quantidade máxima que o comprador está disposto a pagar
-     *  @param incrementos Em quanto é que o Comprador deve aumentar o preco atual do imóvel quando faz uma oferta
-     *  @param minutos De quanto em quanto tempo é que o Comprador deve tentar fazer uma oferta (minutos)
-     *  @throws LeilaoTerminadoException se o leilao já tiver sido terminado(pela invocação do método bloqueiaLeilao)
+    /** 
+     *  Regista um novo comprador no leilão.
+     *  @param idComprador email do Comprador que se pretende registar no leilão.
+     *  @param limite Quantidade máxima que o comprador está disposto a pagar.
+     *  @param incrementos Em quanto é que o Comprador deve aumentar o preco atual do imóvel quando faz uma oferta.
+     *  @param minutos De quanto em quanto tempo é que o Comprador deve tentar fazer uma oferta (minutos).
+     *  @throws LeilaoTerminadoException se o leilao já tiver sido terminado(pela invocação do método bloqueiaLeilao).
      */
     public void registaCompradorLeilao(String idComprador, int limite, int incrementos, int minutos) 
-    throws LeilaoTerminadoException
+        throws LeilaoTerminadoException
     {
         if(leilaoBloqueado)
             throw new LeilaoTerminadoException("Não pode adicionar mais vendedores, o leilão terminou.");
@@ -57,9 +77,12 @@ public class Leilao implements Serializable
         return leilaoBloqueado;
     }
 
-    /** Simula o leilão e faz log das licitações para a PrintStream passada como argumento. Esta simulação não é destrutiva, i.e. depois de fazer uma simulação, podemos voltar a fazer 
-     *  uma simulação válida no mesmo objeto Leilão. O resultado não é determínistico pelo que invocações diferentes poderão ter resultados diferentes. Devolve o id do vencedor do leilão ou null se nunhuma 
-     *  oferta supera o preço minimo. Esta simulação é feita numa escala de tempo de forma que 1 hora de leilao passa num minuto e 1 minuto num segundo.
+    /** 
+     *  Simula o leilão e faz log das licitações para a PrintStream passada como argumento. Esta simulação é não destrutiva,
+     *  i.e. depois de fazer uma simulação, é possível voltar a fazer  uma simulação válida com o mesmo objeto Leilao. O resultado
+     *  é não determínistico pelo que invocações diferentes poderão ter resultados diferentes. Devolve o id do vencedor do leilão
+     *  ou null se nunhuma oferta supera o preço minimo. Esta simulação é feita numa escala de tempo de forma em que 1 hora de leilão
+     *  passa num minuto e 1 minuto passa num segundo.
      */    
     public String simulaLeilao(PrintStream impressora) throws java.io.IOException{
         int duracaoMinutos = 60 * duracao;
@@ -68,16 +91,15 @@ public class Leilao implements Serializable
         Random random = new Random();
         Licitador aGanhar = null;
         //FileWriter fw = new FileWriter("leilao.txt", false); // vai fazer log dos dados do leilao para o ficheiro
+        
+        // copia estado antes de executar para ser possivel fazer simulaçoes nao-destrutivas dos leiloes
+        List<Licitador> copiaLicitadores = new ArrayList<>(licitadores);
 
-        List<Licitador> copiaLicitadores = new ArrayList<>(licitadores); // copia estado antes de executar para ser possivel fazer simulaçoes nao-destrutivas dos leiloes
-
-        impressora.println("Participantes:");
+        impressora.println("-> Participantes: ");
         for(Licitador l : copiaLicitadores){
             impressora.println(l.entradaLog());
-        }
-        impressora.println("\nImovel:");
-        impressora.println(imovelEmLeilao + " precoMin:" + precoMinimo); 
-        impressora.println("\nLicitações:");
+        } 
+        impressora.println("\n-> Licitações: ");
 
         for(int i = 0; !copiaLicitadores.isEmpty() && i < duracaoMinutos; i = proxI){
             proxI = i + 1;
@@ -115,7 +137,7 @@ public class Leilao implements Serializable
             if(!candidatosLicitar.isEmpty()){// se alguem superou a oferta anterior
                 precoAtual = melhorOferta; // atualiza o preco atual do imovel
                 aGanhar = candidatosLicitar.get(random.nextInt(candidatosLicitar.size())); // escolhe um Licitador à sorte dos candidatos a atualizar
-                impressora.println(aGanhar.getIdComprador() + " Oferta:" + precoAtual + " Minuto: " + i); // regista a Licitação no log
+                impressora.println(aGanhar.getIdComprador() + " ofereceu " + precoAtual + "€ no minuto " + i); // regista a Licitação no log
             }
 
             try{
@@ -133,7 +155,11 @@ public class Leilao implements Serializable
     public void bloqueiaLeilao(){
         this.leilaoBloqueado = true;
     }
-
+    
+    public Leilao clone(){
+        return new Leilao(this);
+    }
+    
     public boolean equals(Object o){
         if(this == o)
             return true;
@@ -141,16 +167,12 @@ public class Leilao implements Serializable
             return false;
 
         Leilao l = (Leilao) o;
-        return responsavel.equals(l.responsavel) && imovelEmLeilao.equals(l.imovelEmLeilao) &&
-        licitadores.equals(l.licitadores) && duracao == l.duracao && precoMinimo == l.precoMinimo &&
-        leilaoBloqueado == l.leilaoBloqueado;
+        return responsavel.equals(l.responsavel) && imovelEmLeilao.equals(l.imovelEmLeilao) && 
+               licitadores.equals(l.licitadores) && duracao == l.duracao && precoMinimo == l.precoMinimo &&
+               leilaoBloqueado == l.leilaoBloqueado;
     }
-
-    public String getImovelEmLeilao(){
-        return imovelEmLeilao;
-    }
-
-    public String toString(){
+    
+        public String toString(){
         StringBuilder sb = new StringBuilder("-> Leilão:\n");
 
         sb.append("Responsável: " + responsavel + "\n");

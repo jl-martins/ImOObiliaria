@@ -52,9 +52,11 @@ public class Imoobiliaria implements Serializable
         for(Utilizador utilizador: utilizadoresAdicionar)
             this.utilizadores.put(utilizador.getEmail(), utilizador.clone());
 
-        if(original.utilizadorAutenticado != null){
+        if(original.utilizadorAutenticado != null)
             this.utilizadorAutenticado = this.utilizadores.get(original.utilizadorAutenticado.getEmail());
-        }
+        
+        if(original.leilao != null)
+            this.leilao = original.leilao.clone();
     }
 
     /** Inicializa e devolve uma Imoobiliaria com o estado guardado no ficheiro Imoobiliaria.ser */
@@ -91,7 +93,7 @@ public class Imoobiliaria implements Serializable
     }
 
     /**
-     * Lê uma Imoobiliaria a partir de um ficheiro .ser
+     * Lê um objeto da classe Imoobiliaria a partir de um ficheiro .ser
      * @param fich Nome do ficheiro de estado.
      * @return A Imoobiliaria lida.
      */
@@ -118,9 +120,9 @@ public class Imoobiliaria implements Serializable
     }
 
     /**
-     * Regista um utilizador, quer vendedor, quer comprador.
+     * Regista um utilizador (quer vendedor, quer comprador).
      * @param utilizador Utilizador a registar
-     * @throws UtilizadorExistenteException se a Imoobiliaria já tiver um utilizador que tem o mesmo e-mail que aquele que foi passado para o método.
+     * @throws UtilizadorExistenteException se a Imoobiliaria já tiver um utilizador com o mesmo e-mail que o que foi passado para o método.
      */
     public void registarUtilizador(Utilizador utilizador) throws UtilizadorExistenteException{
         String email = utilizador.getEmail();
@@ -132,7 +134,7 @@ public class Imoobiliaria implements Serializable
     }
 
     /**
-     * Valida o acesso à aplicação, utilizando as credenciais (email e password).
+     * Valida o acesso à aplicação, utilizando como credenciais o email e a password do utilizador.
      * @param email Email do utilizador.
      * @param password Password do utilizador.
      * @throws SemAutorizacaoException Se o e-mail e/ou a password for(em) inválido(s).
@@ -146,7 +148,7 @@ public class Imoobiliaria implements Serializable
             utilizadorAutenticado = utilizador;
     }
 
-    /** Se existir um utilizador autenticado, termina a sessão do mesmo, se não, não faz nada. */
+    /** Caso exista um utilizador autenticado, termina a sessão do mesmo; c.c. não faz nada. */
     public void fechaSessao(){
         utilizadorAutenticado = null;
     }
@@ -176,16 +178,16 @@ public class Imoobiliaria implements Serializable
      */
     public void confirmaCompradorAutenticado() throws SemAutorizacaoException{
         if(!(utilizadorAutenticado instanceof Comprador))
-            throw new SemAutorizacaoException("O utilizador atual não é um comprador autenticado");
+            throw new SemAutorizacaoException("O utilizador atual não é um comprador autenticado.");
     }
 
     /**
-     * Confirma se o utilziador autenticado é o Comprador com o email igual ao que é passado como argumento
+     * Confirma se o utilziador autenticado é um Comprador com email igual ao email passado como parâmetro.
      * @throws SemAutorizacaoException se não existir um utilizador autenticado ou se este não for um Comprador.
      */
     public void confirmaCompradorAutenticado(String email) throws SemAutorizacaoException{
         if(!(utilizadorAutenticado instanceof Comprador) || !utilizadorAutenticado.getEmail().equals(email))
-            throw new SemAutorizacaoException("O utilizador atual não é um comprador autenticado");
+            throw new SemAutorizacaoException("O utilizador atual não é um comprador autenticado.");
     }
 
     /**
@@ -208,8 +210,8 @@ public class Imoobiliaria implements Serializable
     }
 
     /** 
-     * Remove um Imovel da Imoobiliaria, se este existir e o utilizador autenticado for o vendedor desse Imovel. 
-     * @id ID do Imovel a remover.
+     * Remove um Imovel da Imoobiliaria, caso este exista e o utilizador autenticado seja o vendedor desse Imovel. 
+     * @param id ID do Imovel a remover.
      * @throws SemAutorizacaoException se o utilizador atual não tiver autorização para remover o Imovel.
      * @throws ImovelInexistenteException se o Imovel não existir.
      */
@@ -228,7 +230,7 @@ public class Imoobiliaria implements Serializable
 
     /**
      * @param id ID do Imovel a devolver.
-     * @return Se @code id corresponder a um Imovel, é devolvido um clone desse Imovel.
+     * @return Se @code id corresponder a um Imovel, é retornado um clone desse Imovel.
      * @throws ImovelInexistenteException se não existir nenhum Imovel correspondente a @code id.
      */
     public Imovel getImovel(String id) throws ImovelInexistenteException{
@@ -245,10 +247,10 @@ public class Imoobiliaria implements Serializable
      * @throws SemAutorizacaoException se o utilizador autenticado não for um vendedor.
      */
     public List<Consulta> getConsultas() throws SemAutorizacaoException{
-        List<Consulta> ultimasConsultas = new ArrayList<Consulta>();
+        int inicio, fim; // permitem obter uma sublista da lista de consultas
         Set<String> emVenda;
         final int N_CONSULTAS = 10;
-        int inicio, fim;
+        List<Consulta> ultimasConsultas = new ArrayList<Consulta>();
 
         confirmaVendedorAutenticado();
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
@@ -273,14 +275,13 @@ public class Imoobiliaria implements Serializable
      * @throws EstadoInvalidoException se @code estado for inválido.
      */
     public void setEstado(String idImovel, String estado) 
-    throws ImovelInexistenteException, SemAutorizacaoException, EstadoInvalidoException
+        throws ImovelInexistenteException, SemAutorizacaoException, EstadoInvalidoException
     {
         confirmaVendedorAutenticado();
         Imovel imv = imoveis.get(idImovel);
 
-        if(imv == null){
+        if(imv == null)
             throw new ImovelInexistenteException("O imóvel '" + idImovel + "' não está registado.");
-        }
 
         Vendedor vendedor = (Vendedor) utilizadorAutenticado;
         if(!vendedor.registouImovel(idImovel))
@@ -292,7 +293,7 @@ public class Imoobiliaria implements Serializable
     } 
 
     /**
-     * Se o utilizador autenticado for um vendedor, é devolvido o conjunto dos seus
+     * Se o utilizador autenticado for um vendedor, devolve o conjunto dos seus
      * imóveis que têm um número de consultas superior ao valor passado como parâmetro.
      * @param n Limite inferior do número de consultas.
      * @return Conjunto dos códigos dos imóveis que têm mais do que @code N consultas.
@@ -318,8 +319,9 @@ public class Imoobiliaria implements Serializable
      * @return List dos imóveis da classe especificada que de preço não superior a @code preco.
      */
     public List<Imovel> getImovel(String classe, int preco){
-        List<Imovel> resultados = new ArrayList<Imovel>();
         Class tipoImovel;
+        List<Imovel> resultados = new ArrayList<Imovel>();
+        
         try{
             tipoImovel = Class.forName(classe);
         }
@@ -351,8 +353,10 @@ public class Imoobiliaria implements Serializable
 
     /** @return Mapeamento entre todos os imóveis e todos os vendedores. */
     public Map<Imovel, Vendedor> getMapeamentoImoveis(){
-        Map<Imovel, Vendedor> mapeamento = new HashMap<Imovel,Vendedor>((int) Math.ceil(imoveis.size() / 0.75));
         Collection<Utilizador> todosUtilizadores = utilizadores.values();
+        /* O fator de carga do HashMap é 0.75 por omissão. Especificando o tamanho inicial
+         * (int) Math.ceil(imoveis.size() / 0.75) evitamos rehashings desnecessários. */
+        Map<Imovel, Vendedor> mapeamento = new HashMap<Imovel,Vendedor>((int) Math.ceil(imoveis.size() / 0.75));
 
         for(Utilizador usr : todosUtilizadores){
             if(usr instanceof Vendedor){
@@ -387,12 +391,12 @@ public class Imoobiliaria implements Serializable
      * @throws SemAutorizacaoException se o utilizador atual não for um comprador autenticado.
      */
     public TreeSet<Imovel> getFavoritos() throws SemAutorizacaoException{
+        Imovel imv;
         confirmaCompradorAutenticado();
         Comprador comprador = (Comprador) utilizadorAutenticado;
         TreeSet<String> idsFavoritos = comprador.getFavoritos();
         TreeSet<Imovel> favoritos = new TreeSet<Imovel>(new ComparadorPorPreco());
-        Imovel imv;
-
+        
         for(String id : idsFavoritos){
             imv = imoveis.get(id);
             if(imv != null){ // se o Imovel não foi removido
@@ -414,7 +418,6 @@ public class Imoobiliaria implements Serializable
             throw new SemAutorizacaoException("O Utilizador atual não tem autorização para iniciar o Leilão deste imóvel.");
 
         int precoMinimo = imoveis.get(idImovel).getPrecoMinimo();
-
         leilao = new Leilao(idImovel, utilizadorAutenticado.getEmail(), horas, precoMinimo);
     }
 
@@ -428,7 +431,7 @@ public class Imoobiliaria implements Serializable
      * @throws LeilaoTerminadoException se não existir um leilão a decorrer.
      */
     public void adicionaComprador(String idComprador, int limite, int incrementos, int minutos)
-    throws SemAutorizacaoException, LeilaoTerminadoException
+        throws SemAutorizacaoException, LeilaoTerminadoException
     {
         confirmaCompradorAutenticado(idComprador);
 
@@ -436,6 +439,7 @@ public class Imoobiliaria implements Serializable
             throw new LeilaoTerminadoException("Não há nenhum leilão ativo neste momento.");
         if(leilao.terminouLeilao())
             throw new LeilaoTerminadoException("O leilão terminou, não pode inserir mais compradores");
+        
         leilao.registaCompradorLeilao(idComprador, limite, incrementos, minutos);
     }
 
@@ -444,32 +448,29 @@ public class Imoobiliaria implements Serializable
      * @throws LeilaoTerminadoException se não estiver a decorrer um leilão.
      * @throws SemAutorizacaoException se o utilizador atual não for o responsável pelo leilão atual.
      */
-    public Comprador encerraLeilao() throws LeilaoTerminadoException, SemAutorizacaoException{
+    public Comprador encerraLeilao() throws LeilaoTerminadoException, SemAutorizacaoException, IOException{
         String idVencedor = null;
         if(leilao == null)
             throw new LeilaoTerminadoException("De momento não está a decorrer nenhum leilão.");
+        
         if(!(utilizadorAutenticado instanceof Vendedor) || !utilizadorAutenticado.getEmail().equals(leilao.getResponsavel()))
-            throw new SemAutorizacaoException("Este utilizador não tem permissões para encerrar o leilão.");
+            throw new SemAutorizacaoException("O utilizador atual não tem permissões para encerrar o leilão.");
 
-        try{
-            idVencedor = leilao.simulaLeilao(System.out);
-        } catch(IOException e){
-            System.out.println("Erro ao simular o leilão");
-        }
+        idVencedor = leilao.simulaLeilao(System.out);  
         leilao.bloqueiaLeilao();
-
+        
         if(idVencedor == null)
             return null;
         
         try{
             setEstado(leilao.getImovelEmLeilao(), "reservado");
-        }catch(Exception e){}
+        }
+        catch(Exception e){} // já sabemos que o leilão existe e que o estado "reservado" é válido   
         return (Comprador) utilizadores.get(idVencedor);
     }
 
     public Imoobiliaria clone(){
-        Imoobiliaria copia = new Imoobiliaria(this);
-        return copia;
+        return new Imoobiliaria(this);
     }
 
     public boolean equals(Object o){
@@ -477,10 +478,10 @@ public class Imoobiliaria implements Serializable
             return true;
         if(o == null || this.getClass() != o.getClass())
             return false;
+        
         Imoobiliaria imb = (Imoobiliaria) o;
-        return this.imoveis.equals(imb.imoveis) &&
-        this.utilizadores.equals(imb.utilizadores) &&
-        this.utilizadorAutenticado.equals(imb.utilizadorAutenticado);
+        return this.imoveis.equals(imb.imoveis) && this.utilizadores.equals(imb.utilizadores) &&
+               this.utilizadorAutenticado.equals(imb.utilizadorAutenticado) && this.leilao.equals(imb.leilao);
     }
 
     public String toString(){
@@ -489,6 +490,7 @@ public class Imoobiliaria implements Serializable
         sb.append("\n----------Utilizadores----------\n");
         for(Utilizador u : utilizadores.values())
             sb.append(u.toString()).append("\n");
+        
         sb.append("\n------------Imoveis------------\n");
         for(Imovel im : imoveis.values())
             sb.append(im.toString()).append("\n");
@@ -503,6 +505,7 @@ public class Imoobiliaria implements Serializable
         hash = 31*hash + ((utilizadores == null) ? 0 : utilizadores.hashCode());
         hash = 31*hash + ((imoveis == null) ? 0 : imoveis.hashCode());
         hash = 31*hash + ((utilizadorAutenticado == null) ? 0 : utilizadorAutenticado.hashCode());
+        hash = 31*hash + ((leilao == null) ? 0 : leilao.hashCode());
         return hash;
     }
 }

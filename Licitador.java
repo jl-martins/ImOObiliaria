@@ -11,63 +11,83 @@ import java.lang.Comparable;
 public class Licitador implements Serializable
 {
     private String idComprador;
-    private int limite, // Limite que o Licitador está disposto a pagar
-    intervaloIncrementos, // Indica de quanto em quanto tempo é que o utilizador faz ofertas 
-    incrementos, // Em quanto é que o Licitador sobe a oferta
-    quandoProximaLicitacao; // Indica em que minuto é que o Licitador vai fazer a proxima oferta
-
+    private int limite;     // Limite que o Licitador está disposto a pagar
+    private int intervaloIncrementos; // Indica de quanto em quanto tempo é que o utilizador faz ofertas 
+    private int incrementos; // Em quanto é que o Licitador sobe a oferta
+    private int quandoProximaLicitacao; // Indica em que minuto é que o Licitador vai fazer a proxima oferta
+    
+    /** Construtor parametrizado (declarado como 'private' para não se possível criar licitadores sem especificar os seus dados) */
     private Licitador() {}
     
+    /** Construtor parametrizado. */
     public Licitador(String idComprador, int limite, int incrementos, int intervaloIncrementos){
         this.idComprador = idComprador;
         this.limite = limite;
-        this.incrementos = incrementos;
         this.intervaloIncrementos = intervaloIncrementos;
+        this.incrementos = incrementos;
         this.quandoProximaLicitacao = 0;
     }
-
+    
+    /** Construtor de cópia. */
     public Licitador(Licitador l){
         this(l.idComprador, l.limite, l.incrementos, l.intervaloIncrementos);
     }
 
-    /** Deve-se fazer quando nao se pretende utilizar mais o licitador no leilao. Restaura o estado do objeto para fazer licitaçoes nos tempos corretos. */
+    /** 
+     * Restaura o estado do objeto para fazer licitações nos instantes corretos. 
+     * Método a invocar quando não se pretende utilizar mais o licitador no leilão.
+     */
     public void reset(){
         this.quandoProximaLicitacao = 0;
     }
-
-    public int getIncrementos(){
-        return incrementos;
-    }
     
-    /** Indica em que minuto do leilão vai ser feita a próxima Licitação. */
-    public int getQuandoProximaLicitacao(){
-        return quandoProximaLicitacao;
-    }
-
-    /** Faz com que o Licitador faça a próxima oferta depois de 'intervaloIncremento' minutos. */
-    public void atualizaQuandoProxLicitacao(){
-        this.quandoProximaLicitacao += intervaloIncrementos;
-    }
-
-    public int getLimite(){
-        return limite;
-    }
-
-    /** Faz uma oferta de forma a superar o valor passado como argumento. */
-    public int aumentaLicitacao(int n){
-        int novoValor = n + incrementos;
-        return (novoValor > this.limite)? this.limite : novoValor;
-    }
-
+    /** @return id do comprador que está a licitar. */
     public String getIdComprador(){
         return this.idComprador;
     }
 
-    /** Cria uma string com os dados do Licitador para ser registada no log do leilao. */
-    public String entradaLog(){
-        return idComprador + " limimte:" + limite + " intervalo:" + intervaloIncrementos + " incrementos:" + incrementos;
+    /** @return Valor dos incrementos a efetuar por este Licitador. */
+    public int getIncrementos(){
+        return incrementos;
+    }
+    
+    /** @return Minuto do leilão será feita a próxima licitação. */
+    public int getQuandoProximaLicitacao(){
+        return quandoProximaLicitacao;
     }
 
+    /** Faz com que o Licitador faça a próxima oferta depois de @code intervaloIncrementos minutos. */
+    public void atualizaQuandoProxLicitacao(){
+        this.quandoProximaLicitacao += intervaloIncrementos;
+    }
+    
+    /** @return Valor máximo que o licitador está disposto a investir. */
+    public int getLimite(){
+        return limite;
+    }
+
+    /** Se possível, faz uma oferta de forma a superar o valor passado como argumento, se não oferece o valor limite deste Licitador. */
+    public int aumentaLicitacao(int n){
+        int novoValor = n + incrementos;
+        return (novoValor > this.limite)? this.limite : novoValor;
+    }
+    
+
+    /** @return String com os dados deste Licitador para ser registada no log de um Leilao. */
+    public String entradaLog(){
+        StringBuilder sb = new StringBuilder("Email: ");
+        
+        sb.append(idComprador);
+        sb.append("; limite: " + limite + "€");
+        sb.append("; intervalo: " + intervaloIncrementos + " min");
+        sb.append("; incrementos: " + incrementos + "€.");
+        return sb.toString();
+    }
+    
+    public Licitador clone(){
+        return new Licitador(this);
+    }
+    
     public boolean equals(Object o){
         if(this == o)
             return true;

@@ -51,7 +51,7 @@ public class ImoobiliariaApp
         catch(IOException e){err.println("Erro de IO: Não foi possível apresentar o ecrã inicial.");}
     }
 
-    private static void limparEcra(){System.out.print("\f");} // funciona no bluej (pode não funcionar noutros terminais)
+    private static void limparEcra(){out.print("\f");} // funciona no bluej (pode não funcionar noutros terminais)
 
     private static void enterParaContinuar(){
         Scanner input = new Scanner(System.in);
@@ -117,7 +117,7 @@ public class ImoobiliariaApp
                 "Gerar estado Aleatório",
                 "Carregar dados da sessão anterior"
             };
-        Menu menuDados = new Menu(" Que dados pretende carregar?", opcoesDados, false);
+        Menu menuDados = new Menu(" Opções de estado inicial", opcoesDados, false);
 
         menuDados.executa();
         opcao = menuDados.getOpcao();
@@ -304,18 +304,18 @@ public class ImoobiliariaApp
      */
     private static void registarUtilizador(){
         int numOpcao; // número da opção do menu
-        Scanner input = new Scanner(System.in);
-        String email, nome, password, morada, strData; // strData - String que irá guardar a representação textual da data.
-        DateTimeFormatter formatador = DateTimeFormatter.ISO_LOCAL_DATE; // data na forma aaaa-mm-dd
         LocalDate dataNascimento = null;
         Utilizador novoUtilizador = null;
-
+        Scanner input = new Scanner(System.in);
+        String email, nome, password, morada, strData; // strData: guarda a representação textual da data.
+        DateTimeFormatter formatador = DateTimeFormatter.ISO_LOCAL_DATE; // data com o formato aaaa-mm-dd
+        
         menuTipoUtilizador.executa();
         numOpcao = menuTipoUtilizador.getOpcao();
         try{
             out.print("Email: ");
             email = input.nextLine();
-            if(ValidadorEmail.validar(email) == true){ // ver se vale a pena criar uma EmailInvalidoException
+            if(ValidadorEmail.validar(email) == true){
                 out.print("Nome: ");
                 nome = input.nextLine();
                 out.print("Password: ");
@@ -328,16 +328,16 @@ public class ImoobiliariaApp
 
                 switch(numOpcao){
                     case 1: // registar comprador
-                    novoUtilizador = new Comprador(email, nome, password, morada, dataNascimento);
-                    break;
+                        novoUtilizador = new Comprador(email, nome, password, morada, dataNascimento);
+                        break;
                     case 2: // registar vendedor
-                    novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
-                    break;
+                        novoUtilizador = new Vendedor(email, nome, password, morada, dataNascimento);
+                        break;
                 }  
-                imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se todos os dados foram lidos com sucesso.
+                imoobiliaria.registarUtilizador(novoUtilizador); // só chegamos aqui se os dados foram lidos com sucesso.
                 out.println("-> Utilizador registado com sucesso!");
             }
-            else // o email introduzido é inválido
+            else // email inválido
                 err.println("O email: '" + email + "' é inválido.");  
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
@@ -363,16 +363,16 @@ public class ImoobiliariaApp
             imoobiliaria.iniciaSessao(email, password);
             out.println("-> Sessão iniciada iniciada com sucesso!");
             enterParaContinuar();
-            // só chegamos a este switch, se o utilizador tiver conseguido autenticar-se
+            // só chegamos aqui se o utilizador tiver conseguido autenticar-se
             switch(imoobiliaria.classUtilizadorAutenticado()){
                 case "Comprador":
-                menuComprador.setIdUtilizador(email);
-                r = menuComprador();
-                break;
+                    menuComprador.setIdUtilizador(email);
+                    r = menuComprador();
+                    break;
                 case "Vendedor":
-                menuVendedor.setIdUtilizador(email);
-                r = menuVendedor();
-                break;
+                    menuVendedor.setIdUtilizador(email);
+                    r = menuVendedor();
+                    break;
             }
         }
         catch(NoSuchElementException e){err.println("Erro: Introduziu uma linha em branco.");}
@@ -387,12 +387,12 @@ public class ImoobiliariaApp
         out.println("-> Sessão fechada com sucesso!");
     }
 
-    /** Lê os dados de um imóvel e se estes forem válidos, regista-o na Imoobiliaria (opção de vendedor). */
+    /** Lê os atributos de um imóvel e se estes forem válidos, regista-o na Imoobiliaria (opção de vendedor). */
     private static void registarImovel(){
+        Imovel im = null;
         String id, rua;
         int precoPedido, precoMinimo, numOpcao;
         Scanner input = new Scanner(System.in);
-        Imovel im = null;
 
         menuTipoImovel.executa();
         numOpcao = menuTipoImovel.getOpcao();
@@ -430,7 +430,7 @@ public class ImoobiliariaApp
         catch(TipoInvalidoException | ImovelExisteException | SemAutorizacaoException e){err.println(e.getMessage());}
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a uma moradia e em caso de sucesso devolve a Moradia criada. */
+    /** Lê os atributos de uma moradia. Se estes forem válidos, cria e retorna uma Moradia com esses atributos. */
     private static Moradia leDadosMoradia(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Scanner input = new Scanner(System.in);
         TipoMoradia tipo;
@@ -456,7 +456,7 @@ public class ImoobiliariaApp
                                    areaTotal, areaEnv, numQuartos, numWCs, numDaPorta);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a um apartamento e em caso de sucesso devolve o Apartamento criado. */
+    /** Lê os atributos de um apartamento. Se estes forem válidos, cria e retorna um Apartamento com esses atributos. */
     private static Apartamento leDadosApartamento(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
         Scanner input = new Scanner(System.in);
         TipoApartamento tipo;
@@ -486,7 +486,7 @@ public class ImoobiliariaApp
                                  numQuartos, numWCs, numDaPorta, andar, temGaragem);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a uma loja e em caso de sucesso devolve a Loja criada. */
+    /** Lê os atributos de uma loja. Se estes forem válidos, cria e retorna uma Loja com esses atributos. */
     private static Loja leDadosLoja(String id, String rua, int precoPedido, int precoMinimo){
         Scanner input = new Scanner(System.in);
         int area, numDaPorta, numOpcao;
@@ -509,7 +509,7 @@ public class ImoobiliariaApp
         return new Loja(id, rua, precoPedido, precoMinimo, area, temWC, tipoNegocio, numDaPorta);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a um terreno e em caso de sucesso devolve o Terreno criado. */
+    /** Lê os atributos de um terreno. Se estes forem válidos, cria e retorna um Terreno com esses atributos. */
     private static Terreno leDadosTerreno(String id, String rua, int precoPedido, int precoMinimo){
         Scanner input = new Scanner(System.in);
         int area, numOpcao;
@@ -543,40 +543,20 @@ public class ImoobiliariaApp
                             terrenoArm, diamCanalizacoes, maxKWh, temRedeEsgotos);
     }
 
-    /** Pede ao utilizador para introduzir os dados relativos a uma loja habitável e em caso de sucesso devolve a LojaHabitavel criada. */
+    /** Lê os atributos de uma loja habiável. Se estes forem válidos, cria e retorna uma LojaHabitavel com esses atributos. */
     private static LojaHabitavel leDadosLojaHabitavel(String id, String rua, int precoPedido, int precoMinimo) throws TipoInvalidoException{
-        Loja loja = leDadosLoja(id, rua, precoPedido, precoMinimo);
         Scanner input = new Scanner(System.in);
-        TipoApartamento tipo;
-        int andar, numOpcao; // não lemos o número da porta, porque assumimos que este é igual ao da loja
-        int areaTotal, numQuartos, numWCs;
-        boolean temGaragem = false;
+        Loja loja = leDadosLoja(id, rua, precoPedido, precoMinimo);
         Apartamento apartamento;
-
-        out.println("Introduza os dados do apartamento.");
-        out.print("Tipo de apartamento [Simples/Duplex/Triplex]: ");
-        tipo = TipoApartamento.fromString(input.nextLine());
-        out.print("Área total: ");
-        areaTotal = input.nextInt(); input.nextLine();
-        out.print("Número de quartos: ");
-        numQuartos = input.nextInt(); input.nextLine();
-        out.print("Número de WCs: ");
-        numWCs = input.nextInt(); input.nextLine();
-        out.print("Andar: ");
-        andar = input.nextInt(); input.nextLine();
-
-        menuSimNao.setTitulo(" O apartamento tem garagem?");
-        menuSimNao.executa();
-        numOpcao = menuSimNao.getOpcao();
-        temGaragem = (numOpcao == 1);
-        apartamento = new Apartamento(id, rua, precoPedido, precoMinimo, tipo, areaTotal, numQuartos, numWCs, loja.getNumDaPorta(), andar, temGaragem);
-
+        
+        out.println("\n--------------------Parte habitacional--------------------");
+        apartamento = leDadosApartamento(id, rua, precoPedido, precoMinimo);
         return new LojaHabitavel(loja, apartamento);
     }
 
     /** 
-     * Verifica se o utilizador atual é um vendedor autenticado e se for, pergunta-lhe o id do imóvel pretende remover.
-     * Se o id introduzido corresponder a um Imovel do vendedor autenticado, esse imóvel é removido.
+     * Verifica se o utilizador atual é um vendedor autenticado e se for, pergunta-lhe o id de um Imovel que pretende remover.
+     * Se o id introduzido corresponder a um Imovel do vendedor autenticado, esse Imovel é removido.
      */
     private static void removerImovel(){
         Scanner input = new Scanner(System.in);
@@ -645,9 +625,9 @@ public class ImoobiliariaApp
      * o conjunto dos seus imóveis que têm mais do que N consultas.
      */
     private static void topImoveis(){
-        Scanner input = new Scanner(System.in);
         int N;
         Set<String> setIds;
+        Scanner input = new Scanner(System.in);
 
         try{
             out.print("Limite inferior do número consultas dos imóveis a apresentar: ");
@@ -657,7 +637,7 @@ public class ImoobiliariaApp
                 out.println("Não existem imóveis com mais do que " + N + " consultas.");
             else{
                 out.println("-> IDs dos imóveis com mais do que " + N + " consultas\n");
-                for(String id : setIds) // ! se este setIds puder ser null, temos que alterar este ciclo
+                for(String id : setIds)
                     out.println(id);
             }
         }
@@ -666,15 +646,15 @@ public class ImoobiliariaApp
 
     /** Lê um tipo e um preço e apresenta a lista de todos os imóveis desse tipo, até ao preço especificado. */
     private static void listarImoveisTipo(){
-        Scanner input = new Scanner(System.in);
         String tipo;
         int precoMaximo;
         List<Imovel> l;
+        Scanner input = new Scanner(System.in);
 
         try{
             out.print("Tipo de imóvel [Moradia/Apartamento/Loja/LojaHabitavel/Terreno]: ");
             tipo = input.nextLine();
-            out.print("Preço máximo dos imóveis a consultar: ");
+            out.print("Preço máximo: ");
             precoMaximo = input.nextInt(); input.nextLine();
             l = imoobiliaria.getImovel(tipo, precoMaximo);
 
@@ -702,7 +682,7 @@ public class ImoobiliariaApp
             List<Habitavel> l = imoobiliaria.getHabitaveis(precoMaximo);
 
             if(l == null || l.isEmpty())
-                out.println("Não existem imóveis habitáveis com preço abaixo de " + precoMaximo + "€");
+                out.println("Não existem imóveis habitáveis com preço inferior a " + precoMaximo + "€");
             else{
                 out.println("--------------------------------------------------------------------------------------------------");
                 for(Habitavel hab : l){
@@ -767,8 +747,8 @@ public class ImoobiliariaApp
     }
 
     /** 
-     * Lê o id de um imóvel a leiloar. Se o utilizador autenticado for um vendedor e o id do 
-     * imóvel introduzido corresponder a um imóvel que lhe pertence, incia um leilão desse imóvel.
+     * Lê o id de um imóvel a leiloar e caso o utilizador autenticado seja um vendedor e o id do 
+     * imóvel introduzido corresponda a um imóvel que lhe pertence, incia um leilão desse imóvel.
      */
     private static void iniciarLeilao(){
         Scanner input = new Scanner(System.in);
@@ -788,11 +768,11 @@ public class ImoobiliariaApp
 
     /** 
      * Se estiver a decorrer um leilão e o utilizador autenticado for um comprador, lê os dados que este 
-     * deve introduzir para participar no leilão e se estes forem válidos, adiciona-o ao leilão. 
+     * deve introduzir para participar no leilão e se os valores introduzidos forem válidos, adiciona-o ao leilão. 
      */
     private static void adicionarComprador(){
-        Scanner input = new Scanner(System.in);
         String idComprador = imoobiliaria.emailUtilizadorAutenticado();
+        Scanner input = new Scanner(System.in);
         int limite, incrementos, minutos;
 
         out.print("Valor máximo que está disposto a dar pelo imóvel: ");
@@ -814,11 +794,11 @@ public class ImoobiliariaApp
         try{
             vencedor = imoobiliaria.encerraLeilao();
 
-            if(vencedor != null){
-                out.println("Vencedor do leilão:\n\n" + vencedor.toStringParcial()); // usamos a toString do utilizador para nao imprimir a lista de favori
-            }else
+            if(vencedor != null)
+                out.println("\n-> Vencedor do leilão:\n" + vencedor.toStringParcial()); // usamos a toString do utilizador para nao imprimir a lista de favoritos
+            else
                 out.println("Nenhum comprador ofereceu mais do que o preço mínimo do imóvel leiloado.");
         }
-        catch(LeilaoTerminadoException | SemAutorizacaoException e){err.println(e.getMessage());}
+        catch(Exception e){err.println(e.getMessage());}
     }
 }
