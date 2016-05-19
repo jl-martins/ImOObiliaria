@@ -78,9 +78,9 @@ public class Licitador implements Serializable
         StringBuilder sb = new StringBuilder("Email: ");
         
         sb.append(idComprador);
-        sb.append("; limite: " + limite + "€");
-        sb.append("; intervalo: " + intervaloIncrementos + " min");
-        sb.append("; incrementos: " + incrementos + "€.");
+        sb.append(" ; limite: " + limite + "€");
+        sb.append(" ; intervalo: " + intervaloIncrementos + " min");
+        sb.append(" ; incrementos: " + incrementos + "€");
         return sb.toString();
     }
     
