@@ -1,4 +1,12 @@
-public class Terreno extends Imovel
+/**
+ * Classe que representa um terreno.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
+import java.io.Serializable;
+
+public class Terreno extends Imovel implements Serializable
 {
     // variaveis de instancia
     private int area;
@@ -8,6 +16,7 @@ public class Terreno extends Imovel
     private double maxKWh;
     private boolean temRedeEsgotos;
     
+    /** Construtor por omissão. */
     public Terreno(){
         super();
         area = 0;
@@ -17,9 +26,10 @@ public class Terreno extends Imovel
         temRedeEsgotos = false;
     }
     
-    public Terreno(String id, String rua, double precoPedido, double precoMinimo, int area, boolean terrenoHab,
-                   boolean terrenoArm, double diamCanalizacoes, double maxKWh, boolean temRedeEsgotos)
-    {
+    /** Construtor parametrizado. */
+    public Terreno(String id, String rua, int precoPedido, int precoMinimo, int area, boolean terrenoHab,
+                   boolean terrenoArm, double diamCanalizacoes, double maxKWh, boolean temRedeEsgotos){
+        
         super(id, rua, precoPedido, precoMinimo);
         this.area = area;
         this.terrenoHab = terrenoHab;
@@ -29,8 +39,9 @@ public class Terreno extends Imovel
         this.temRedeEsgotos = temRedeEsgotos;
     }
     
+    /** Construtor de cópia. */
     public Terreno(Terreno terr){
-        super(terr.getId(), terr.getRua(), terr.getPrecoPedido(), terr.getPrecoMinimo());
+        super(terr);
         area = terr.getArea();
         terrenoHab = terr.getTerrenoHab();
         terrenoArm = terr.getTerrenoArm();
@@ -39,6 +50,7 @@ public class Terreno extends Imovel
         temRedeEsgotos = terr.getTemRedeEsgotos();
     }
     
+    // Getters.
     public int getArea(){
         return area;
     }
@@ -63,6 +75,7 @@ public class Terreno extends Imovel
         return temRedeEsgotos;
     }
     
+    // Setters.
     public void setArea(int area){
         this.area = area;
     }
@@ -106,6 +119,30 @@ public class Terreno extends Imovel
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Terreno\n");
+        
+        sb.append(super.toString());
+        sb.append("Área: " + area + "m^2\n");
+        sb.append("Apropriado para construção de habitação: " + (terrenoHab ? "sim\n" : "não\n"));
+        sb.append("Apropriado para construção de armazéns: " + (terrenoArm ? "sim\n" : "não\n"));
+        sb.append("Diâmetro das canalizações: " + diamCanalizacoes + "mm\n");
+        sb.append("kWh máximos: " + maxKWh + "kWh\n");
+        sb.append("Tem rede de esgotos: " + (temRedeEsgotos ? "sim\n" : "não\n"));
+        return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        long aux;
+        
+        hash = 31*hash + area;
+        hash = 31*hash + (terrenoHab ? 1 : 0);
+        hash = 31*hash + (terrenoArm ? 1 : 0);
+        aux = Double.doubleToLongBits(diamCanalizacoes);
+        hash = 31*hash + (int) (aux^(aux >>> 32));
+        aux = Double.doubleToLongBits(maxKWh);
+        hash = 31*hash + (int) (aux^(aux >>> 32));
+        hash = 31*hash + (temRedeEsgotos ? 1 : 0);
+        return hash;
     }
 }

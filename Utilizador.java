@@ -1,46 +1,42 @@
-import java.util.GregorianCalendar;
+/**
+ * Classe abstrata que representa um utilizador.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
 
-public abstract class Utilizador
+import java.time.LocalDate;
+import java.io.Serializable;
+
+public abstract class Utilizador implements Serializable
 {
     // variáveis de instancia
     private String email;
     private String nome;
     private String password;
     private String morada;
-    private GregorianCalendar dataNascimento;
-
-    /**
-     * Construtor por omissao.
-     */
+    private LocalDate dataNascimento;
+    
     public Utilizador(){
-        email = "n/a";
-        nome = "n/a";
-        password = "n/a";
-        morada = "n/a";
-        dataNascimento = new GregorianCalendar();
+        this("n/a", "n/a", "n/a", "n/a", null);
     }
     
     /**
      * Construtor parametrizado.
      */
-    public Utilizador(String email, String nome, String password, String morada, GregorianCalendar dataNascimento){
+    public Utilizador(String email, String nome, String password, String morada, LocalDate dataNascimento){
         this.email = email;
         this.nome = nome;
         this.password = password;
         this.morada = morada;
-        this.dataNascimento = (GregorianCalendar) dataNascimento.clone();
+        this.dataNascimento = dataNascimento; // As instâncias de LocalDate são imutáveis, logo não precisamos de fazer clone()
     }
     
     /**
      * Construtor de cópia
      */
     public Utilizador(Utilizador original){
-        this(original.getEmail(),
-             original.getNome(),
-             original.getMorada(),
-             original.getPassword(),
-             original.getDataNascimento()
-        );
+        this(original.getEmail(), original.getNome(), original.getMorada(),
+             original.password, original.getDataNascimento());
     }
     
     public String getEmail(){
@@ -51,16 +47,16 @@ public abstract class Utilizador
         return nome;
     }
     
-    public String getMorada(){
-        return morada;
-    }
-    
     public String getPassword(){
         return password;
     }
     
-    public GregorianCalendar getDataNascimento(){
-        return (GregorianCalendar) dataNascimento.clone();
+    public String getMorada(){
+        return morada;
+    }
+    
+    public LocalDate getDataNascimento(){
+        return dataNascimento;
     }
     
     public void setEmail(String email){
@@ -71,16 +67,20 @@ public abstract class Utilizador
         this.nome = nome;
     }
     
-    public void setMorada(String morada){
-        this.morada = morada;
-    }
-    
     public void setPassword(String password){
         this.password = password;
     }
     
-    public void setDataNascimento(GregorianCalendar dataNascimento){
-        this.dataNascimento = (GregorianCalendar) dataNascimento.clone();
+    public void setMorada(String morada){
+        this.morada = morada;
+    }
+    
+    public void setDataNascimento(LocalDate dataNascimento){
+        this.dataNascimento = dataNascimento; // As instâncias de LocalDate são imutáveis, logo não precisamos de fazer clone()
+    }
+    
+    public boolean validaPassword(String password){
+        return this.password.equals(password);
     }
     
     public boolean equals(Object o){
@@ -90,10 +90,10 @@ public abstract class Utilizador
             return false;
         
         Utilizador utilizador = (Utilizador) o;
-        return email.equals(utilizador.getEmail()) &&
-               nome.equals(utilizador.getNome()) &&
-               morada.equals(utilizador.getMorada()) &&
-               password.equals(utilizador.getPassword()) &&
+        return email.equals(utilizador.email) &&
+               nome.equals(utilizador.nome) &&
+               morada.equals(utilizador.morada) &&
+               password.equals(utilizador.password) &&
                dataNascimento.equals(utilizador.getDataNascimento());
     }
     
@@ -102,14 +102,22 @@ public abstract class Utilizador
     public String toString(){
         StringBuilder sb = new StringBuilder();
         
-        sb.append("Utilizador:\n\n");
         sb.append("Email: " + email + "\n");
         sb.append("Nome: " + nome + "\n");
         sb.append("Morada: " + morada + "\n");
-        sb.append("Password: " + password + "\n");
-        sb.append("Data de nascimento: " + dataNascimento.get(GregorianCalendar.DAY_OF_YEAR) + "/"
-                                         + dataNascimento.get(GregorianCalendar.MONTH) + "/"
-                                         + dataNascimento.get(GregorianCalendar.YEAR) + "\n");
+        // a password não é adicionada à String devolvida para que não a revelemos.
+        sb.append("Data de nascimento: " + dataNascimento.toString() + "\n");
         return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = 7;
+        
+        hash = 31*hash + (email == null ? 0 : email.hashCode());
+        hash = 31*hash + (nome == null ? 0 : nome.hashCode());
+        hash = 31*hash + (morada == null ? 0 : morada.hashCode());
+        hash = 31*hash + (password == null ? 0 : password.hashCode());
+        hash = 31*hash + (dataNascimento == null ? 0 : dataNascimento.hashCode());
+        return hash;
     }
 }

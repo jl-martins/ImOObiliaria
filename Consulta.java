@@ -1,51 +1,64 @@
-import java.util.GregorianCalendar;
+/**
+ * Classe de objetos imutáveis que guardam informação sobre os vários dados relativos à consulta de um Imovel, 
+ * nomeadamente a data, o id do Imovel e o email do utilizador que o consultou (quando disponível).
+ * @author Grupo12 
+ * @version 15/05/2016
+ */
 
-public class Consulta
+import java.time.LocalDate;
+import java.io.Serializable;
+
+public final class Consulta implements Comparable<Consulta>, Serializable
 {   
     // Variaveis de instancia
-    private GregorianCalendar data; // data da consulta
-    private String email; // email do utilizador que fez a consulta (valor opcional) 
+    private final LocalDate data; // data da consulta
+    private final String email; // email do utilizador que fez a consulta (valor opcional)
+    private final String idImovel; // id do imóvel consultado
     
-    /**
-     * Construtor por omissao
-     */
+    /** Construtor por omissão. */
     public Consulta(){
-        data = new GregorianCalendar(); // data atual
-        email = null;
+        data = LocalDate.now(); // data atual
+        email = idImovel = "n/a";
     }
     
-    /**
-     * Construtor parametrizado
-     */
-    public Consulta(GregorianCalendar data, String email){
-        this.data = (data != null) ? (GregorianCalendar) data.clone() : new GregorianCalendar();
+    /** Construtor parametrizado. */
+    public Consulta(String email, String idImovel){
+        this.data = LocalDate.now();
         this.email = email;
+        this.idImovel = idImovel;
     }
     
-    /**
-     * Construtor de copia
-     */
+    /** Constrói uma consulta a partir do Utilizador que a realizou e do id do imóvel consultado. */
+    public Consulta(Utilizador usr, String idImovel){
+        this.data = LocalDate.now();
+        this.email = (usr == null)? "n/a" : usr.getEmail();
+        this.idImovel = (idImovel == null)? "n/a" : idImovel;
+    }
+      
+    /** Construtor de cópia */
     public Consulta(Consulta c){
-        this(c.getData(), c.getEmail());
+        this.email = c.getEmail();
+        this.data = c.getData();
+        this.idImovel = c.getIdImovel();
     }
     
     // Getters
-    public GregorianCalendar getData(){
-        return (GregorianCalendar) data.clone();
+    public LocalDate getData(){
+        return data; // objetos da classe LocalDate são imutáveis. Não precisamos de fazer clone().
     }
     
     public String getEmail(){
         return email;
     }
     
-    // Setters
-    public void setData(GregorianCalendar data){
-        if(data != null) // impede que se guarde null na variável de instancia 'data'
-            this.data = (GregorianCalendar) data.clone();
+    public String getIdImovel(){
+        return idImovel;
     }
+
+    /* Este tipo não tem setters de forma a ser imutável. Depois de feita uma consulta, esta não pode ser alterada */
     
-    public void setEmail(String email){
-        this.email = email;
+    public boolean feitaPorUtilizadorRegistado(){
+        return email != null;
     }
     
     public Consulta clone(){
@@ -53,15 +66,35 @@ public class Consulta
     }
     
     public boolean equals(Object o){
+        boolean eIgual = true;
+        
         if(this == o)
             return true;
         if(o == null || o.getClass() != this.getClass())
             return false;
         Consulta c = (Consulta) o;
-        return data.equals(c.getData()) && email.equals(c.getEmail());
+        if(data == null && c.getData() != null)
+            eIgual = false;
+        if(email == null && c.getEmail() != null) 
+            eIgual = false;
+        return eIgual && data.equals(c.getData()) && email.equals(c.getEmail()) && idImovel.equals(c.getIdImovel()); 
+    }
+    
+    @Override
+    public int compareTo(Consulta c){
+        return data.compareTo(c.getData());
     }
     
     public String toString(){
-        return "";
+        return "E-mail: " + email + "\nData: " + data.toString() + "\nID do imóvel consultado: " + idImovel + "\n";
+    }
+    
+    public int hashCode(){
+        int hash = 7;
+        
+        hash = 31 * hash + (email == null ? 0 : email.hashCode());
+        hash = 31 * hash + (data == null ? 0 : data.hashCode());
+        hash = 31 * hash + (idImovel == null ? 0 : idImovel.hashCode());
+        return hash;
     }
 }

@@ -1,26 +1,33 @@
+/**
+ * Classe que representa um apartamento.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
+import java.io.Serializable;
+
 public class Apartamento extends Imovel
+        implements Habitavel, Serializable
 {
     // variaveis de instancia
-    String tipo; // tipo de apartamento: Simples, Duplex, Triplex
-    int areaTotal;
-    int numQuartos, numWCs;
-    int numDaPorta, andar;
-    boolean temGaragem;
+    private TipoApartamento tipo; // tipo de apartamento: Simples, Duplex, Triplex
+    private int areaTotal;
+    private int numQuartos, numWCs;
+    private int numDaPorta, andar;
+    private boolean temGaragem;
 
-    /**
-     * Constructor for objects of class Apartamento
-     */
-    public Apartamento()
-    {
+    /** Construtor por omissão. */
+    public Apartamento(){
         super();
-        tipo = "n/a";
-        areaTotal = numQuartos = numWCs = numDaPorta = andar = 0;
+        tipo = null;
         temGaragem = false;
+        areaTotal = numQuartos = numWCs = numDaPorta = andar = 0;
     }
     
-    public Apartamento(String id, String rua, double precoPedido, double precoMinimo,
-                       String tipo, int areaTotal, int numQuartos, int numWCs,
-                       int numDaPorta, int andar, boolean temGaragem){
+    /** Construtor parametrizado. */
+    public Apartamento(String id, String rua, int precoPedido, int precoMinimo, TipoApartamento tipo, int areaTotal,
+                       int numQuartos, int numWCs, int numDaPorta, int andar, boolean temGaragem)
+    {
         super(id, rua, precoPedido, precoMinimo);
         this.tipo = tipo;
         this.areaTotal = areaTotal;
@@ -31,6 +38,7 @@ public class Apartamento extends Imovel
         this.temGaragem = temGaragem;
     }
     
+    /** Construtor de cópia. */
     public Apartamento(Apartamento a){
         super(a);
         tipo = a.getTipo();
@@ -42,7 +50,8 @@ public class Apartamento extends Imovel
         temGaragem = a.getTemGaragem();
     }
     
-    public String getTipo(){
+    // Getters
+    public TipoApartamento getTipo(){
         return tipo;
     }
     
@@ -70,8 +79,9 @@ public class Apartamento extends Imovel
         return temGaragem;
     }
     
-    public void setTipo(String tipo){
-        this.tipo = tipo;
+    // Setters
+    private void setTipo(String tipo) throws TipoInvalidoException{
+        this.tipo = TipoApartamento.fromString(tipo);
     }
     
     public void setAreaTotal(int areaTotal){
@@ -94,7 +104,7 @@ public class Apartamento extends Imovel
         this.andar = andar;
     }
     
-    public void getTemGaragem(boolean temGaragem){
+    public void setTemGaragem(boolean temGaragem){
         this.temGaragem = temGaragem;
     }
     
@@ -110,13 +120,50 @@ public class Apartamento extends Imovel
         else{
             Apartamento a = (Apartamento) o;
             
-            return super.equals(a) && tipo.equals(a.getTipo()) && areaTotal == a.getAreaTotal() &&
+            return super.equals(a) && tipo == a.getTipo() && areaTotal == a.getAreaTotal() &&
                    numQuartos == a.getNumQuartos() && numWCs == a.getNumWCs() && numDaPorta == a.getNumDaPorta() &&
                    andar == a.getAndar() && temGaragem == a.getTemGaragem();
         }
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Apartamento\n");
+        
+        sb.append(super.toString());
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name().toLowerCase() : "n/a") + "\n");
+        sb.append("Área total: " + areaTotal + "m^2\n");
+        sb.append("Número de quartos: " + numQuartos + "\n");
+        sb.append("Número de WCs: " + numWCs + "\n");
+        sb.append("Número da porta: " + numDaPorta + "\n");
+        sb.append("Andar: " + andar + "\n");
+        sb.append("Tem garagem: " + (temGaragem ? "sim\n" : "não\n"));
+        return sb.toString();
+    }
+    
+    // Método toString() parcial, usado no toString() de LojaHabitavel.
+    public String toStringParcial(){
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("Tipo: " + ((tipo != null) ? tipo.name().toLowerCase() : "n/a") + "\n");
+        sb.append("Área total: " + areaTotal + "m^2\n");
+        sb.append("Número de quartos: " + numQuartos + "\n");
+        sb.append("Número de WCs: " + numWCs + "\n");
+        sb.append("Número da porta: " + numDaPorta + "\n");
+        sb.append("Andar: " + andar + "\n");
+        sb.append("Tem garagem: " + (temGaragem ? "sim\n" : "não\n"));
+        return sb.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        
+        hash = 31*hash + ((tipo == null) ? 0 : tipo.hashCode());
+        hash = 31*hash + areaTotal;
+        hash = 31*hash + numQuartos;
+        hash = 31*hash + numWCs;
+        hash = 31*hash + numDaPorta;
+        hash = 31*hash + andar;
+        hash = 31*hash + (temGaragem ? 1 : 0);
+        return hash;
     }
 }

@@ -1,50 +1,46 @@
+/**
+ * Classe que representa um comprador da Imoobiliaria.
+ * @author Grupo12
+ * @version 15/05/2016
+ */
+
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.GregorianCalendar;
+import java.time.LocalDate;
+import java.io.Serializable;
 
-public class Comprador extends Utilizador
+public class Comprador extends Utilizador implements Serializable
 {
-    Set<Imovel> favoritos; // conjunto dos imoveis favoritos do Comprador
+    private Set<String> favoritos = null; // conjunto de ids dos imoveis favoritos do Comprador
     
-    /**
-     * Construtor por omissao
-     */
-    public Comprador(){
-        super();
-        favoritos = new TreeSet<Imovel>();
-    }
-    
-     /**
-      * Construtor parametrizado.
-      */
-    public Comprador(String email, String nome, String password, String morada,
-                     GregorianCalendar dataNascimento, Set<Imovel> favoritos)
-    {
+    /** Construtor por omissão. */
+    public Comprador(){super();}
+       
+    /** Construtor parametrizado. */
+    public Comprador(String email, String nome, String password, String morada, LocalDate dataNascimento){
         super(email, nome, password, morada, dataNascimento);
-        setFavoritos(favoritos);
+        favoritos = new TreeSet<String>();
     }
     
-    /**
-     * Construtor de copia.
-     */
-    public Comprador(Comprador comp){
-        super(comp);
-        setFavoritos(comp.getFavoritos());
+    /** Construtor de cópia. */
+    public Comprador(Comprador comprador){
+        super(comprador);
+        setFavoritos(comprador.getFavoritos());
     }
     
-    public TreeSet<Imovel> getFavoritos(){
-        TreeSet<Imovel> copiasFav = new TreeSet<Imovel>();
-        
-        for(Imovel fav : this.favoritos)
-            copiasFav.add(fav.clone());
-        return copiasFav;
+    // Getters
+    public TreeSet<String> getFavoritos(){
+        return new TreeSet<String>(favoritos); // Strings são imutáveis, logo não quebramos o encapsulamento. 
     }
     
-    public void setFavoritos(Set<Imovel> favoritos){
-        this.favoritos.clear();
-        
-        for(Imovel fav : favoritos)
-            this.favoritos.add(fav.clone());
+    // Setters
+    private void setFavoritos(Set<String> favoritos){
+        this.favoritos = new TreeSet<String>(favoritos); // Strings são imutáveis, logo não quebramos o encapsulamento. 
+    }
+    
+    /** Adiciona o id de um imóvel aos favoritos. */
+    public void setFavorito(String idImovel){
+        favoritos.add(idImovel);
     }
     
     public Comprador clone(){
@@ -57,13 +53,30 @@ public class Comprador extends Utilizador
         else if(o == null || this.getClass() != o.getClass())
             return false;
         else{
-            Comprador comp = (Comprador) o;
+            Comprador comprador = (Comprador) o;
             
-            return super.equals(comp) && favoritos.equals(comp.getFavoritos());
+            return super.equals(comprador) && favoritos.equals(comprador.getFavoritos());
         }
     }
     
     public String toString(){
-        return "";
+        StringBuilder sb = new StringBuilder("-> Comprador\n");
+        
+        sb.append(super.toString());
+        sb.append("Ids dos imóveis favoritos:\n");
+        for(String str : favoritos)
+            sb.append(str + "\n");
+        return sb.toString();
+    }
+    
+    public String toStringParcial(){
+        return super.toString();
+    }
+    
+    public int hashCode(){
+        int hash = super.hashCode();
+        
+        hash = 31*hash + (favoritos == null ? 0 : favoritos.hashCode());
+        return hash;
     }
 }
